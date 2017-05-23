@@ -6,10 +6,10 @@ AFRAME.registerComponent('stage', {
     horizonColor: {type: 'color', default: '#ddd'},
     autoLights: {default: true},
     sunPosition: {type:'vec3', default: '0 1 -1'},
-    fog: {default: true},
+    fog: {default: false},
 
-    groundShape: {default: 'desert', oneOf:['none', 'flat', 'desert', 'hills', 'mountains']}, 
-    groundStyle: {default: 'smooth', oneOf:['flat', 'smooth', '80s', 'textured', 'snowy']}, // TODO
+    groundShape: {default: 'mountains', oneOf:['none', 'flat', 'desert', 'hills', 'mountains']}, 
+    groundStyle: {default: 'snowy', oneOf:['flat', 'smooth', 'squares', 'textured', 'snowy']}, // TODO
     groundColor: {type: 'color', default: '#795449'},
 
     gridType: {default:'none', oneOf:['none', 'cross', 'squares', 'circles', 'checkerboard', 'spots']},
@@ -33,7 +33,12 @@ AFRAME.registerComponent('stage', {
     this.groundMaterial = null;
     this.ground = document.createElement('a-entity');
     this.ground.setAttribute('rotation', '-90 0 0');
-    this.updateGround(true);
+    this.heightmap = null;
+    this.groundCanvas = null;
+    this.groundTexture = null;
+    this.groundMaterial = null;
+    this.groundGeometry = null;
+    //this.updateGround(true);
 
     // create grid
 
@@ -59,17 +64,6 @@ AFRAME.registerComponent('stage', {
     this.el.appendChild(this.sunlight);
     this.el.appendChild(this.sky);
     this.el.appendChild(this.ground);
-
-
-    var self = this;
-    window.addEventListener('keypress', function(evt){
-      if(evt.keyCode==33){
-        self.el.setAttribute('stage', {sunPosition: {x: self.data.sunPosition.x, y: self.data.sunPosition.y - 0.03, z: self.data.sunPosition.z}})
-      }
-      else if(evt.keyCode==34){
-        self.el.setAttribute('stage', {sunPosition: {x: self.data.sunPosition.x, y: self.data.sunPosition.y + 0.03, z: self.data.sunPosition.z}})
-      }
-    })
   },
 
   // returns a fog color from a specified sky type and sun height
@@ -85,7 +79,7 @@ AFRAME.registerComponent('stage', {
     if (simpleColor !== false) {
       simpleColor = new THREE.Color(simpleColor);
       simpleColor.multiplyScalar(0.9);
-      return simpleColor.getHex();
+      return '#'+simpleColor.getHexString();
     }
 
     var FOG_RATIOS = [1, 0.5, 0.22, 0.1, 0.05, 0.02, 0];
@@ -101,7 +95,7 @@ AFRAME.registerComponent('stage', {
       var c2 = new THREE.Color(FOG_COLORS[i]);
       var a = (sunHeight - FOG_RATIOS[i]) / (FOG_RATIOS[i - 1] - FOG_RATIOS[i]);
       c2.lerp(c1, a);
-      return c2.getHex();
+      return '#'+c2.getHexString();
       }
     }
     return '#000';
@@ -116,17 +110,15 @@ AFRAME.registerComponent('stage', {
     }
     if (this.sunlight) {
       this.sunlight.setAttribute('position', this.data.sunPosition);
-      if (skyType == 'realistic') {
-        this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
-        this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
-      }
-      else {
+      this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
+      this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
+      if (skyType != 'realistic') {
         // dim down the sky color for the light
         var skycol = new THREE.Color(this.data.skyColor);
         skycol.r = (skycol.r + 1.0) / 2.0;
         skycol.g = (skycol.g + 1.0) / 2.0;
         skycol.b = (skycol.b + 1.0) / 2.0;
-        this.hemilight.setAttribute('light', {'color': skycol.getHex()});
+        this.hemilight.setAttribute('light', {'color': '#' + skycol.getHexString()});
       }
     } 
 
@@ -186,14 +178,17 @@ AFRAME.registerComponent('stage', {
   },
 
   updateGround: function (updateGeometry) {
+
+    var snowy = this.data.groundStyle == 'snowy';
+    var resolution = 64;
+    // update ground geometry
+
     if (updateGeometry) {
       var visibleground = this.data.groundShape != 'none';
       this.ground.setAttribute('visible', visibleground);
       if (!visibleground) return;
 
-      var resolution = 64; //this.data.groundShape == 'flat' ? 1 : 64;
       if (!this.groundGeometry) this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_RADIUS + 2, this.STAGE_RADIUS + 2, resolution - 1, resolution - 1);
-      this.groundGeometry.dynamic = true;
       var perlin = new PerlinNoise();
       var verts = this.groundGeometry.vertices;
       var numVerts = this.groundGeometry.vertices.length;
@@ -201,56 +196,94 @@ AFRAME.registerComponent('stage', {
       var inc = frequency / resolution;
       var amplitude = {'flat': 0, 'desert': 3, 'hills': 10, 'mountains': 20}[this.data.groundShape];
 
-      for (var i = 0, x = 0, y = 0; i < numVerts; i++) {
+      if (!this.heightmap || this.heightmap.width != resolution) {
+        this.heightmap = new ImageData(resolution, resolution);
+      }
+
+      for (var i = 0, j = 0, x = 0, y = 0; i < numVerts; i++) {
         if (amplitude == 0) {
           verts[i].z = 0; 
           continue;
         }
-        var h = perlin.noise(x, y, 0) * amplitude;
+        var h = Math.max(0, perlin.noise(x, y, 0) );
+        
+        // update heightmap
+        var s = Math.floor(Math.min(1, h * 2) * 255);
+        this.heightmap.data[j++] = s;
+        this.heightmap.data[j++] = s;
+        this.heightmap.data[j++] = s;
+        j++;
+
+        h *= amplitude;
+
         x += inc;
         if (x >= 10) {
           x = 0;
           y += inc;
         }
-        // TODO: improve smoothing in center
-        if (Math.abs(x / frequency - 0.5) < 0.1 && Math.abs(y / frequency - 0.5) < 0.1) h = 0;
+
+        // flat center
+        var xx = x * 2 / frequency - 1; 
+        var yy = y * 2 / frequency - 1; 
+        xx = Math.max(0, Math.min(1, (Math.abs(xx) - 0.1) * 10 ))
+        yy = Math.max(0, Math.min(1, (Math.abs(yy) - 0.1) * 10 ))
+        h *= xx > yy ? xx : yy;
+
         verts[i].z = h;
       }
 
       this.groundGeometry.computeFaceNormals();
       this.groundGeometry.computeVertexNormals();
-      this.groundGeometry.verticesNeedUpdate  = true;
-      this.groundGeometry.normalsNeedUpdate  = true;
+      this.groundGeometry.verticesNeedUpdate = true;
+      this.groundGeometry.normalsNeedUpdate = true;
     }
 
-    var texResolution = 512;
-    if (!this.groundMaterial) {
+    // update ground texture
+
+    var texResolution = snowy ? resolution : 512;
+    if (!this.groundCanvas || this.groundCanvas.width != texResolution) {
       this.groundCanvas = document.createElement('canvas');
       this.groundCanvas.width = texResolution;
       this.groundCanvas.height = texResolution;
       this.groundTexture = new THREE.Texture(this.groundCanvas);
       this.groundTexture.wrapS = THREE.RepeatWrapping;
       this.groundTexture.wrapT = THREE.RepeatWrapping;
-      this.groundMaterial = new THREE.MeshPhongMaterial({map: this.groundTexture, wireframe: false});
-      //this.ground.object3D.children[0].material = this.groundMaterial;
+      this.groundMaterial = new THREE.MeshPhongMaterial({
+        map: this.groundTexture, 
+        wireframe: false
+      });
     }
-    var res2 = Math.floor(texResolution / 2);
+
+    this.groundMaterial.shading = this.data.groundStyle == 'flat' ? THREE.FlatShading : THREE.SmoothShading;
+
     var ctx = this.groundCanvas.getContext('2d');
-    /*var grd = ctx.createRadialGradient(res2, res2, 0, res2, res2, res2);
-    grd.addColorStop(0, this.data.groundColor);
-    grd.addColorStop(0.4, '#C0D1D5');
-    ctx.fillStyle = grd;
-    */
     ctx.fillStyle = this.data.groundColor;
     ctx.fillRect(0, 0, texResolution, texResolution);
 
-    this.groundTexture.repeat.set(40, 40);
+    if (this.data.groundStyle == 'squares') {
+      var darker = new THREE.Color(this.data.groundColor);
+      var res2 = texResolution / 2;
+      darker.multiplyScalar(0.8);
+      ctx.fillStyle = '#' + darker.getHexString();
+      ctx.fillRect(0, 0, res2, res2);
+      ctx.fillRect(res2, res2, res2, res2);
+    }
+    else if (snowy) {
+      //ctx.globalCompositeOperation = 'screen';
+      ctx.putImageData(this.heightmap, 0, 0);
+      //ctx.globalCompositeOperation = 'source-over';
+    }
 
+    var texrepeat = snowy ? 1 : 50;
+    this.groundTexture.repeat.set(texrepeat, texrepeat);
     this.groundTexture.needsUpdate = true;
 
     if (updateGeometry) {
       var mesh = new THREE.Mesh(this.groundGeometry, this.groundMaterial)
       this.ground.setObject3D('mesh', mesh);
+    }
+    else {
+      this.ground.getObject3D('mesh').material = this.groundMaterial;
     }
   },
 
