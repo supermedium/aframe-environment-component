@@ -1,7 +1,7 @@
 /* global AFRAME, THREE */
 AFRAME.registerComponent('environment', {
   schema: {
-    skyType: {default: 'realistic', oneOf:['color', 'gradient', 'realistic']},
+    skyType: {default: 'atmosphere', oneOf:['color', 'gradient', 'atmosphere']},
     skyColor: {type: 'color', default: '#88c'},
     horizonColor: {type: 'color', default: '#ddd'},
     autoLights: {default: true},
@@ -10,7 +10,7 @@ AFRAME.registerComponent('environment', {
 
     groundFeatures: {default: 'flat', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'forest', 'columns']}, 
     groundYScale: {type: 'float', default: 4, min: 0, max: 200},
-    groundStyle: {default: 'smooth', oneOf:['flat', 'smooth', 'squares']},
+    groundStyle: {default: 'smooth', oneOf:['flat', 'smooth', 'checkerboard', 'squares']},
     groundColor:  {type: 'color', default: '#795449'},
     groundColor2: {type: 'color', default: '#694439'},
 
@@ -108,7 +108,7 @@ AFRAME.registerComponent('environment', {
     var skyType = this.data.skyType;
     var sunPos = new THREE.Vector3(this.data.sunPosition.x, this.data.sunPosition.y, this.data.sunPosition.z);
     sunPos.normalize();
-    if (skyType == 'realistic') {
+    if (skyType == 'atmosphere') {
       this.sky.setAttribute('material', {'sunPosition': sunPos});
       this.setStars((1 - Math.max(0, (sunPos.y + 0.08) * 8)) * 2000 );
     }
@@ -116,7 +116,7 @@ AFRAME.registerComponent('environment', {
       this.sunlight.setAttribute('position', this.data.sunPosition);
       this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
       this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
-      if (skyType != 'realistic') {
+      if (skyType != 'atmosphere') {
         // dim down the sky color for the light
         var skycol = new THREE.Color(this.data.skyColor);
         skycol.r = (skycol.r + 1.0) / 2.0;
@@ -134,8 +134,8 @@ AFRAME.registerComponent('environment', {
       var mat = {};
 
       if (skyType != oldData['skyType']) {
-        mat.shader = {'color': 'flat', 'gradient': 'gradientshader', 'realistic': 'skyshader'}[skyType];
-        this.stars.setAttribute('visible', skyType == 'realistic'); 
+        mat.shader = {'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
+        this.stars.setAttribute('visible', skyType == 'atmosphere'); 
       }
       if (skyType == 'color') {
         mat.color = this.data.skyColor;
@@ -145,7 +145,7 @@ AFRAME.registerComponent('environment', {
         mat.topColor = this.data.skyColor;
         mat.bottomColor = this.data.horizonColor;
       }
-      else if (skyType == 'realistic') {
+      else if (skyType == 'atmosphere') {
       }
 
       this.sky.setAttribute('material', mat);
@@ -289,15 +289,30 @@ AFRAME.registerComponent('environment', {
       this.columnsMaterial.color = new THREE.Color(this.data.groundColor2);
     }
 
+    var texrepeat = 50;
+
     var res2 = texResolution / 2;
     var ctx = this.groundCanvas.getContext('2d');
     ctx.fillStyle = this.data.groundColor;
     ctx.fillRect(0, 0, texResolution, texResolution);
-    if (this.data.groundStyle == 'squares') {
+    if (this.data.groundStyle == 'checkerboard') {
       ctx.fillStyle = this.data.groundColor2;
       ctx.fillRect(0, 0, res2, res2);
       ctx.fillRect(res2, res2, res2, res2);
     }
+    else if (this.data.groundStyle == 'squares') {
+      var numSquares = 8;
+      var squareSize = texResolution / numSquares;
+      var col1 = new THREE.Color(this.data.groundColor);
+      var col2 = new THREE.Color(this.data.groundColor2);
+      for (var i = 0; i < numSquares * numSquares; i++) {
+        var col = Math.random() > 0.5 ? col1.clone() : col2.clone();
+        col.addScalar(Math.random() * 0.1 - 0.05);
+        ctx.fillStyle = '#' + col.getHexString();
+        ctx.fillRect((i % numSquares) * squareSize, Math.floor(i / numSquares) * squareSize, squareSize, squareSize);
+      }
+    }
+//    console.log(this.groundCanvas);
 
     this.drawGrid(ctx, texResolution)
 
@@ -306,7 +321,6 @@ AFRAME.registerComponent('environment', {
     gridctx.fillRect(0, 0, texResolution, texResolution);
     this.drawGrid(gridctx, texResolution)
 
-    var texrepeat = 50;
     this.groundTexture.repeat.set(texrepeat, texrepeat);
     this.groundTexture.needsUpdate = true;
     this.gridTexture.repeat.set(texrepeat, texrepeat);
@@ -744,3 +758,73 @@ PerlinNoise.prototype.noise = function(x, y, z) {
 
   return nxyz; 
 };
+
+
+
+// TODO : REMOVE
+/*
+  add this code
+  run console.log( canvas );
+  see the canvas
+
+  if the canvas is running a webgl context, it'll need the preserveDrawingBuffer flag set to true
+*/
+
+( function() {
+
+  var _oldConsole = console.log;
+
+  // Code from https://github.com/adriancooney/console.image
+  
+  function getBox(width, height) {
+    return {
+      string: "+",
+      style: "font-size: 1px; padding: " + Math.floor(height/2) + "px " + Math.floor(width/2) + "px; line-height: " + height + "px;"
+    }
+  }
+
+  function logImage(url, scale) {
+    scale = scale || 1;
+    var img = new Image();
+
+    img.onload = function() {
+      var dim = getBox(this.width * scale, this.height * scale);
+      console.log("%c" + dim.string, dim.style + "background: url(" + url + "); background-size: " + (this.width * scale) + "px " + (this.height * scale) + "px; color: transparent;");
+    };
+
+    img.src = url;
+
+    
+  };
+
+  console.log = function() {
+
+    var special = false;
+
+    [].forEach.call( arguments, function( a ) { 
+      if( a instanceof HTMLCanvasElement ) special = true;;
+    } );
+
+    if( special ) {
+
+      [].forEach.call( arguments, function( a ) { 
+      
+        _oldConsole.apply( console, [ a ] );
+
+        if( a instanceof HTMLCanvasElement ) {
+
+          logImage( a.toDataURL() );
+
+        }
+
+      } );
+
+    } else {
+
+      _oldConsole.apply( console, arguments );
+
+    }
+
+  }
+
+} )();
