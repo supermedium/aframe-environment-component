@@ -8,8 +8,8 @@ AFRAME.registerComponent('environment', {
     sunPosition: {type:'vec3', default: '0 1 -1'},
     fog: {default: true},
 
-    groundFeatures: {default: 'flat', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'forest', 'columns']}, 
-    groundYScale: {type: 'float', default: 4, min: 0, max: 200},
+    groundFeatures: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'forest', 'columns']}, 
+    groundYScale: {type: 'float', default: 8, min: 0, max: 200},
     groundStyle: {default: 'smooth', oneOf:['flat', 'smooth', 'checkerboard', 'squares']},
     groundColor:  {type: 'color', default: '#795449'},
     groundColor2: {type: 'color', default: '#694439'},
@@ -21,6 +21,22 @@ AFRAME.registerComponent('environment', {
   init: function () {
 
     this.STAGE_SIZE = 200;
+
+    // assets
+    this.assets = {
+      stones: {
+        v : [-148,-453,-18,142,-196,-26,-40,124,-109,36,-835,37,-282,-72,97,-40,-158,170,2,125,87,-174,125,-20,-65,-356,42,83,-555,-147,5,-182,-62,172,123,-12,193,-489,-60,4,-727,97,120,-767,16,39,-704,-88,-27,-801,-16,-16,-211,30,-119,-327,-8,-139,-349,93,213,124,-213,89,-589,-87,-229,-235,122,54,-537,-57,-173,124,11,28,124,-224,-176,124,205,107,-107,41,34,-21,167,110,-52,195,213,-124,88,161,-173,126,232,122,44,99,-202,87,74,-165,152,80,122,48,181,123,188,-99,-410,-79,-104,-690,-14,138,124,2,121,-356,-83,-301,124,113,-223,-282,20,-232,-62,192,151,-230,-208,-17,125,-106,222,-436,-100,50,-276,-211,165,-154,47,23,124,148,253,122,132,-131,124,-79,-110,124,101,-130,-633,81,100,124,-79,104,-713,-56,100,124,83,113,-468,87,-256,124,22,-270,124,194,-117,-265,164,-31,124,-7,-32,-175,-16,-34,124,157,-47,-289,130,128,124,-266,1,-500,-128,265,124,-100,269,-228,-74,89,123,6,113,-404,-7,168,121,7,34,-149,107,95,122,217],
+        f : [0,37,38,53,13,52,1,54,39,13,16,3,16,14,3,14,13,3,4,58,42,4,59,41,5,17,6,6,63,5,19,18,8,9,66,47,47,44,9,10,45,66,10,69,45,11,69,70,70,68,11,68,46,20,1,57,14,14,55,1,2,40,15,15,37,2,38,15,16,17,64,8,7,62,18,18,42,7,19,64,60,60,22,19,12,23,21,23,9,21,9,12,21,68,70,12,22,60,43,43,4,22,70,10,23,0,53,24,24,51,0,47,66,25,25,65,47,26,59,43,43,5,26,27,48,33,28,49,72,28,73,49,31,48,30,30,48,32,32,50,30,31,34,33,34,31,29,29,28,34,27,72,35,35,71,27,29,50,36,36,73,29,0,38,53,0,51,37,52,13,56,1,39,56,1,55,40,1,40,54,2,37,51,13,53,16,16,55,14,14,57,13,4,41,58,5,60,64,5,64,17,6,17,61,7,42,58,8,64,19,19,42,18,18,62,8,9,44,46,47,65,44,11,68,67,20,67,68,46,68,12,57,56,13,1,56,57,2,54,40,15,40,55,16,53,38,38,37,15,15,55,16,17,8,62,62,61,17,7,61,62,19,22,42,20,46,44,20,44,65,12,70,23,23,66,9,9,46,12,22,4,42,43,59,4,23,10,66,70,69,10,24,53,52,25,66,45,26,5,63,43,60,5,27,33,72,27,71,48,30,50,31,32,48,71,33,34,72,33,48,31,34,28,72,29,73,28,35,72,49,29,31,50]
+      }
+    };
+    // scale assets (coordinates saved in integers for better compression)
+    for(i in assets){
+      var len = assets[i].v.length;
+      for (var v = 0; v < len; v++) {
+        assets[i].v[v] /= 1000.0;
+      }
+    }
+
 
     // create sky
 
@@ -72,36 +88,38 @@ AFRAME.registerComponent('environment', {
   // returns a fog color from a specified sky type and sun height
   getFogColor: function (skyType, sunHeight) {
 
-    var simpleColor = false;
+    var fogColor;
     if (skyType=='color'){
-      simpleColor = this.data.skyColor;
+      fogColor = new THREE.Color(this.data.skyColor);
     }
     else if (skyType=='gradient'){
-      simpleColor = this.data.horizonColor;
+      fogColor = new THREE.Color(this.data.horizonColor);
     }
-    if (simpleColor !== false) {
-      simpleColor = new THREE.Color(simpleColor);
-      simpleColor.multiplyScalar(0.9);
-      return '#'+simpleColor.getHexString();
-    }
+    else if (skyType == 'atmosphere')
+    {
+      //var FOG_COLORS = ['#DBE5E7', '#DAE3E4', '#A7B5B6', '#8D9088', '#6D6A5B', '#4B4231', '#000000'];
+      var FOG_RATIOS = [        1,       0.5,      0.22,       0.1,      0.05,     0];
+      var FOG_COLORS = ['#C0CDCF', '#81ADC5', '#525e62', '#2a2d2d', '#141616', '#000'];
 
-    var FOG_RATIOS = [1, 0.5, 0.22, 0.1, 0.05, 0.02, 0];
-    var FOG_COLORS = ['#DBE5E7', '#DAE3E4', '#A7B5B6', '#8D9088', '#6D6A5B', '#4B4231', '#000000'];
+      if (sunHeight <= 0) return '#000';
 
-    if (sunHeight <= 0) return '#000';
+      sunHeight = Math.min(1, sunHeight);
 
-    sunHeight = Math.min(1, sunHeight);
-
-    for (var i = 0; i < FOG_RATIOS.length; i++){
-      if (sunHeight > FOG_RATIOS[i]){
-      var c1 = new THREE.Color(FOG_COLORS[i - 1]);
-      var c2 = new THREE.Color(FOG_COLORS[i]);
-      var a = (sunHeight - FOG_RATIOS[i]) / (FOG_RATIOS[i - 1] - FOG_RATIOS[i]);
-      c2.lerp(c1, a);
-      return '#'+c2.getHexString();
+      for (var i = 0; i < FOG_RATIOS.length; i++){
+        if (sunHeight > FOG_RATIOS[i]){
+          var c1 = new THREE.Color(FOG_COLORS[i - 1]);
+          var c2 = new THREE.Color(FOG_COLORS[i]);
+          var a = (sunHeight - FOG_RATIOS[i]) / (FOG_RATIOS[i - 1] - FOG_RATIOS[i]);
+          c2.lerp(c1, a);
+          fogColor = c2;
+          break;
+        }
       }
     }
-    return '#000';
+
+    fogColor.multiplyScalar(0.9);
+    fogColor.lerp(new THREE.Color(this.data.groundColor), 0.3);
+    return '#'+fogColor.getHexString();
   },
 
   update: function (oldData) {
@@ -152,7 +170,7 @@ AFRAME.registerComponent('environment', {
     }
 
     if (this.data.fog) {
-      this.el.sceneEl.setAttribute('fog', {color: this.getFogColor(skyType, sunPos.y), far: 100});
+      this.el.sceneEl.setAttribute('fog', {color: this.getFogColor(skyType, sunPos.y), far: this.STAGE_SIZE / 2});
     }
     else {
       this.el.sceneEl.removeAttribute('fog');
@@ -439,9 +457,25 @@ AFRAME.registerComponent('environment', {
       this.stars.id= 'stars';
       this.createStars();
       this.el.appendChild(this.stars);
+      this.addObject();
     }
     numStars = Math.floor(Math.min(2000, Math.max(0, numStars)));
     this.stars.getObject3D('mesh').geometry.setDrawRange(0, numStars);
+  },
+
+  addObject: function (obj) {
+
+    var vertices = new Float32Array(v);
+    var faces = new Uint32Array(f);
+    var geo = new THREE.BufferGeometry();
+    geo.setIndex( new THREE.BufferAttribute( faces, 1 ) );
+    geo.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
+    geo.computeVertexNormals();
+    var mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({color: 0x999999, shading: THREE.SmoothShading}));
+    mesh.rotation.set(Math.PI + Math.random(), Math.random() * Math.PI * 2, Math.random());
+    mesh.scale.set(1 + Math.random(), 1 + Math.random(), 1 + Math.random());
+
+    this.el.setObject3D('obj', mesh);
   }
 
 
@@ -451,9 +485,9 @@ AFRAME.registerComponent('environment', {
 /* global AFRAME */
 AFRAME.registerShader('skyshader', {
   schema: {
-    luminance: { type: 'number', default: 1, max: 0, min: 2, is: 'uniform' },
-    turbidity: { type: 'number', default: 2, max: 0, min: 20, is: 'uniform' },
-    reileigh: { type: 'number', default: 1, max: 0, min: 4, is: 'uniform' },
+    luminance: { type: 'number', default: 1, min: 0, max: 2, is: 'uniform' },
+    turbidity: { type: 'number', default: 2, min: 0, max: 20, is: 'uniform' },
+    reileigh: { type: 'number', default: 1, min: 0, max: 4, is: 'uniform' },
     mieCoefficient: { type: 'number', default: 0.005, min: 0, max: 0.1, is: 'uniform' },
     mieDirectionalG: { type: 'number', default: 0.8, min: 0, max: 1, is: 'uniform' },
     sunPosition: { type: 'vec3', default: '0 0 -1', is: 'uniform' },
