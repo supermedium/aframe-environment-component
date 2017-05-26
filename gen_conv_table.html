@@ -1,0 +1,118 @@
+<html>
+<head>
+	<title>generate conv_table</title>
+<style>
+textarea{
+	width: 90%;
+	height: 7rem;
+}
+</style>
+</head>
+<body>
+<p>Convert array of integers to unicode string</p>
+<textarea id="i" onkeyup="conv();conv_lzw()"></textarea>
+<p>conv_table:</p>
+<textarea id="o"></textarea>
+<p id="log1"></p>
+<p>lzw:</p>
+<textarea id="lzw"></textarea>
+<p id="log2"></p>
+<script>
+
+conv_table = '!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{¬|}~';
+conv_table += '¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ'
+conv_table += 'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſ';
+conv_table += 'ƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ';
+
+function byteCount(s) {
+    return encodeURI(s).split(/%..|./).length - 1;
+}
+
+
+function conv(){
+	var input  = document.getElementById('i');
+	var output = document.getElementById('o');
+	var log = document.getElementById('log1');
+	var outstr = '';
+	var nums = input.value.split(',');
+
+	for (var i = 0; i < nums.length; i++) {
+		if (nums[i]=='') continue;
+		var idx = parseInt(nums[i]);
+		if (idx >= conv_table.length) {
+			log.innerHTML = 'ERROR: index ' + idx + ' out of conv_table (max: '+conv_table.length+')';
+			return;
+		}
+		outstr += conv_table.charAt(idx);
+	};
+	
+	output.value = outstr;
+	log.innerHTML = 'Compression ratio: ' + Math.floor(byteCount(outstr) / input.value.length * 100) / 100;
+
+}
+
+
+function conv_lzw(){
+	var input  = document.getElementById('i');
+	var output = document.getElementById('lzw');
+	var log = document.getElementById('log2');
+	
+	outstr = lzw_encode(input.value);
+	output.value = outstr;
+	
+	log.innerHTML = 'Compression ratio: ' + Math.floor(byteCount(outstr) / input.value.length * 100) / 100;
+}
+
+function lzw_encode(s) {
+    var dict = {};
+    var data = (s + "").split("");
+    var out = [];
+    var currChar;
+    var phrase = data[0];
+    var code = 256;
+    for (var i=1; i<data.length; i++) {
+        currChar=data[i];
+        if (dict[phrase + currChar] != null) {
+            phrase += currChar;
+        }
+        else {
+            out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+            dict[phrase + currChar] = code;
+            code++;
+            phrase=currChar;
+        }
+    }
+    out.push(phrase.length > 1 ? dict[phrase] : phrase.charCodeAt(0));
+    for (var i=0; i<out.length; i++) {
+        out[i] = String.fromCharCode(out[i]);
+    }
+    return out.join("");
+}
+
+function lzw_decode(s) {
+    var dict = {};
+    var data = (s + "").split("");
+    var currChar = data[0];
+    var oldPhrase = currChar;
+    var out = [currChar];
+    var code = 256;
+    var phrase;
+    for (var i=1; i<data.length; i++) {
+        var currCode = data[i].charCodeAt(0);
+        if (currCode < 256) {
+            phrase = data[i];
+        }
+        else {
+           phrase = dict[currCode] ? dict[currCode] : (oldPhrase + currChar);
+        }
+        out.push(phrase);
+        currChar = phrase.charAt(0);
+        dict[code] = oldPhrase + currChar;
+        code++;
+        oldPhrase = phrase;
+    }
+    return out.join("");
+}
+</script>
+</body>
+</html>
