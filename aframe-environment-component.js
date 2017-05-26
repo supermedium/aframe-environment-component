@@ -8,20 +8,28 @@ AFRAME.registerComponent('environment', {
     sunPosition: {type:'vec3', default: '0 1 -1'},
     fog: {default: true},
 
-    groundFeatures: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'forest', 'columns']}, 
+    flatShading: {default: false},
+
+    ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
     groundYScale: {type: 'float', default: 8, min: 0, max: 200},
-    groundStyle: {default: 'smooth', oneOf:['flat', 'smooth', 'checkerboard', 'squares']},
+    groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares']},
     groundColor:  {type: 'color', default: '#795449'},
     groundColor2: {type: 'color', default: '#694439'},
 
-    gridStyle: {default:'none', oneOf:['none', 'squares', 'crosses', 'spots', 'xlines', 'ylines']},
+    dressing: {default: 'cubes', oneOf:['none', 'cubes', 'pyramids', 'cylinders']},
+    dressingAmount: {type: 'int', default: 10, min: 0, max: 1000},
+    dressingColor:  {type: 'color', default: '#795449'},
+    dressingScale: {type: 'float', default: 1, min: 0, max: 100},
+    dressingVariance: {type: 'vec3', default: '1 1 1'},
+    dressingUniformScale: {default: true},
+
+    grid: {default:'none', oneOf:['none', 'squares', 'crosses', 'spots', 'xlines', 'ylines']},
     gridColor: {type: 'color', default: '#ccc'}
   },
 
   init: function () {
 
     this.STAGE_SIZE = 200;
-
 
     // assets
     this.conv_table = '!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{¬|}~';
@@ -31,18 +39,18 @@ AFRAME.registerComponent('environment', {
     
     this.assets = {
       stones: {
-        //v : [-148,-453,-18,142,-196,-26,-40,124,-109,36,-835,37,-282,-72,97,-40,-158,170,2,125,87,-174,125,-20,-65,-356,42,83,-555,-147,5,-182,-62,172,123,-12,193,-489,-60,4,-727,97,120,-767,16,39,-704,-88,-27,-801,-16,-16,-211,30,-119,-327,-8,-139,-349,93,213,124,-213,89,-589,-87,-229,-235,122,54,-537,-57,-173,124,11,28,124,-224,-176,124,205,107,-107,41,34,-21,167,110,-52,195,213,-124,88,161,-173,126,232,122,44,99,-202,87,74,-165,152,80,122,48,181,123,188,-99,-410,-79,-104,-690,-14,138,124,2,121,-356,-83,-301,124,113,-223,-282,20,-232,-62,192,151,-230,-208,-17,125,-106,222,-436,-100,50,-276,-211,165,-154,47,23,124,148,253,122,132,-131,124,-79,-110,124,101,-130,-633,81,100,124,-79,104,-713,-56,100,124,83,113,-468,87,-256,124,22,-270,124,194,-117,-265,164,-31,124,-7,-32,-175,-16,-34,124,157,-47,-289,130,128,124,-266,1,-500,-128,265,124,-100,269,-228,-74,89,123,6,113,-404,-7,168,121,7,34,-149,107,95,122,217],
-        //f : [0,37,38,53,13,52,1,54,39,13,16,3,16,14,3,14,13,3,4,58,42,4,59,41,5,17,6,6,63,5,19,18,8,9,66,47,47,44,9,10,45,66,10,69,45,11,69,70,70,68,11,68,46,20,1,57,14,14,55,1,2,40,15,15,37,2,38,15,16,17,64,8,7,62,18,18,42,7,19,64,60,60,22,19,12,23,21,23,9,21,9,12,21,68,70,12,22,60,43,43,4,22,70,10,23,0,53,24,24,51,0,47,66,25,25,65,47,26,59,43,43,5,26,27,48,33,28,49,72,28,73,49,31,48,30,30,48,32,32,50,30,31,34,33,34,31,29,29,28,34,27,72,35,35,71,27,29,50,36,36,73,29,0,38,53,0,51,37,52,13,56,1,39,56,1,55,40,1,40,54,2,37,51,13,53,16,16,55,14,14,57,13,4,41,58,5,60,64,5,64,17,6,17,61,7,42,58,8,64,19,19,42,18,18,62,8,9,44,46,47,65,44,11,68,67,20,67,68,46,68,12,57,56,13,1,56,57,2,54,40,15,40,55,16,53,38,38,37,15,15,55,16,17,8,62,62,61,17,7,61,62,19,22,42,20,46,44,20,44,65,12,70,23,23,66,9,9,46,12,22,4,42,43,59,4,23,10,66,70,69,10,24,53,52,25,66,45,26,5,63,43,60,5,27,33,72,27,71,48,30,50,31,32,48,71,33,34,72,33,48,31,34,28,72,29,73,28,35,72,49,29,31,50],
-        v : '-148,-453Ą1ăā2ĉ96Ą2Đą0,124ĉ09,3ē835ĝ7đ8č-7č9ĤĔĉ5ċ7ĕčėĢ8Ĭ17ęĴđĕ-6Ģ-ġĐ4čĠĄ5ňĉ4ĤŀĊħ6ĳĩĖ2ĈĀĳ9ŕĂĜľĕęĨ2ĤīœĽ76Ĥ1Đ3śıŞ8ă-ŠĄ801ĉēŨđ1ŵ3Ľźś3ű-ů1ŪĄ34ĜŘ,2ƄœŞƌĈ8śįśĶđ2śŔĢėč5ŞćĬ5ķ7Ĉėĺŵ2ċĘƗŞĸĐƦƋ0ƛ0ķƴ,4ŻƏŵŨŧ1Ľ5ŗĢƐĉƫŮĖ6ŵĀƤœĐŔĳ2č4ę9ƙ0ŅĤĹŶƛǀ,ųœǑċ8ƻŔĖǆ-ǔĄƸŤśƾŞ69Žĺ3ƪęǏǉłŲŕżǣƧŕǐǾĦƱđƀĄŐĖ9ĳ5ǉŔĽ20ƃŧ2ō0ǍǐǩĞĚĕ5ȍťŹƻĿĮęŋƋƥƫāăȒȥĳȄĀ3ǼĄ7ǬƾƎĖŴĉżȅ3Ƒƻ0ĕưĨĜǭȰƍ-5ƯȽȴņźř6ăƖŰɆȴȖŰıȴ19ƭĸđȠŨŞȮȴĨƆħĸōēƇɖƢǩĬƩɁȸėǴɛƯŇɈŖȨɜƫĀɈĒƙƩȰęƒœĈƯɄ40ŞŧɍœŵĤɧĀƈȵšƛȖƌ7',
-        f : '0,37ā8,53,1Ĉ52ĉĆ4ā9ĉĈ16āĉĖ1ĐĔĐĊėĐ5ą4čĠĒ41ĆĉăĖĬċĉĒ1ąąĒ6Ė4ăķ,4ĐİĀ45,ĵĉĀ6Ħŀ1ĨŅ,7ĀŌŁąňŏĺĖ2ĀĨ5ăĚĉĠŇ,ĤŖŇŀĂŞĄĉŇęīĐąīčıĉĢčřĴĐ6ńĀ2ŭİč2Ĉ2Ĩż,ĒžƁĉŻŉūŖŻčŵĺĈ4ƎŞűŖŷĈĀćŞĐ2ĠĨľīŔŀ2ŀ6ŀĹ2Ė5ĦƎĮƦŞĸą3ŽĢĒ7ŻūƎĒ3Ĩ4ƯĀ3ľƯč3č5ƽƽĨ3ěĈǈāſƂƂƯƙăƴāŢŀ7ſă2ĒǄāĖ3Ė7ŽĒƽąƗƖǇăČēĆęđǬĎ5ƤŖĺƖƙāǩĨĞƗĕĘĆŇĝĠřƐħĆǥŁńĠŁĝīĪŁĨĸǃĲȊįȔģůȗ6čĳĺĐ4ĶīƤĝƇŁǙńīĢĬŐǃǩęĔǯŘŤ5ȝŠǴǾǽƗ3ƯƯřšȶǼ1ăąșŁƋǹǒȎɄȔŸĺŻľĶƙľŴŇƒŞŽĈłĒĦęƊĺɌƍĆĦɕŃŁǠńĽƘĆċŻƢĶƠƧŁƪȇĩ2ăưŋŻǒƺƼĆǆāĤūǇǊĐǓɶƻǌāƙūŻƳƱǔɷĺǎʇǄ'
+        vertices : [-148,-453,-18,142,-196,-26,-40,124,-109,36,-835,37,-282,-72,97,-40,-158,170,2,125,87,-174,125,-20,-65,-356,42,83,-555,-147,5,-182,-62,172,123,-12,193,-489,-60,4,-727,97,120,-767,16,39,-704,-88,-27,-801,-16,-16,-211,30,-119,-327,-8,-139,-349,93,213,124,-213,89,-589,-87,-229,-235,122,54,-537,-57,-173,124,11,28,124,-224,-176,124,205,107,-107,41,34,-21,167,110,-52,195,213,-124,88,161,-173,126,232,122,44,99,-202,87,74,-165,152,80,122,48,181,123,188,-99,-410,-79,-104,-690,-14,138,124,2,121,-356,-83,-301,124,113,-223,-282,20,-232,-62,192,151,-230,-208,-17,125,-106,222,-436,-100,50,-276,-211,165,-154,47,23,124,148,253,122,132,-131,124,-79,-110,124,101,-130,-633,81,100,124,-79,104,-713,-56,100,124,83,113,-468,87,-256,124,22,-270,124,194,-117,-265,164,-31,124,-7,-32,-175,-16,-34,124,157,-47,-289,130,128,124,-266,1,-500,-128,265,124,-100,269,-228,-74,89,123,6,113,-404,-7,168,121,7,34,-149,107,95,122,217],
+        faces : [0,37,38,53,13,52,1,54,39,13,16,3,16,14,3,14,13,3,4,58,42,4,59,41,5,17,6,6,63,5,19,18,8,9,66,47,47,44,9,10,45,66,10,69,45,11,69,70,70,68,11,68,46,20,1,57,14,14,55,1,2,40,15,15,37,2,38,15,16,17,64,8,7,62,18,18,42,7,19,64,60,60,22,19,12,23,21,23,9,21,9,12,21,68,70,12,22,60,43,43,4,22,70,10,23,0,53,24,24,51,0,47,66,25,25,65,47,26,59,43,43,5,26,27,48,33,28,49,72,28,73,49,31,48,30,30,48,32,32,50,30,31,34,33,34,31,29,29,28,34,27,72,35,35,71,27,29,50,36,36,73,29,0,38,53,0,51,37,52,13,56,1,39,56,1,55,40,1,40,54,2,37,51,13,53,16,16,55,14,14,57,13,4,41,58,5,60,64,5,64,17,6,17,61,7,42,58,8,64,19,19,42,18,18,62,8,9,44,46,47,65,44,11,68,67,20,67,68,46,68,12,57,56,13,1,56,57,2,54,40,15,40,55,16,53,38,38,37,15,15,55,16,17,8,62,62,61,17,7,61,62,19,22,42,20,46,44,20,44,65,12,70,23,23,66,9,9,46,12,22,4,42,43,59,4,23,10,66,70,69,10,24,53,52,25,66,45,26,5,63,43,60,5,27,33,72,27,71,48,30,50,31,32,48,71,33,34,72,33,48,31,34,28,72,29,73,28,35,72,49,29,31,50],
+        //v : '-148,-453Ą1ăā2ĉ96Ą2Đą0,124ĉ09,3ē835ĝ7đ8č-7č9ĤĔĉ5ċ7ĕčėĢ8Ĭ17ęĴđĕ-6Ģ-ġĐ4čĠĄ5ňĉ4ĤŀĊħ6ĳĩĖ2ĈĀĳ9ŕĂĜľĕęĨ2ĤīœĽ76Ĥ1Đ3śıŞ8ă-ŠĄ801ĉēŨđ1ŵ3Ľźś3ű-ů1ŪĄ34ĜŘ,2ƄœŞƌĈ8śįśĶđ2śŔĢėč5ŞćĬ5ķ7Ĉėĺŵ2ċĘƗŞĸĐƦƋ0ƛ0ķƴ,4ŻƏŵŨŧ1Ľ5ŗĢƐĉƫŮĖ6ŵĀƤœĐŔĳ2č4ę9ƙ0ŅĤĹŶƛǀ,ųœǑċ8ƻŔĖǆ-ǔĄƸŤśƾŞ69Žĺ3ƪęǏǉłŲŕżǣƧŕǐǾĦƱđƀĄŐĖ9ĳ5ǉŔĽ20ƃŧ2ō0ǍǐǩĞĚĕ5ȍťŹƻĿĮęŋƋƥƫāăȒȥĳȄĀ3ǼĄ7ǬƾƎĖŴĉżȅ3Ƒƻ0ĕưĨĜǭȰƍ-5ƯȽȴņźř6ăƖŰɆȴȖŰıȴ19ƭĸđȠŨŞȮȴĨƆħĸōēƇɖƢǩĬƩɁȸėǴɛƯŇɈŖȨɜƫĀɈĒƙƩȰęƒœĈƯɄ40ŞŧɍœŵĤɧĀƈȵšƛȖƌ7',
+        //f : '0,37ā8,53,1Ĉ52ĉĆ4ā9ĉĈ16āĉĖ1ĐĔĐĊėĐ5ą4čĠĒ41ĆĉăĖĬċĉĒ1ąąĒ6Ė4ăķ,4ĐİĀ45,ĵĉĀ6Ħŀ1ĨŅ,7ĀŌŁąňŏĺĖ2ĀĨ5ăĚĉĠŇ,ĤŖŇŀĂŞĄĉŇęīĐąīčıĉĢčřĴĐ6ńĀ2ŭİč2Ĉ2Ĩż,ĒžƁĉŻŉūŖŻčŵĺĈ4ƎŞűŖŷĈĀćŞĐ2ĠĨľīŔŀ2ŀ6ŀĹ2Ė5ĦƎĮƦŞĸą3ŽĢĒ7ŻūƎĒ3Ĩ4ƯĀ3ľƯč3č5ƽƽĨ3ěĈǈāſƂƂƯƙăƴāŢŀ7ſă2ĒǄāĖ3Ė7ŽĒƽąƗƖǇăČēĆęđǬĎ5ƤŖĺƖƙāǩĨĞƗĕĘĆŇĝĠřƐħĆǥŁńĠŁĝīĪŁĨĸǃĲȊįȔģůȗ6čĳĺĐ4ĶīƤĝƇŁǙńīĢĬŐǃǩęĔǯŘŤ5ȝŠǴǾǽƗ3ƯƯřšȶǼ1ăąșŁƋǹǒȎɄȔŸĺŻľĶƙľŴŇƒŞŽĈłĒĦęƊĺɌƍĆĦɕŃŁǠńĽƘĆċŻƢĶƠƧŁƪȇĩ2ăưŋŻǒƺƼĆǆāĤūǇǊĐǓɶƻǌāƙūŻƳƱǔɷĺǎʇǄ'
       }      
     };
 
     // scale assets (coordinates saved in integers for better compression)
     for(i in this.assets){
-      var len = this.assets[i].v.length;
+      var len = this.assets[i].vertices.length;
       for (var v = 0; v < len; v++) {
-        this.assets[i].v[v] /= 1000.0;
+        this.assets[i].vertices[v] /= 1000.0;
       }
     }
 
@@ -63,9 +71,8 @@ AFRAME.registerComponent('environment', {
     this.groundTexture = null;
     this.groundMaterial = null;
     this.groundGeometry = null;
-    //this.updateGround(true);
-    this.columns = null;
-    this.columnsMaterial = null;
+
+    this.dressing = document.createElement('a-entity');
 
     this.gridCanvas = null;
     this.gridTexture = null;
@@ -90,6 +97,7 @@ AFRAME.registerComponent('environment', {
     this.el.appendChild(this.hemilight);
     this.el.appendChild(this.sunlight);
     this.el.appendChild(this.ground);
+    this.el.appendChild(this.dressing);
     this.el.appendChild(this.sky);
   },
 
@@ -192,24 +200,37 @@ AFRAME.registerComponent('environment', {
 /*    if (!oldData || this.data.gridColor != oldData.gridColor) {
       this.gridMaterial.color = new THREE.Color(this.data.gridColor);
     }
-    if (!oldData || (this.data.gridStyle != oldData.gridStyle ||
-      this.data.gridSpacing != oldData.gridSpacing ||
+    if (!oldData || (this.data.grid != oldData.grid ||
+      this.data.gridSpacing != oldDaat.gridSpacing ||
       this.data.gridSize != oldData.gridSize)) {
       this.updateGrid();
     }
 */
     if (!oldData || 
+        this.data.ground != oldData.ground ||
         this.data.groundColor != oldData.groundColor ||
         this.data.groundColor2 != oldData.groundColor2 ||
-        this.data.groundFeatures != oldData.groundFeatures ||
         this.data.groundYScale != oldData.groundYScale ||
-        this.data.groundStyle != oldData.groundStyle ||
+        this.data.groundTexture != oldData.groundTexture ||
         this.data.gridColor != oldData.gridColor ||
-        this.data.gridStyle != oldData.gridStyle
+        this.data.grid != oldData.grid
         ) {
-      this.updateGround(this.data.groundFeatures != oldData.groundFeatures);
+      this.updateGround(this.data.ground != oldData.ground);
       if (this.hemilight) this.hemilight.setAttribute('light', {'groundColor': this.data.groundColor});
     }
+
+    if (!oldData ||
+        this.data.dressing != oldData.dressing ||
+        this.data.dressingAmount != oldData.dressingAmount ||
+        this.data.dressingScale != oldData.dressingScale ||
+        this.data.dressingColor != oldData.dressingColor  ||
+        //this.data.dressingVariance != oldData.dressingVariance ||
+        this.data.dressingUniformScale != oldData.dressingUniformScale 
+      ) {
+      console.log('hola');
+      this.updateDressing();
+    }
+
   },
 
   updateGround: function (updateGeometry) {
@@ -217,10 +238,8 @@ AFRAME.registerComponent('environment', {
     var resolution = 64;
     // update ground geometry
 
-    var showColumns = this.data.groundFeatures == 'columns';
-
     if (updateGeometry) {
-      var visibleground = this.data.groundFeatures != 'none';
+      var visibleground = this.data.ground != 'none';
       this.ground.setAttribute('visible', visibleground);
       if (!visibleground) return;
 
@@ -231,19 +250,14 @@ AFRAME.registerComponent('environment', {
       var frequency = 10;
       var inc = frequency / resolution;
 
-      if (showColumns && !this.columns){
-        this.createColumns();
-      }
-      if (this.columns) this.columns.visible = showColumns;
-
       for (var i = 0, j = 0, x = 0, y = 0; i < numVerts; i++) {
-        if (this.data.groundFeatures == 'flat' || showColumns) {
+        if (this.data.ground == 'flat') {
           verts[i].z = 0; 
           continue;
         }
 
         var h; 
-        switch (this.data.groundFeatures) {
+        switch (this.data.ground) {
           case 'hills':
             h = Math.max(0, perlin.noise(x, y, 0));
           break;
@@ -254,8 +268,8 @@ AFRAME.registerComponent('environment', {
           case 'spikes':
             h = Math.random() < 0.02 ? Math.random() : 0;
           break;
-          case 'forest':
-            h = Math.random() < 0.15 ? Math.random() : 0;
+          case 'noise':
+            h = Math.random() < 0.35 ? Math.random() : 0;
           break;
         }
 
@@ -282,6 +296,7 @@ AFRAME.registerComponent('environment', {
       this.groundGeometry.computeFaceNormals();
       this.groundGeometry.computeVertexNormals();
       this.groundGeometry.verticesNeedUpdate = true;
+      this.groundGeometry.facesNeedUpdate = true;
       this.groundGeometry.normalsNeedUpdate = true;
     }
 
@@ -298,7 +313,7 @@ AFRAME.registerComponent('environment', {
       this.gridTexture = new THREE.Texture(this.gridCanvas);
       this.gridTexture.wrapS = THREE.RepeatWrapping;
       this.gridTexture.wrapT = THREE.RepeatWrapping;
-
+      //this.gridTexture.anisotropy  = this.el.sceneEl.renderer.getMaxAnisotropy();
       this.groundCanvas = document.createElement('canvas');
       this.groundCanvas.width = texResolution;
       this.groundCanvas.height = texResolution;
@@ -313,11 +328,7 @@ AFRAME.registerComponent('environment', {
       });
     }
 
-    this.groundMaterial.shading = this.data.groundStyle == 'flat' ? THREE.FlatShading : THREE.SmoothShading;
-
-    if (showColumns) {
-      this.columnsMaterial.color = new THREE.Color(this.data.groundColor2);
-    }
+    this.groundMaterial.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
 
     var texrepeat = 50;
 
@@ -325,12 +336,12 @@ AFRAME.registerComponent('environment', {
     var ctx = this.groundCanvas.getContext('2d');
     ctx.fillStyle = this.data.groundColor;
     ctx.fillRect(0, 0, texResolution, texResolution);
-    if (this.data.groundStyle == 'checkerboard') {
+    if (this.data.groundTexture == 'checkerboard') {
       ctx.fillStyle = this.data.groundColor2;
       ctx.fillRect(0, 0, res2, res2);
       ctx.fillRect(res2, res2, res2, res2);
     }
-    else if (this.data.groundStyle == 'squares') {
+    else if (this.data.groundTexture == 'squares') {
       var numSquares = 8;
       var squareSize = texResolution / numSquares;
       var col1 = new THREE.Color(this.data.groundColor);
@@ -366,11 +377,11 @@ AFRAME.registerComponent('environment', {
   },
 
   drawGrid: function (ctx, resolution) {
-    if (this.data.gridStyle == 'none') return;
+    if (this.data.grid == 'none') return;
     var res = resolution;
     var res2 = res / 2;
     ctx.fillStyle = this.data.gridColor;
-    switch (this.data.gridStyle) {
+    switch (this.data.grid) {
       case 'squares':
         ctx.fillRect(0, 0, res, 1);
         ctx.fillRect(res2, 0, 1, res);
@@ -424,23 +435,115 @@ AFRAME.registerComponent('environment', {
         ctx.fillRect(res2, 0, 1, res);
         ctx.fillRect(0, 0, 1, res);
       break;
-
     }
   },
 
-  createColumns: function() {
-    this.columns = new THREE.Object3D();
-    this.columnsMaterial = new THREE.MeshLambertMaterial({color: this.data.groundColor})
-    var geometry = new THREE.CylinderBufferGeometry(0.5, 0.5, 1, 8, 1, true);
-    for (var y = 0; y < 10; y++) {
-      for (var x = 0; x < 10; x++) {
-        var cylinder = new THREE.Mesh(geometry, this.columnsMaterial);
-        cylinder.position.set(10 + (x - 5) * 20, 10 + (y - 5) * 20, 0.5);
-        cylinder.rotation.set(Math.PI / 2, 0, 0);
-        this.columns.add(cylinder);
+  updateDressing: function () {
+    var dressing = new THREE.Object3D();
+    this.dressing.setAttribute('visible', this.data.dressing != 'none');
+    if (this.data.dressing == 'none') {
+      return;
+    }
+    
+    function getAssetGeometry(data) {
+      if (!data) return null;
+      var g = new THREE.Geometry();
+      for (var v = 0; v < data.vertices.length; v += 3) {
+        g.vertices.push(new THREE.Vector3(data.vertices[v], data.vertices[v + 1], data.vertices[v + 2]));
       }
-    };
-    this.ground.setObject3D('columns', this.columns);
+      for (var f = 0; f < data.faces.length; f += 3) {
+        g.faces.push(new THREE.Face3( data.faces[f], data.faces[f + 1], data.faces[f + 2]))
+      }
+      g.computeFaceNormals();
+      return g;
+    }
+
+    var geometry = new THREE.Geometry(); // mother geometry that will hold all instances
+    var faceindex = ['a','b','c'];
+
+    var treedata = [];
+
+    // get geometry
+    var geo;
+    var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - Math.random() * 0.3);
+    switch (this.data.dressing){
+      case 'cubes':
+        geo = new THREE.BoxGeometry(1, 1, 1);
+        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+      break;
+      case 'pyramids':
+        geo = new THREE.ConeGeometry(1, 1, 4, 1, true);
+        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+      break;
+      case 'cylinders':
+        geo = new THREE.CylinderGeometry(0.5, 0.5, 1, 8, 1, true);
+        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+      break;
+      default:
+        geo = getAssetGeometry(this.assets[this.data.dressing]);
+        if (!geo) return;
+      break;
+    }
+
+    for (var i = 0; i < this.data.dressingAmount; i++) {
+    
+      // set vertex colors
+      for (var f = 0, fl = geo.faces.length; f < fl; f++) {
+        var face = geo.faces[f];
+        for (var v = 0; v < 3; v++) {
+          //p = geo.vertices[ face[ faceindex[v] ] ]; // get vertex position
+          face.vertexColors[v] = color.clone().multiplyScalar(1 - Math.random() * 0.1);
+        }
+      }
+
+      // set random position, rotation and scale
+      var ds = this.data.dressingScale;
+      var dv = new THREE.Vector3(this.data.dressingVariance.x, this.data.dressingVariance.y, this.data.dressingVariance.z);
+      var distance = 10 + Math.max(dv.x, dv.z) + 10 * Math.random() + Math.random() * this.STAGE_SIZE / 3;
+      var direction = Math.random() * Math.PI * 2; 
+      var matrix = new THREE.Matrix4();
+      var scale = Math.random();
+      var uniformScale = this.data.dressingUniformScale;
+
+      matrix.compose(
+        // position
+        new THREE.Vector3(
+          Math.cos(direction) * distance, 
+          0, 
+          Math.sin(direction) * distance
+          ),
+        // rotation
+        new THREE.Quaternion().setFromAxisAngle(
+          new THREE.Vector3(0, 1, 0), 
+          (Math.random() - 0.5) * dv.length() * Math.PI * 2
+          ),
+        // scale
+        new THREE.Vector3(
+           ds + (uniformScale ? scale : Math.random()) * dv.x,
+           ds + (uniformScale ? scale : Math.random()) * dv.y,
+           ds + (uniformScale ? scale : Math.random()) * dv.z
+          )
+        );
+
+      // merge with dressing mother geometry
+      geometry.merge(geo, matrix);
+    }
+
+    // convert geometry to buffergeometry
+    var bufgeo = new THREE.BufferGeometry();
+    bufgeo.fromGeometry(geometry);
+
+    // setup material
+    var material = new THREE.MeshLambertMaterial({
+      color: new THREE.Color(this.data.dressingColor), 
+      vertexColors: THREE.VertexColors
+    })
+
+    // create mesh
+    var mesh = new THREE.Mesh(bufgeo, material);
+    dressing.add(mesh);
+
+    this.dressing.setObject3D('mesh', dressing);
   },
 
   createStars: function() {
@@ -473,23 +576,7 @@ AFRAME.registerComponent('environment', {
     }
     numStars = Math.floor(Math.min(2000, Math.max(0, numStars)));
     this.stars.getObject3D('mesh').geometry.setDrawRange(0, numStars);
-  },
-
-  addObject: function (obj) {
-
-    var vertices = new Float32Array(v);
-    var faces = new Uint32Array(f);
-    var geo = new THREE.BufferGeometry();
-    geo.setIndex( new THREE.BufferAttribute( faces, 1 ) );
-    geo.addAttribute('position', new THREE.BufferAttribute(vertices, 3));
-    geo.computeVertexNormals();
-    var mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({color: 0x999999, shading: THREE.SmoothShading}));
-    mesh.rotation.set(Math.PI + Math.random(), Math.random() * Math.PI * 2, Math.random());
-    mesh.scale.set(1 + Math.random(), 1 + Math.random(), 1 + Math.random());
-
-    this.el.setObject3D('obj', mesh);
   }
-
 
 });
 
