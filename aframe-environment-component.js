@@ -289,6 +289,36 @@ AFRAME.registerComponent('environment', {
       this.updateDressing();
     }
 
+    this.dumpParameters();
+
+  },
+
+  dumpParameters: function () {
+
+    var makef = (v) => Math.floor(v * 1000) / 1000;
+    var dump = [];
+
+    if (this.data.preset == 'none') {
+      for (var i in this.schema) {
+        var def = this.schema[i].default;
+        var data = this.data[i];
+        if (this.schema[i].type == 'vec3') {
+          var coords = def.split(' ');
+          if (makef(coords[0]) != makef(data.x) || makef(coords[1]) != makef(data.y) || makef(coords[2]) != makef(data.z)) {
+            dump.push(i + ': ' + makef(data.x) + ' ' + makef(data.y) + ' ' + makef(data.z))
+          }
+        }
+        else {
+          if (def != data) {
+            if (this.schema[i].type == 'number') {
+              data = makef(data);
+            }
+            dump.push(i + ': ' + data); 
+          }
+        }
+      }
+    }
+    console.log('%c'+dump.join('; '), 'color: #f48;font-weight:bold');
   },
 
   random: function (x) {
