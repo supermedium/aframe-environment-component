@@ -1,17 +1,56 @@
 /* global AFRAME, THREE */
+
+function logEnvironmentPreset(){
+  var el = document.querySelector('[environment]');
+  var c = el.components['environment'];
+  var str = '{';
+  for (var i in c.schema){
+    if (i == 'preset') continue;
+    str += i + ': ';
+    switch(c.schema[i].type) {
+      case 'boolean': 
+      case 'int': 
+      case 'number': 
+        str += c.data[i]; 
+      break;
+      case 'color': 
+      case 'string': 
+        str += '"' + c.data[i] + '"'; 
+      break;
+      case 'vec3': 
+        str += '{ x: ' + c.data[i].x + ', y: ' + c.data[i].y + ', z: ' + c.data[i].z + '}'; 
+      break;
+    }
+    str += ', ';
+  }
+  str += '}';
+
+  console.log(str)
+}
+
+__environment_presets__ = {
+      'none' : {},
+      'default' : {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 1.37, z: -1}, fog: 0.5, flatShading: false, ground: "spikes", groundYScale: 8, groundTexture: "none", groundColor: "#ec8929", groundColor2: "#694439", dressing: "cubes", dressingAmount: 10, dressingColor: "#795449", dressingScale: 1, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"}
+};
+
+
 AFRAME.registerComponent('environment', {
   schema: {
+    preset: {default: 'none', oneOf: Object.keys(__environment_presets__)},
+    //ImFeelingLucky: {default: false}, 
+    seed: {type: 'int', default: 1, min: 0, max: 1000},
+
     skyType: {default: 'atmosphere', oneOf:['color', 'gradient', 'atmosphere']},
     skyColor: {type: 'color', default: '#88c'},
     horizonColor: {type: 'color', default: '#ddd'},
     autoLights: {default: true},
     sunPosition: {type:'vec3', default: '0 1 -1'},
-    fog: {default: true},
+    fog: {type:'float', default: 0.5, min: 0, max: 1},
 
     flatShading: {default: false},
 
-    ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
-    groundYScale: {type: 'float', default: 8, min: 0, max: 200},
+    ground: {default: 'spikes', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
+    groundYScale: {type: 'float', default: 8, min: 0, max: 50},
     groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares']},
     groundColor:  {type: 'color', default: '#795449'},
     groundColor2: {type: 'color', default: '#694439'},
@@ -131,14 +170,27 @@ AFRAME.registerComponent('environment', {
           break;
         }
       }
+  
+      fogColor.multiplyScalar(0.9);
+      fogColor.lerp(new THREE.Color(this.data.groundColor), 0.3);
     }
 
-    fogColor.multiplyScalar(0.9);
-    fogColor.lerp(new THREE.Color(this.data.groundColor), 0.3);
     return '#'+fogColor.getHexString();
   },
 
   update: function (oldData) {
+    /*
+    if (oldData['ImFeelingLucky'] !== undefined && this.data.ImFeelingLucky != oldData.ImFeelingLucky) {
+      this.randomizeAll();
+    }
+    else 
+    */
+    if (oldData['preset'] !== undefined && this.data.preset != oldData.preset) {
+      for (var i in __environment_presets__[this.data.preset]) {
+        this.data[i] = __environment_presets__[this.data.preset][i];
+      }
+    }
+
     var skyType = this.data.skyType;
     var sunPos = new THREE.Vector3(this.data.sunPosition.x, this.data.sunPosition.y, this.data.sunPosition.z);
     sunPos.normalize();
@@ -185,8 +237,11 @@ AFRAME.registerComponent('environment', {
       this.sky.setAttribute('material', mat);
     }
 
-    if (this.data.fog) {
-      this.el.sceneEl.setAttribute('fog', {color: this.getFogColor(skyType, sunPos.y), far: this.STAGE_SIZE / 2});
+    if (this.data.fog > 0) {
+      this.el.sceneEl.setAttribute('fog', {
+        color: this.getFogColor(skyType, sunPos.y), 
+        far: (1.01 - this.data.fog) * this.STAGE_SIZE * 2
+      });
     }
     else {
       this.el.sceneEl.removeAttribute('fog');
@@ -207,6 +262,7 @@ AFRAME.registerComponent('environment', {
     }
 */
     if (!oldData || 
+        this.data.seed != oldData.seed ||
         this.data.ground != oldData.ground ||
         this.data.groundColor != oldData.groundColor ||
         this.data.groundColor2 != oldData.groundColor2 ||
@@ -215,24 +271,48 @@ AFRAME.registerComponent('environment', {
         this.data.gridColor != oldData.gridColor ||
         this.data.grid != oldData.grid
         ) {
-      this.updateGround(this.data.ground != oldData.ground);
+      this.updateGround(this.data.seed != oldData.seed || this.data.ground != oldData.ground);
       if (this.hemilight) this.hemilight.setAttribute('light', {'groundColor': this.data.groundColor});
     }
 
     if (!oldData ||
+        this.data.seed != oldData.seed ||
         this.data.dressing != oldData.dressing ||
         this.data.dressingAmount != oldData.dressingAmount ||
         this.data.dressingScale != oldData.dressingScale ||
         this.data.dressingColor != oldData.dressingColor  ||
-        //this.data.dressingVariance != oldData.dressingVariance ||
+        this.data.dressingVariance.x != oldData.dressingVariance.x ||
+        this.data.dressingVariance.y != oldData.dressingVariance.y ||
+        this.data.dressingVariance.z != oldData.dressingVariance.z ||
         this.data.dressingUniformScale != oldData.dressingUniformScale 
       ) {
-      console.log('hola');
       this.updateDressing();
     }
 
   },
 
+  random: function (x) {
+    return parseFloat('0.'+Math.sin(this.data.seed * 9999 * x).toString().substr(7));
+  },
+/*
+  randomizeAll: function() {
+    this.data.seed = Math.floor(1 + Math.random() * 1000);
+    var discard = ['seed', 'preset', 'autoLights', 'ImFeelingLucky'];
+    this.data.autoLights = true;
+    for (var i in this.schema){
+      if (discard.indexOf(i) != -1) continue;
+      var p = this.schema[i];
+      switch(p.type){
+        case 'boolean': this.data[i] = Math.random() >= 0.5; break;
+        case 'int':     this.data[i] = p.min + Math.floor(Math.random() * (p.max * 0.2 - p.min)); break;
+        case 'number':  this.data[i] = p.min + Math.random() * (p.max * 0.2 - p.min); break;
+        case 'vec3':    this.data[i] = '' + (Math.random() * 20) + ' ' + (Math.random() * 20) + ' ' + (Math.random() * 20); break;
+        case 'string':  this.data[i] = p.oneOf[ Math.floor(Math.random() * p.oneOf.length) ]; break;
+        //case 'color':  this.data[i] = p.oneOf[ Math.floor(Math.random() * p.oneOf.length) ]; break;
+      }
+    }
+  },
+*/
   updateGround: function (updateGeometry) {
 
     var resolution = 64;
@@ -244,7 +324,7 @@ AFRAME.registerComponent('environment', {
       if (!visibleground) return;
 
       if (!this.groundGeometry) this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_SIZE + 2, this.STAGE_SIZE + 2, resolution - 1, resolution - 1);
-      var perlin = new PerlinNoise();
+      var perlin = new PerlinNoise(this);
       var verts = this.groundGeometry.vertices;
       var numVerts = this.groundGeometry.vertices.length;
       var frequency = 10;
@@ -266,14 +346,14 @@ AFRAME.registerComponent('environment', {
             h = Math.min(1, Math.pow(h, 2) * 10);
           break;
           case 'spikes':
-            h = Math.random() < 0.02 ? Math.random() : 0;
+            h = this.random(i) < 0.02 ? this.random(i + 1) : 0;
           break;
           case 'noise':
-            h = Math.random() < 0.35 ? Math.random() : 0;
+            h = this.random(i) < 0.35 ? this.random(i + 1) : 0;
           break;
         }
 
-        h += Math.random() * 0.1; // add some randomness
+        h += this.random(i + 2) * 0.1; // add some randomness
 
         // calculate next x,y ground coordinates
         x += inc;
@@ -347,8 +427,8 @@ AFRAME.registerComponent('environment', {
       var col1 = new THREE.Color(this.data.groundColor);
       var col2 = new THREE.Color(this.data.groundColor2);
       for (var i = 0; i < numSquares * numSquares; i++) {
-        var col = Math.random() > 0.5 ? col1.clone() : col2.clone();
-        col.addScalar(Math.random() * 0.1 - 0.05);
+        var col = this.random(i + 3) > 0.5 ? col1.clone() : col2.clone();
+        col.addScalar(this.random(i + 3) * 0.1 - 0.05);
         ctx.fillStyle = '#' + col.getHexString();
         ctx.fillRect((i % numSquares) * squareSize, Math.floor(i / numSquares) * squareSize, squareSize, squareSize);
       }
@@ -465,7 +545,7 @@ AFRAME.registerComponent('environment', {
 
     // get geometry
     var geo;
-    var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - Math.random() * 0.3);
+    var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - this.random(66) * 0.3);
     switch (this.data.dressing){
       case 'cubes':
         geo = new THREE.BoxGeometry(1, 1, 1);
@@ -485,24 +565,24 @@ AFRAME.registerComponent('environment', {
       break;
     }
 
-    for (var i = 0; i < this.data.dressingAmount; i++) {
+    for (var i = 0, r = 88343; i < this.data.dressingAmount; i++, r++) {
     
       // set vertex colors
       for (var f = 0, fl = geo.faces.length; f < fl; f++) {
         var face = geo.faces[f];
         for (var v = 0; v < 3; v++) {
           //p = geo.vertices[ face[ faceindex[v] ] ]; // get vertex position
-          face.vertexColors[v] = color.clone().multiplyScalar(1 - Math.random() * 0.1);
+          face.vertexColors[v] = color.clone().multiplyScalar(1 - this.random(r * f * v) * 0.1);
         }
       }
 
       // set random position, rotation and scale
       var ds = this.data.dressingScale;
       var dv = new THREE.Vector3(this.data.dressingVariance.x, this.data.dressingVariance.y, this.data.dressingVariance.z);
-      var distance = 10 + Math.max(dv.x, dv.z) + 10 * Math.random() + Math.random() * this.STAGE_SIZE / 3;
-      var direction = Math.random() * Math.PI * 2; 
+      var distance = 10 + Math.max(dv.x, dv.z) + 10 * this.random(r + 1) + this.random(r + 2) * this.STAGE_SIZE / 3;
+      var direction = this.random(r + 3) * Math.PI * 2; 
       var matrix = new THREE.Matrix4();
-      var scale = Math.random();
+      var scale = this.random(r + 4);
       var uniformScale = this.data.dressingUniformScale;
 
       matrix.compose(
@@ -515,13 +595,13 @@ AFRAME.registerComponent('environment', {
         // rotation
         new THREE.Quaternion().setFromAxisAngle(
           new THREE.Vector3(0, 1, 0), 
-          (Math.random() - 0.5) * dv.length() * Math.PI * 2
+          (this.random(r + 5) - 0.5) * dv.length() * Math.PI * 2
           ),
         // scale
         new THREE.Vector3(
-           ds + (uniformScale ? scale : Math.random()) * dv.x,
-           ds + (uniformScale ? scale : Math.random()) * dv.y,
-           ds + (uniformScale ? scale : Math.random()) * dv.z
+           ds + (uniformScale ? scale : this.random(r + 6)) * dv.x,
+           ds + (uniformScale ? scale : this.random(r + 7)) * dv.y,
+           ds + (uniformScale ? scale : this.random(r + 8)) * dv.z
           )
         );
 
@@ -552,8 +632,8 @@ AFRAME.registerComponent('environment', {
     var positions = new Float32Array( numStars * 3 );
     var radius = this.STAGE_SIZE / 2 - 1;
     var v = new THREE.Vector3();
-    for ( var i = 0; i < positions.length; i += 3 ) {
-      v.set(Math.random() - 0.5, Math.random(), Math.random() - 0.5);
+    for (var i = 0; i < positions.length; i += 3) {
+      v.set(this.random(i + 23) - 0.5, this.random(i + 24), this.random(i + 25) - 0.5);
       v.normalize();
       v.multiplyScalar(radius);
       positions[i  ] = v.x;
@@ -808,7 +888,7 @@ var PerlinNoise = function(r) {
                                  [0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]]; 
   this.p = [];
   for (var i=0; i<256; i++) {
-    this.p[i] = Math.floor(r.random()*256);
+    this.p[i] = Math.floor(r.random(666)*256);
   }
   // To remove the need for index wrapping, double the permutation table length 
   this.perm = []; 
