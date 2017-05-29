@@ -1,8 +1,9 @@
 /* global AFRAME, THREE */
 
-function logEnvironmentPreset(){
+function logPreset () {
   var el = document.querySelector('[environment]');
   var c = el.components['environment'];
+  c.logPreset();
   var str = '{';
   for (var i in c.schema){
     if (i == 'preset') continue;
@@ -55,7 +56,7 @@ AFRAME.registerComponent('environment', {
     groundColor:  {type: 'color', default: '#795449'},
     groundColor2: {type: 'color', default: '#694439'},
 
-    dressing: {default: 'cubes', oneOf:['none', 'cubes', 'pyramids', 'cylinders']},
+    dressing: {default: 'cubes', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'lathe']},
     dressingAmount: {type: 'int', default: 10, min: 0, max: 1000},
     dressingColor:  {type: 'color', default: '#795449'},
     dressingScale: {type: 'float', default: 1, min: 0, max: 100},
@@ -224,7 +225,7 @@ AFRAME.registerComponent('environment', {
         this.stars.setAttribute('visible', skyType == 'atmosphere'); 
       }
       if (skyType == 'color') {
-        mat.color = this.data.skyColor;
+        mat.color = this.dat.askyColor;
         mat.fog = false;
       }
       else if (skyType == 'gradient') {
@@ -289,40 +290,71 @@ AFRAME.registerComponent('environment', {
       this.updateDressing();
     }
 
-    this.dumpParameters();
+    this.dumpParametersDiff();
 
   },
 
-  dumpParameters: function () {
+  logPreset: function () {
+    var str = '{';
+    for (var i in this.schema){
+      if (i == 'preset') continue;
+      str += i + ': ';
+      var type = this.schema[i].type;
+      if (type == 'vec3') {
+        str += '{ x: ' + this.data[i].x + ', y: ' + this.data[i].y + ', z: ' + this.data[i].z + '}'; 
+      }
+      else if (type == 'string' || type == 'color') {
+        str += '"' + this.data[i] + '"'; 
+      }
+      else {
+        str += this.data[i]; 
+      }
+      str += ', ';
+    }
+    str += '}';
+    console.log(str)
+  },
 
-    var makef = (v) => Math.floor(v * 1000) / 1000;
-    var dump = [];
+  dumpParametersDiff: function () {
+    var dec3 = (v) => Math.floor(v * 1000) / 1000; // trim number to 3 decimals
+    var params = [];
+    var usingPreset = this.data.preset != 'none' ? __environment_presets__[this.data.preset] : false;
 
-    if (this.data.preset == 'none') {
-      for (var i in this.schema) {
-        var def = this.schema[i].default;
-        var data = this.data[i];
-        if (this.schema[i].type == 'vec3') {
-          var coords = def.split(' ');
-          if (makef(coords[0]) != makef(data.x) || makef(coords[1]) != makef(data.y) || makef(coords[2]) != makef(data.z)) {
-            dump.push(i + ': ' + makef(data.x) + ' ' + makef(data.y) + ' ' + makef(data.z))
-          }
+    if (usingPreset) {
+      params.push('preset: ' + this.data.preset);
+    }
+
+    for (var i in this.schema) {
+      if (i == 'preset' || (usingPreset && usingPreset[i] === undefined)) {
+        continue;
+      }
+      var def = usingPreset ? usingPreset[i] : this.schema[i].default;
+      var data = this.data[i];
+      var type = this.schema[i].type;
+      if (type == 'vec3') {
+        var coords = def;
+        if (typeof(def) == 'string') {
+          def = def.split(' ');
+          coords = {x: def[0], y: def[1], z: def[2]};
         }
-        else {
-          if (def != data) {
-            if (this.schema[i].type == 'number') {
-              data = makef(data);
-            }
-            dump.push(i + ': ' + data); 
+        if (dec3(coords.x) != dec3(data.x) || dec3(coords.y) != dec3(data.y) || dec3(coords.z) != dec3(data.z)) {
+          params.push(i + ': ' + dec3(data.x) + ' ' + dec3(data.y) + ' ' + dec3(data.z))
+        }
+      }
+      else {
+        if (def != data) {
+          if (this.schema[i].type == 'number') {
+            data = dec3(data);
           }
+          params.push(i + ': ' + data); 
         }
       }
     }
-    console.log('%c'+dump.join('; '), 'color: #f48;font-weight:bold');
+    console.log('%c' + params.join('; '), 'color: #f48;font-weight:bold');
   },
 
   random: function (x) {
-    return parseFloat('0.'+Math.sin(this.data.seed * 9999 * x).toString().substr(7));
+    return parseFloat('0.' + Math.sin(this.data.seed * 9999 * x).toString().substr(7));
   },
 /*
   randomizeAll: function() {
@@ -588,6 +620,13 @@ AFRAME.registerComponent('environment', {
       case 'cylinders':
         geo = new THREE.CylinderGeometry(0.5, 0.5, 1, 8, 1, true);
         geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+      break;
+      case 'lathe':
+        var points = [];
+        for ( var i = 0; i < 10; i ++ ) {
+          points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
+        }
+        geo = new THREE.LatheGeometry(points);
       break;
       default:
         geo = getAssetGeometry(this.assets[this.data.dressing]);
