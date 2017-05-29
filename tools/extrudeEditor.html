@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>LatheGeometry Editor for ThreeJS</title>
+  <title>ExtrudeGeometry Editor for ThreeJS</title>
   <meta charset="utf-8">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/85/three.js"></script>
 <style>
 body {
   font: 11px verdana, sans-serif;
@@ -75,7 +75,7 @@ footer {
 <body>
 <div id="all">
   <div class="info">
-    <h1>Lathe editor for three.js</h1>
+    <h1>Extrude editor for three.js</h1>
     <p>
       Place points on left canvas with <b>Left Click</b><br>
       Finish contour with <b>Double Click</b>, <b>ENTER</b> or <b>ESC</b><br>
@@ -120,21 +120,24 @@ window.addEventListener('keydown', keydown);
 
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 40, 1, 0.1, 1000 );
-camera.position.z = 25;
-camera.position.y = 5;
-camera.lookAt(new THREE.Vector3(0, 5, 0));
+camera.position.z = 38;
+camera.position.y = 10;
+camera.lookAt(new THREE.Vector3(0, 10, 0));
 var renderer = new THREE.WebGLRenderer({canvas: three, antialias: true});
 renderer.setSize(W, H);
 var light = new THREE.PointLight(0xffffff, 1);
 light.position.set(10, 0, 30);
+scene.add(light);
+light = new THREE.PointLight(0xffffff, 0.4);
+light.position.set(-20, 60, 30);
 scene.add(light);
 var obj = null;
 var material = new THREE.MeshPhongMaterial({color: 0xcccccc, side: THREE.DoubleSide});
 
 function renderThree() {
   if (obj) {
-    obj.rotation.y += 0.02;
-    obj.rotation.x = Math.sin(performance.now()/1000) * 0.5;
+    obj.rotation.z = performance.now()/2000;
+    obj.rotation.x = -Math.PI / 2 + Math.sin(performance.now()/1000) * 0.5;
   }
   requestAnimationFrame( renderThree );
   renderer.render(scene, camera);
@@ -155,7 +158,7 @@ function dblclick(evt) {
 
 function mousedown(evt) {
   if (hovering === false && !finished) {
-    m = {x: Math.max(W2 + 0.1, evt.offsetX), y: evt.offsetY};
+    m = {x: evt.offsetX, y: evt.offsetY};
     points.push(m)
     drawing = true;
     updateObj();
@@ -177,7 +180,7 @@ function mouseup(evt) {
 
 function mousemove(evt) {
   if (drawing || editing !== false) {
-    m = {x: Math.max(W2 + 0.1, evt.offsetX), y: evt.offsetY};
+    m = {x: evt.offsetX, y: evt.offsetY};
     if (editing !== false) {
       points[editing].x = m.x;
       points[editing].y = m.y;
@@ -252,23 +255,27 @@ function paint() {
 
 function drawPoints() {
   if (points.length == 0) return;
+
+  // close shape
+  if (points.length > 1) {
+    c.strokeStyle = '#f7f';
+    c.lineWidth = 1;
+    c.beginPath();
+    c.moveTo(points[points.length - 1].x , points[points.length - 1].y)
+    c.lineTo(points[0].x, points[0].y);
+    c.stroke();
+  }
+
   // lines
   c.strokeStyle = '#f7f';
+  c.fillStyle = 'rgba(0,0,0,0.1)';
   c.lineWidth = 2;
   c.beginPath();
   c.moveTo(points[0].x, points[0].y)
   for (var i = 1; i < points.length; i++) {
     c.lineTo(points[i].x, points[i].y);
   }
-  c.stroke();
-  // mirror
-  c.strokeStyle = '#666';
-  c.lineWidth = 1;
-  c.beginPath();
-  c.moveTo(W - points[0].x , points[0].y)
-  for (var i = 1; i < points.length; i++) {
-    c.lineTo(W - points[i].x, points[i].y);
-  }
+  if (finished) c.fill();
   c.stroke();
 
   // to current mouse point
@@ -320,7 +327,7 @@ function getThreeCoords() {
   for (var i = 0; i < points.length; i ++ ) {
       coords.push(new THREE.Vector2(
         points[i].x / W - 0.5, 
-        1 - points[i].y / H
+        points[i].y / H - 0.5
         ));
     }
   return coords;
@@ -331,7 +338,35 @@ function updateObj() {
   if (obj) {
     scene.remove(obj);
   }
-  var geo = new THREE.LatheGeometry(verts);
+
+  if (verts.length <= 2) return;
+
+/*
+  var curve = new THREE.CatmullRomCurve3( [
+    new THREE.Vector3( 0, 0, -1),
+    new THREE.Vector3( -1, 0, 0 ),
+    new THREE.Vector3( 1, 0, 1 ),
+    new THREE.Vector3( 0, 0, 2 )
+  ] );
+
+  curve.type = 'catmullrom';
+  curve.closed = false;
+*/
+
+  var settings = {
+    //extrudePath: curve,
+    amount: 2,
+    steps: 1,
+    bevelEnabled: false,
+  };
+
+  var shape = new THREE.Shape();
+  for (var i = 0; i < verts.length; i++) {
+    if (i == 0) shape.moveTo(verts[i].x, verts[i].y);
+    else shape.lineTo(verts[i].x, verts[i].y);
+  }
+
+  var geo = new THREE.ExtrudeGeometry(shape, settings);
   obj = new THREE.Mesh(geo, material);
   obj.scale.set(10,10,10);
   scene.add(obj);
@@ -347,15 +382,20 @@ function updateObj() {
   }
 
 
-  html = 'var plist = [' + list.join(', ') + '];<br>';
-  html += 'var points = [];<br>';
-  html += 'for (var i = 0; i < plist.length; i += 2) {<br>';
-  html += '&nbsp;&nbsp;points.push(new THREE.Vector2(plist[i], plist[i + 1]);<br>';
-  html += '}<br>';
-  html += 'var geometry = new THREE.LatheGeometry(points);<br>var material = new THREE.MeshPhongMaterial();<br>var lathe = new THREE.Mesh(geometry, material);<br>scene.add(lathe);';
+  html = [
+    'var plist = [' + list.join(', ') + '];',
+    'var shape = new THREE.Shape();',
+    'for (var i = 0; i < plist.length; i++) {',
+    '&nbsp; if (i == 0) shape.moveTo(plist[i].x, plist[i].y);',
+    '&nbsp; else shape.lineTo(plist[i].x, plist[i].y);',
+    '}',
+    'var geo = new THREE.ExtrudeGeometry(shape, {amount: 2, bevelEnabled: false});',
+    'var extruded = new THREE.Mesh(geo, material);',
+    'scene.add(extruded);'
+    ];
 
 
-  log.innerHTML = html;
+  log.innerHTML = html.join('<br>');
 }
 
 
