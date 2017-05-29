@@ -102,9 +102,9 @@ function dblclick(evt) {
 
 function mousedown(evt) {
   if (hovering === false && !finished) {
-    points.push({x: evt.offsetX, y: evt.offsetY})
+    m = {x: Math.max(W2 + 0.1, evt.offsetX), y: evt.offsetY};
+    points.push(m)
     drawing = true;
-    m = {x: evt.offsetX, y: evt.offsetY};
     updateObj();
   }
   else {
@@ -123,7 +123,7 @@ function mouseup(evt) {
 
 function mousemove(evt) {
   if (drawing || editing !== false) {
-    m = {x: evt.offsetX, y: evt.offsetY};
+    m = {x: Math.max(W2 + 0.1, evt.offsetX), y: evt.offsetY};
     if (editing !== false) {
       points[editing].x = m.x;
       points[editing].y = m.y;
@@ -263,6 +263,8 @@ function updateObj() {
   obj = new THREE.Mesh(geo, material);
   obj.scale.set(10,10,10);
   scene.add(obj);
+
+  // dump ThreeJS code to <div>
 
   var log = document.getElementById('log');
   var list = [];
