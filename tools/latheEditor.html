@@ -189,6 +189,7 @@ function mousemove(evt) {
 }
 
 function keydown(evt) {
+  if (evt.shiftKey || evt.metaKey || evt.ctrlKey || evt.altKey) return;
   if (evt.keyCode == 27 || evt.keyCode == 13) { // escape or enter
     if (!finished) {
       finished = true;
