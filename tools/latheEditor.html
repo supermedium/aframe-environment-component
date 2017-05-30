@@ -119,8 +119,8 @@ window.addEventListener('keydown', keydown);
 var scene = new THREE.Scene();
 var camera = new THREE.PerspectiveCamera( 40, 1, 0.1, 1000 );
 camera.position.z = 25;
-camera.position.y = 5;
-camera.lookAt(new THREE.Vector3(0, 5, 0));
+camera.position.y = -5;
+camera.lookAt(new THREE.Vector3(0, -5, 0));
 var renderer = new THREE.WebGLRenderer({canvas: three, antialias: true});
 renderer.setSize(W, H);
 var light = new THREE.PointLight(0xffffff, 1);
@@ -132,7 +132,7 @@ var material = new THREE.MeshPhongMaterial({color: 0xcccccc, side: THREE.DoubleS
 function renderThree() {
   if (obj) {
     obj.rotation.y += 0.02;
-    obj.rotation.x = Math.sin(performance.now()/1000) * 0.5;
+    obj.rotation.x = -Math.PI + Math.sin(performance.now()/1000) * 0.5;
   }
   requestAnimationFrame( renderThree );
   renderer.render(scene, camera);
@@ -319,7 +319,7 @@ function getThreeCoords() {
   for (var i = 0; i < points.length; i ++ ) {
       coords.push(new THREE.Vector2(
         points[i].x / W - 0.5, 
-        1 - points[i].y / H
+        points[i].y / H
         ));
     }
   return coords;

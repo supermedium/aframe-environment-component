@@ -56,10 +56,10 @@ AFRAME.registerComponent('environment', {
     groundColor:  {type: 'color', default: '#795449'},
     groundColor2: {type: 'color', default: '#694439'},
 
-    dressing: {default: 'cubes', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'lathe']},
-    dressingAmount: {type: 'int', default: 10, min: 0, max: 1000},
+    dressing: {default: 'apparatus', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'towers', 'mushrooms', 'trees', 'apparatus']},
+    dressingAmount: {type: 'int', default: 100, min: 0, max: 1000},
     dressingColor:  {type: 'color', default: '#795449'},
-    dressingScale: {type: 'float', default: 1, min: 0, max: 100},
+    dressingScale: {type: 'float', default: 5, min: 0, max: 100},
     dressingVariance: {type: 'vec3', default: '1 1 1'},
     dressingUniformScale: {default: true},
 
@@ -75,19 +75,44 @@ AFRAME.registerComponent('environment', {
     this.conv_table = '!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{¬|}~';
     this.conv_table += '¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ'
     this.conv_table += 'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſ';
-    this.conv_table += 'ƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƞƟƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ';
+    this.conv_table += 'ƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƟƞƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ';
     
     this.assets = {
-      stones: {
-        vertices : [-148,-453,-18,142,-196,-26,-40,124,-109,36,-835,37,-282,-72,97,-40,-158,170,2,125,87,-174,125,-20,-65,-356,42,83,-555,-147,5,-182,-62,172,123,-12,193,-489,-60,4,-727,97,120,-767,16,39,-704,-88,-27,-801,-16,-16,-211,30,-119,-327,-8,-139,-349,93,213,124,-213,89,-589,-87,-229,-235,122,54,-537,-57,-173,124,11,28,124,-224,-176,124,205,107,-107,41,34,-21,167,110,-52,195,213,-124,88,161,-173,126,232,122,44,99,-202,87,74,-165,152,80,122,48,181,123,188,-99,-410,-79,-104,-690,-14,138,124,2,121,-356,-83,-301,124,113,-223,-282,20,-232,-62,192,151,-230,-208,-17,125,-106,222,-436,-100,50,-276,-211,165,-154,47,23,124,148,253,122,132,-131,124,-79,-110,124,101,-130,-633,81,100,124,-79,104,-713,-56,100,124,83,113,-468,87,-256,124,22,-270,124,194,-117,-265,164,-31,124,-7,-32,-175,-16,-34,124,157,-47,-289,130,128,124,-266,1,-500,-128,265,124,-100,269,-228,-74,89,123,6,113,-404,-7,168,121,7,34,-149,107,95,122,217],
-        faces : [0,37,38,53,13,52,1,54,39,13,16,3,16,14,3,14,13,3,4,58,42,4,59,41,5,17,6,6,63,5,19,18,8,9,66,47,47,44,9,10,45,66,10,69,45,11,69,70,70,68,11,68,46,20,1,57,14,14,55,1,2,40,15,15,37,2,38,15,16,17,64,8,7,62,18,18,42,7,19,64,60,60,22,19,12,23,21,23,9,21,9,12,21,68,70,12,22,60,43,43,4,22,70,10,23,0,53,24,24,51,0,47,66,25,25,65,47,26,59,43,43,5,26,27,48,33,28,49,72,28,73,49,31,48,30,30,48,32,32,50,30,31,34,33,34,31,29,29,28,34,27,72,35,35,71,27,29,50,36,36,73,29,0,38,53,0,51,37,52,13,56,1,39,56,1,55,40,1,40,54,2,37,51,13,53,16,16,55,14,14,57,13,4,41,58,5,60,64,5,64,17,6,17,61,7,42,58,8,64,19,19,42,18,18,62,8,9,44,46,47,65,44,11,68,67,20,67,68,46,68,12,57,56,13,1,56,57,2,54,40,15,40,55,16,53,38,38,37,15,15,55,16,17,8,62,62,61,17,7,61,62,19,22,42,20,46,44,20,44,65,12,70,23,23,66,9,9,46,12,22,4,42,43,59,4,23,10,66,70,69,10,24,53,52,25,66,45,26,5,63,43,60,5,27,33,72,27,71,48,30,50,31,32,48,71,33,34,72,33,48,31,34,28,72,29,73,28,35,72,49,29,31,50],
+      'stones': [
+        {
+          type: 'mesh', 
+          vertices: [-148,-453,-18,142,-196,-26,-40,124,-109,36,-835,37,-282,-72,97,-40,-158,170,2,125,87,-174,125,-20,-65,-356,42,83,-555,-147,5,-182,-62,172,123,-12,193,-489,-60,4,-727,97,120,-767,16,39,-704,-88,-27,-801,-16,-16,-211,30,-119,-327,-8,-139,-349,93,213,124,-213,89,-589,-87,-229,-235,122,54,-537,-57,-173,124,11,28,124,-224,-176,124,205,107,-107,41,34,-21,167,110,-52,195,213,-124,88,161,-173,126,232,122,44,99,-202,87,74,-165,152,80,122,48,181,123,188,-99,-410,-79,-104,-690,-14,138,124,2,121,-356,-83,-301,124,113,-223,-282,20,-232,-62,192,151,-230,-208,-17,125,-106,222,-436,-100,50,-276,-211,165,-154,47,23,124,148,253,122,132,-131,124,-79,-110,124,101,-130,-633,81,100,124,-79,104,-713,-56,100,124,83,113,-468,87,-256,124,22,-270,124,194,-117,-265,164,-31,124,-7,-32,-175,-16,-34,124,157,-47,-289,130,128,124,-266,1,-500,-128,265,124,-100,269,-228,-74,89,123,6,113,-404,-7,168,121,7,34,-149,107,95,122,217],
+          faces: [0,37,38,53,13,52,1,54,39,13,16,3,16,14,3,14,13,3,4,58,42,4,59,41,5,17,6,6,63,5,19,18,8,9,66,47,47,44,9,10,45,66,10,69,45,11,69,70,70,68,11,68,46,20,1,57,14,14,55,1,2,40,15,15,37,2,38,15,16,17,64,8,7,62,18,18,42,7,19,64,60,60,22,19,12,23,21,23,9,21,9,12,21,68,70,12,22,60,43,43,4,22,70,10,23,0,53,24,24,51,0,47,66,25,25,65,47,26,59,43,43,5,26,27,48,33,28,49,72,28,73,49,31,48,30,30,48,32,32,50,30,31,34,33,34,31,29,29,28,34,27,72,35,35,71,27,29,50,36,36,73,29,0,38,53,0,51,37,52,13,56,1,39,56,1,55,40,1,40,54,2,37,51,13,53,16,16,55,14,14,57,13,4,41,58,5,60,64,5,64,17,6,17,61,7,42,58,8,64,19,19,42,18,18,62,8,9,44,46,47,65,44,11,68,67,20,67,68,46,68,12,57,56,13,1,56,57,2,54,40,15,40,55,16,53,38,38,37,15,15,55,16,17,8,62,62,61,17,7,61,62,19,22,42,20,46,44,20,44,65,12,70,23,23,66,9,9,46,12,22,4,42,43,59,4,23,10,66,70,69,10,24,53,52,25,66,45,26,5,63,43,60,5,27,33,72,27,71,48,30,50,31,32,48,71,33,34,72,33,48,31,34,28,72,29,73,28,35,72,49,29,31,50]
+        }
         //v : '-148,-453Ą1ăā2ĉ96Ą2Đą0,124ĉ09,3ē835ĝ7đ8č-7č9ĤĔĉ5ċ7ĕčėĢ8Ĭ17ęĴđĕ-6Ģ-ġĐ4čĠĄ5ňĉ4ĤŀĊħ6ĳĩĖ2ĈĀĳ9ŕĂĜľĕęĨ2ĤīœĽ76Ĥ1Đ3śıŞ8ă-ŠĄ801ĉēŨđ1ŵ3Ľźś3ű-ů1ŪĄ34ĜŘ,2ƄœŞƌĈ8śįśĶđ2śŔĢėč5ŞćĬ5ķ7Ĉėĺŵ2ċĘƗŞĸĐƦƋ0ƛ0ķƴ,4ŻƏŵŨŧ1Ľ5ŗĢƐĉƫŮĖ6ŵĀƤœĐŔĳ2č4ę9ƙ0ŅĤĹŶƛǀ,ųœǑċ8ƻŔĖǆ-ǔĄƸŤśƾŞ69Žĺ3ƪęǏǉłŲŕżǣƧŕǐǾĦƱđƀĄŐĖ9ĳ5ǉŔĽ20ƃŧ2ō0ǍǐǩĞĚĕ5ȍťŹƻĿĮęŋƋƥƫāăȒȥĳȄĀ3ǼĄ7ǬƾƎĖŴĉżȅ3Ƒƻ0ĕưĨĜǭȰƍ-5ƯȽȴņźř6ăƖŰɆȴȖŰıȴ19ƭĸđȠŨŞȮȴĨƆħĸōēƇɖƢǩĬƩɁȸėǴɛƯŇɈŖȨɜƫĀɈĒƙƩȰęƒœĈƯɄ40ŞŧɍœŵĤɧĀƈȵšƛȖƌ7',
         //f : '0,37ā8,53,1Ĉ52ĉĆ4ā9ĉĈ16āĉĖ1ĐĔĐĊėĐ5ą4čĠĒ41ĆĉăĖĬċĉĒ1ąąĒ6Ė4ăķ,4ĐİĀ45,ĵĉĀ6Ħŀ1ĨŅ,7ĀŌŁąňŏĺĖ2ĀĨ5ăĚĉĠŇ,ĤŖŇŀĂŞĄĉŇęīĐąīčıĉĢčřĴĐ6ńĀ2ŭİč2Ĉ2Ĩż,ĒžƁĉŻŉūŖŻčŵĺĈ4ƎŞűŖŷĈĀćŞĐ2ĠĨľīŔŀ2ŀ6ŀĹ2Ė5ĦƎĮƦŞĸą3ŽĢĒ7ŻūƎĒ3Ĩ4ƯĀ3ľƯč3č5ƽƽĨ3ěĈǈāſƂƂƯƙăƴāŢŀ7ſă2ĒǄāĖ3Ė7ŽĒƽąƗƖǇăČēĆęđǬĎ5ƤŖĺƖƙāǩĨĞƗĕĘĆŇĝĠřƐħĆǥŁńĠŁĝīĪŁĨĸǃĲȊįȔģůȗ6čĳĺĐ4ĶīƤĝƇŁǙńīĢĬŐǃǩęĔǯŘŤ5ȝŠǴǾǽƗ3ƯƯřšȶǼ1ăąșŁƋǹǒȎɄȔŸĺŻľĶƙľŴŇƒŞŽĈłĒĦęƊĺɌƍĆĦɕŃŁǠńĽƘĆċŻƢĶƠƧŁƪȇĩ2ăưŋŻǒƺƼĆǆāĤūǇǊĐǓɶƻǌāƙūŻƳƱǔɷĺǎʇǄ'
-      }      
+      ],
+      'towers': [
+        {type: 'extrude', vertices:  [-0.054, -0.178, -0.007, -0.182, 0.069, -0.027, 0.189, 0.079, 0.178, 0.124, -0.007, 0.097, -0.145, 0.182, -0.178, 0.144, -0.079, -0.021]},
+        {type: 'lathe', segments: 4, vertices: [0.004, 0.02, 0.012, 0.092, 0.042, 0.166, 0.067, 0.55, 0.101, 0.594, 0.105, 0.838, 0.193, 0.934, 0.18, 0.994]},
+        {type: 'lathe', segments: 5, vertices: [0.069, 0.216, 0.067, 0.562, 0.126, 0.562, 0.128, 0.774, 0.191, 0.774, 0.193, 0.986]}
+      ],
+      'trees': [
+        {type: 'lathe', vertices: [0.001, 0.008, 0.142, 0.362, 0.081, 0.348, 0.26, 0.742, 0.146, 0.69, 0.288, 0.918, 0.04, 0.932, 0.046, 0.998]},
+        {type: 'lathe', vertices: [0.001, 0.666, 0.107, 0.748, 0.044, 0.746, 0.193, 0.868, 0.087, 0.864, 0.282, 0.97, 0.044, 0.938, 0.042, 0.994]},
+        {type: 'lathe', vertices: [0.001, 0.714, 0.109, 0.794, 0.056, 0.812, 0.195, 0.9, 0.128, 0.934, 0.227, 0.982, 0.095, 0.99]}
+      ],
+      'apparatus': [
+        {type: 'lathe', vertices: [0.071, 0.244, 0.079, 0.498, 0.036, 0.498, 0.038, 0.576, 0.083, 0.574, 0.101, 0.936, 0.089, 0.942, 0.113, 0.95, 0.115, 0.996]},
+        {type: 'lathe', vertices: [0.436, 0.182, 0.054, 0.434, 0.071, 0.442, 0.073, 0.52, 0.056, 0.53, 0.095, 0.598, 0.079, 0.994]},
+        {type: 'lathe', vertices: [0.002, 0.03, 0.016, 0.86, 0.331, 0.786, 0.189, 0.898, 0.252, 0.91, 0.176, 0.916, 0.083, 0.992]},
+        {type: 'lathe', segments: 5, vertices: [0.002, 0.476, 0.016, 0.836, 0.052, 0.848, 0.073, 0.948, 0.122, 0.95, 0.065, 0.994]}
+      ],
+      'mushrooms': [
+        {type: 'lathe', vertices: [0.001, 0.04, 0.203, 0.058, 0.372, 0.124, 0.48, 0.218, 0.254, 0.21, 0.062, 0.26, 0.056, 0.84, 0.085, 0.95, 0.122, 0.998]},
+        {type: 'lathe', vertices: [0.001, 0.662, 0.13, 0.686, 0.223, 0.78, 0.256, 0.928, 0.111, 0.914, 0.115, 0.998]},
+        {type: 'lathe', vertices: [0.001, 0.454, 0.264, 0.522, 0.461, 0.614, 0.418, 0.656, 0.174, 0.78, 0.176, 0.916, 0.223, 0.994]}
+      ]
     };
 
-    // scale assets (coordinates saved in integers for better compression)
+    // scale mesh assets (coordinates saved in integers for better compression)
     for(i in this.assets){
+      if (this.assets[i].type != 'mesh') continue;
       var len = this.assets[i].vertices.length;
       for (var v = 0; v < len; v++) {
         this.assets[i].vertices[v] /= 1000.0;
@@ -264,6 +289,7 @@ AFRAME.registerComponent('environment', {
 */
     if (!oldData || 
         this.data.seed != oldData.seed ||
+        this.data.flatShading != oldData.flatShading ||
         this.data.ground != oldData.ground ||
         this.data.groundColor != oldData.groundColor ||
         this.data.groundColor2 != oldData.groundColor2 ||
@@ -279,6 +305,7 @@ AFRAME.registerComponent('environment', {
     if (!oldData ||
         this.data.seed != oldData.seed ||
         this.data.dressing != oldData.dressing ||
+        this.data.flatShading != oldData.flatShading ||
         this.data.dressingAmount != oldData.dressingAmount ||
         this.data.dressingScale != oldData.dressingScale ||
         this.data.dressingColor != oldData.dressingColor  ||
@@ -437,6 +464,7 @@ AFRAME.registerComponent('environment', {
 
       this.groundGeometry.computeFaceNormals();
       this.groundGeometry.computeVertexNormals();
+
       this.groundGeometry.verticesNeedUpdate = true;
       this.groundGeometry.facesNeedUpdate = true;
       this.groundGeometry.normalsNeedUpdate = true;
@@ -470,7 +498,7 @@ AFRAME.registerComponent('environment', {
       });
     }
 
-    this.groundMaterial.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
+    //this.groundMaterial.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
 
     var texrepeat = 50;
 
@@ -580,24 +608,62 @@ AFRAME.registerComponent('environment', {
     }
   },
 
+  getAssetGeometry: function(data) {
+    if (!data) return null;
+    var geoset = [];
+
+    for (var j = 0; j < data.length; j++) {
+
+      if (data[j].type == 'lathe') {
+        var maxy = -99999;
+        var points = [];
+        var verts = data[j].vertices;
+        for (var i = 0; i < verts.length; i += 2) {
+          points.push(new THREE.Vector2(verts[i], verts[i + 1]));
+          if (verts[i + 1] > maxy) {
+            maxy = verts[i + 1];
+          }
+        }
+        var g = new THREE.LatheGeometry(points, data[j]['segments'] || 8);
+        g.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI, 0, 0)));
+        g.applyMatrix(new THREE.Matrix4().makeTranslation(0, maxy, 0));
+        geoset.push(g);
+      }
+
+      else if (data[j].type == 'extrude') {
+        var shape = new THREE.Shape();
+        var verts = data[j].vertices;
+        for (var i = 0; i < verts.length; i+= 2) {
+          if (i == 0) shape.moveTo(verts[i], verts[i + 1]);
+          else shape.lineTo(verts[i], verts[i + 1]);
+        }
+        g = new THREE.ExtrudeGeometry(shape, {amount: 1, bevelEnabled: false});
+        g.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
+        geoset.push(g);
+      }
+
+      else if (data[j].type == 'mesh') {
+        var g = new THREE.Geometry();
+        var verts = data[j].vertices;
+        var faces = data[j].faces;
+        for (var v = 0; v < verts.length; v += 3) {
+          g.vertices.push(new THREE.Vector3(verts[v], verts[v + 1], verts[v + 2]));
+        }
+        for (var f = 0; f < data.faces.length; f += 3) {
+          g.faces.push(new THREE.Face3(faces[f], faces[f + 1], faces[f + 2]))
+        }
+        g.computeFaceNormals();
+        geoset.push(g);
+      }
+    }
+    return geoset;
+  },
+
   updateDressing: function () {
     var dressing = new THREE.Object3D();
     this.dressing.setAttribute('visible', this.data.dressing != 'none');
     if (this.data.dressing == 'none') {
       return;
-    }
-    
-    function getAssetGeometry(data) {
-      if (!data) return null;
-      var g = new THREE.Geometry();
-      for (var v = 0; v < data.vertices.length; v += 3) {
-        g.vertices.push(new THREE.Vector3(data.vertices[v], data.vertices[v + 1], data.vertices[v + 2]));
-      }
-      for (var f = 0; f < data.faces.length; f += 3) {
-        g.faces.push(new THREE.Face3( data.faces[f], data.faces[f + 1], data.faces[f + 2]))
-      }
-      g.computeFaceNormals();
-      return g;
     }
 
     var geometry = new THREE.Geometry(); // mother geometry that will hold all instances
@@ -605,43 +671,38 @@ AFRAME.registerComponent('environment', {
 
     var treedata = [];
 
-    // get geometry
-    var geo;
-    var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - this.random(66) * 0.3);
+    // get array of geometries
+    var geoset;
     switch (this.data.dressing){
       case 'cubes':
-        geo = new THREE.BoxGeometry(1, 1, 1);
-        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+        geoset = [new THREE.BoxGeometry(1, 1, 1)];
+        geoset[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
       break;
       case 'pyramids':
-        geo = new THREE.ConeGeometry(1, 1, 4, 1, true);
-        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+        geoset = [new THREE.ConeGeometry(1, 1, 4, 1, true)];
+        geoset[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
       break;
       case 'cylinders':
-        geo = new THREE.CylinderGeometry(0.5, 0.5, 1, 8, 1, true);
-        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
-      break;
-      case 'lathe':
-        var points = [];
-        for ( var i = 0; i < 10; i ++ ) {
-          points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
-        }
-        geo = new THREE.LatheGeometry(points);
+        geoset = [new THREE.CylinderGeometry(0.5, 0.5, 1, 8, 1, true)];
+        geoset[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
       break;
       default:
-        geo = getAssetGeometry(this.assets[this.data.dressing]);
-        if (!geo) return;
+        geoset = this.getAssetGeometry(this.assets[this.data.dressing]);
+        if (!geoset) return;
       break;
     }
 
     for (var i = 0, r = 88343; i < this.data.dressingAmount; i++, r++) {
     
-      // set vertex colors
+      var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)];
+      var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - this.random(66 + i) * 0.3);
+
       for (var f = 0, fl = geo.faces.length; f < fl; f++) {
         var face = geo.faces[f];
         for (var v = 0; v < 3; v++) {
-          //p = geo.vertices[ face[ faceindex[v] ] ]; // get vertex position
-          face.vertexColors[v] = color.clone().multiplyScalar(1 - this.random(r * f * v) * 0.1);
+          p = geo.vertices[face[faceindex[v]]]; // get vertex position
+          var floorao =  p.y / 4 + 0.75;
+          face.vertexColors[v] = new THREE.Color(color.r * floorao, color.g * floorao, color.b * floorao);
         }
       }
 
@@ -687,6 +748,10 @@ AFRAME.registerComponent('environment', {
       color: new THREE.Color(this.data.dressingColor), 
       vertexColors: THREE.VertexColors
     })
+
+    if (this.data.flatShading) {
+      bufgeo.computeVertexNormals();
+    }
 
     // create mesh
     var mesh = new THREE.Mesh(bufgeo, material);
