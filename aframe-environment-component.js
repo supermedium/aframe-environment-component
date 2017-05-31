@@ -4,35 +4,23 @@ function logPreset () {
   var el = document.querySelector('[environment]');
   var c = el.components['environment'];
   c.logPreset();
-  var str = '{';
-  for (var i in c.schema){
-    if (i == 'preset') continue;
-    str += i + ': ';
-    switch(c.schema[i].type) {
-      case 'boolean': 
-      case 'int': 
-      case 'number': 
-        str += c.data[i]; 
-      break;
-      case 'color': 
-      case 'string': 
-        str += '"' + c.data[i] + '"'; 
-      break;
-      case 'vec3': 
-        str += '{ x: ' + c.data[i].x + ', y: ' + c.data[i].y + ', z: ' + c.data[i].z + '}'; 
-      break;
-    }
-    str += ', ';
-  }
-  str += '}';
-
-  console.log(str)
 }
 
 __environment_presets__ = {
       'none' : {},
-      'default' : {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 1.37, z: -1}, fog: 0.5, flatShading: false, ground: "spikes", groundYScale: 8, groundTexture: "none", groundColor: "#ec8929", groundColor2: "#694439", dressing: "cubes", dressingAmount: 10, dressingColor: "#795449", dressingScale: 1, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"}
-};
+      'default' : {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: -0.11999999999999988, y: 1, z: 0.33999999999999997}, fog: 0.7799999999999999, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#795449", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
+      'contact': {seed: 2, skyType: "gradient", skyColor: "#564b89", horizonColor: "#88c", autoLights: true, sunPosition: { x: 0, y: 2.01, z: -1}, fog: 0.74, flatShading: true, ground: "spikes", groundYScale: 3.2600000000000002, groundTexture: "none", groundColor: "#473263", groundColor2: "#694439", dressing: "apparatus", dressingAmount: 10, dressingColor: "#b6aaca", dressingScale: 20, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "squares", gridColor: "#a2869c"},
+      'egypt': {seed: 7, skyType: "gradient", skyColor: "#1b7660", horizonColor: "#e4b676", autoLights: true, sunPosition: { x: 0, y: 1.65, z: -1}, fog: 0.75, flatShading: false, ground: "hills", groundYScale: 5, groundTexture: "none", groundColor: "#664735", groundColor2: "#7c5c45", dressing: "pyramids", dressingAmount: 15, dressingColor: "#7c5c45", dressingScale: 5, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "spots", gridColor: "#e4b676"},
+      'checkerboard': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.35}, fog: 0.6799999999999999, flatShading: false, ground: "hills", groundYScale: 4.8100000000000005, groundTexture: "checkerboard", groundColor: "#6b6969", groundColor2: "#595758", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
+      'forest': {seed: 1, skyType: "gradient", skyColor: "#498f7c", horizonColor: "#e1e2d3", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.7}, fog: 0.6, flatShading: false, ground: "noise", groundYScale: 3.0800000000000005, groundTexture: "squares", groundColor: "#625233", groundColor2: "#695e45", dressing: "trees", dressingAmount: 1000, dressingColor: "#a4aa59", dressingScale: 3, dressingVariance: { x: 5, y: 5, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
+      'goaland': {seed: 17, skyType: "gradient", skyColor: "#239893", horizonColor: "#a3dab8", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.56}, fog: 0.73, flatShading: false, ground: "noise", groundYScale: 0.81, groundTexture: "none", groundColor: "#E95867", groundColor2: "#db4453", dressing: "mushrooms", dressingAmount: 50, dressingColor: "#fb6f84", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#239893"},
+      'yavapai': {seed: 11, skyType: "gradient", skyColor: "#239849", horizonColor: "#cfe0af", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "canyon", groundYScale: 9.76, groundTexture: "none", groundColor: "#C66344", groundColor2: "#c96b4b", dressing: "none", dressingAmount: 50, dressingColor: "#dd7d44", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
+      'threetowers': {seed: 5, skyType: "gradient", skyColor: "#23a06b", horizonColor: "#f5e170", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "spikes", groundYScale: 4.260000000000002, groundTexture: "none", groundColor: "#273a49", groundColor2: "#273a49", dressing: "towers", dressingAmount: 3, dressingColor: "#5f6d94", dressingScale: 20, dressingVariance: { x: 5, y: 100, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
+      'starry': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: -0.01, z: -0.46}, fog: 0.7, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#694439", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "squares", gridColor: "#283133"},
+      'osiris': {seed: 4, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 0.019999999999999997, z: -0.46}, fog: 0, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#9e7b47", groundColor2: "#9e7b47", dressing: "pyramids", dressingAmount: 7, dressingColor: "#9e7b47", dressingScale: 5, dressingVariance: { x: 30, y: 30, z: 30}, dressingUniformScale: true, grid: "dots", gridColor: "#4b779a"}
+};    
+
+
 
 
 AFRAME.registerComponent('environment', {
@@ -45,25 +33,25 @@ AFRAME.registerComponent('environment', {
     skyColor: {type: 'color', default: '#88c'},
     horizonColor: {type: 'color', default: '#ddd'},
     autoLights: {default: true},
-    sunPosition: {type:'vec3', default: '0 1 -1'},
-    fog: {type:'float', default: 0.5, min: 0, max: 1},
+    sunPosition: {type:'vec3', default: '0 1 -0.2'},
+    fog: {type:'float', default: 0.7, min: 0, max: 1},
 
     flatShading: {default: false},
 
-    ground: {default: 'spikes', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
-    groundYScale: {type: 'float', default: 8, min: 0, max: 50},
+    ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
+    groundYScale: {type: 'float', default: 3, min: 0, max: 50},
     groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares']},
-    groundColor:  {type: 'color', default: '#795449'},
+    groundColor:  {type: 'color', default: '#553e35'},
     groundColor2: {type: 'color', default: '#694439'},
 
-    dressing: {default: 'apparatus', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'towers', 'mushrooms', 'trees', 'apparatus']},
+    dressing: {default: 'none', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'towers', 'mushrooms', 'trees', 'apparatus']},
     dressingAmount: {type: 'int', default: 100, min: 0, max: 1000},
     dressingColor:  {type: 'color', default: '#795449'},
     dressingScale: {type: 'float', default: 5, min: 0, max: 100},
     dressingVariance: {type: 'vec3', default: '1 1 1'},
     dressingUniformScale: {default: true},
 
-    grid: {default:'none', oneOf:['none', 'squares', 'crosses', 'spots', 'xlines', 'ylines']},
+    grid: {default:'none', oneOf:['none', 'squares', 'crosses', 'dots', 'xlines', 'ylines']},
     gridColor: {type: 'color', default: '#ccc'}
   },
 
@@ -196,10 +184,10 @@ AFRAME.registerComponent('environment', {
           break;
         }
       }
-  
-      fogColor.multiplyScalar(0.9);
-      fogColor.lerp(new THREE.Color(this.data.groundColor), 0.3);
     }
+
+    fogColor.multiplyScalar(0.9);
+    fogColor.lerp(new THREE.Color(this.data.groundColor), 0.3);
 
     return '#'+fogColor.getHexString();
   },
@@ -250,7 +238,7 @@ AFRAME.registerComponent('environment', {
         this.stars.setAttribute('visible', skyType == 'atmosphere'); 
       }
       if (skyType == 'color') {
-        mat.color = this.dat.askyColor;
+        mat.color = this.data.skyColor;
         mat.fog = false;
       }
       else if (skyType == 'gradient') {
@@ -413,7 +401,7 @@ AFRAME.registerComponent('environment', {
       if (!visibleground) return;
 
       if (!this.groundGeometry) this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_SIZE + 2, this.STAGE_SIZE + 2, resolution - 1, resolution - 1);
-      var perlin = new PerlinNoise(this);
+      var perlin = new PerlinNoise();
       var verts = this.groundGeometry.vertices;
       var numVerts = this.groundGeometry.vertices.length;
       var frequency = 10;
@@ -586,7 +574,7 @@ AFRAME.registerComponent('environment', {
         ctx.fillRect(res2 + 1, res2 - l2 + 1, 1, l);
 
       break;
-      case 'spots':
+      case 'dots':
         function circle(ctx, x, y, r) {
           ctx.beginPath();
           ctx.arc(x, y, r, 0, 2 * Math.PI);

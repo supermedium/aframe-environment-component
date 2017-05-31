@@ -2,20 +2,100 @@
 <html>
   <head>
     <meta charset="utf-8">
-    <title>A-Frame</title>
+    <title>A-Frame Environment Component test</title>
     <meta name="description" content="A-Frame">
     <!--<script src="https://aframe.io/releases/0.5.0/aframe.min.js"></script>-->
     <script src="aframe.js"></script>
     <script src="aframe-environment-component.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Voces" rel="stylesheet">
+
+    <style>
+      h1 {
+        position: absolute;
+        z-index: 7000;
+        top: 40px;
+        left: 40px;
+        margin: 0;
+        font: 28px 'Voces', sans-serif;
+        color: black;
+      }
+      h1 b{
+        color: white;
+        text-shadow: 1px 2px 0px black;
+      }
+      #about {
+        position: absolute;
+        z-index: 7001;
+        width: 300px;
+        top: 90px;
+        left: 40px;
+        font: 14px 'Voces', Arial, sans-serif;
+        color: white;
+        line-height: 1.3rem;
+        background: rgba(0,0,0,0.2);
+        padding: 1rem;
+      }
+      #about b{
+          font-weight: bold;
+          font-family: monospace;
+      }
+      #about p:last-child{
+        margin: 0;
+      }
+      #about a{
+        font-size: 14px;
+        color: black;
+        font-weight: bold;
+        text-decoration: none;
+        border-bottom: 1px solid black;
+        transition: border-bottom-width 0.1s;
+        display: inline-block;
+      }
+      #about a:hover{
+        border-bottom: 4px solid black;
+      }
+      h1 a{
+        color: white;
+        text-decoration: none;
+        text-shadow: 1px 2px 0px black;
+        font-size: 20px;
+      }
+    </style>
   </head>
   <body>
+    <h1>Preset 
+      <a href="javascript:;" onclick="nextPreset(-1)">◀</a>
+      <b>default</b>
+      <a href="javascript:;" onclick="nextPreset(1)">►</a></h1>
+    <div id="about">
+        
+      <b>aframe-environment-component</b>
+      <p>A component for select and design simple backgrounds for your <a href="http://aframe.io">A-Frame</a> demos and experiences.</p>
+      <p>
+        Press <b>ctrl + alt + i</b> to enter inspector and tweak parameters.</p>
+      <p>
+      
+        <a href="http://github.com/feiss/aframe-environment-component">GitHub / How to use it</a>
+      </p>
+    </div>
     <a-scene>
 
-      <a-entity environment></a-entity>
-
-<!--      <a-box position="0 1 -2"></a-box>
-      <a-sphere position="2 1 -2"></a-sphere>
--->
+      <a-entity environment="preset:default" id="ENVIRONMENT"></a-entity>
+  <a-sphere position="0 1 0"></a-sphere>
     </a-scene>
+
+
+  <script>
+    var presets = Object.keys(__environment_presets__);
+    var preset = 1;
+    function nextPreset(dir) {
+      if (preset === 1 && dir === -1) preset = presets.length;
+      preset = (preset + dir) % presets.length;
+      if (preset === 0) preset = 1;
+      document.querySelector('[environment]').setAttribute('environment', {preset: presets[preset]});
+      document.querySelector('h1 b').innerHTML = presets[preset];
+    };
+
+  </script>
   </body>
 </html>
