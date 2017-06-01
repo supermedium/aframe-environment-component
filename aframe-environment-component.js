@@ -9,17 +9,16 @@ function logPreset () {
 __environment_presets__ = {
       'none' : {},
       'default' : {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: -0.11999999999999988, y: 1, z: 0.33999999999999997}, fog: 0.7799999999999999, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#795449", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
-      'contact': {seed: 2, skyType: "gradient", skyColor: "#564b89", horizonColor: "#88c", autoLights: true, sunPosition: { x: 0, y: 2.01, z: -1}, fog: 0.74, flatShading: true, ground: "spikes", groundYScale: 3.2600000000000002, groundTexture: "none", groundColor: "#473263", groundColor2: "#694439", dressing: "apparatus", dressingAmount: 10, dressingColor: "#b6aaca", dressingScale: 20, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "squares", gridColor: "#a2869c"},
+      'contact': {seed: 2, skyType: "gradient", skyColor: "#564b89", horizonColor: "#88c", autoLights: true, sunPosition: { x: 0, y: 2.01, z: -1}, fog: 0.74, flatShading: false, ground: "spikes", groundYScale: 3.2600000000000002, groundTexture: "none", groundColor: "#473263", groundColor2: "#694439", dressing: "apparatus", dressingAmount: 10, dressingColor: "#b6aaca", dressingScale: 20, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "squares", gridColor: "#a2869c"},
       'egypt': {seed: 7, skyType: "gradient", skyColor: "#1b7660", horizonColor: "#e4b676", autoLights: true, sunPosition: { x: 0, y: 1.65, z: -1}, fog: 0.75, flatShading: false, ground: "hills", groundYScale: 5, groundTexture: "none", groundColor: "#664735", groundColor2: "#7c5c45", dressing: "pyramids", dressingAmount: 15, dressingColor: "#7c5c45", dressingScale: 5, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "spots", gridColor: "#e4b676"},
-      'checkerboard': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.35}, fog: 0.6799999999999999, flatShading: false, ground: "hills", groundYScale: 4.8100000000000005, groundTexture: "checkerboard", groundColor: "#6b6969", groundColor2: "#595758", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
+      'checkerboard': {seed: 1, skyType: "gradient", skyColor: "#0d0d0d", horizonColor: "#404040", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.2}, fog: 0.81, flatShading: true, ground: "hills", groundYScale: 4.81, groundTexture: "checkerboard", groundColor: "#252525", groundColor2: "#111111", dressing: "cubes", dressingAmount: 10, dressingColor: "#9f9f9f", dressingScale: 1.5099999999999998, dressingVariance: { x: 5, y: 20, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#ccc"},
       'forest': {seed: 1, skyType: "gradient", skyColor: "#498f7c", horizonColor: "#e1e2d3", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.7}, fog: 0.6, flatShading: false, ground: "noise", groundYScale: 3.0800000000000005, groundTexture: "squares", groundColor: "#625233", groundColor2: "#695e45", dressing: "trees", dressingAmount: 1000, dressingColor: "#a4aa59", dressingScale: 3, dressingVariance: { x: 5, y: 5, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
       'goaland': {seed: 17, skyType: "gradient", skyColor: "#239893", horizonColor: "#a3dab8", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.56}, fog: 0.73, flatShading: false, ground: "noise", groundYScale: 0.81, groundTexture: "none", groundColor: "#E95867", groundColor2: "#db4453", dressing: "mushrooms", dressingAmount: 50, dressingColor: "#fb6f84", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#239893"},
       'yavapai': {seed: 11, skyType: "gradient", skyColor: "#239849", horizonColor: "#cfe0af", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "canyon", groundYScale: 9.76, groundTexture: "none", groundColor: "#C66344", groundColor2: "#c96b4b", dressing: "none", dressingAmount: 50, dressingColor: "#dd7d44", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
       'threetowers': {seed: 5, skyType: "gradient", skyColor: "#23a06b", horizonColor: "#f5e170", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "spikes", groundYScale: 4.260000000000002, groundTexture: "none", groundColor: "#273a49", groundColor2: "#273a49", dressing: "towers", dressingAmount: 3, dressingColor: "#5f6d94", dressingScale: 20, dressingVariance: { x: 5, y: 100, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
       'starry': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: -0.01, z: -0.46}, fog: 0.7, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#694439", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "squares", gridColor: "#283133"},
       'osiris': {seed: 4, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 0.019999999999999997, z: -0.46}, fog: 0, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#9e7b47", groundColor2: "#9e7b47", dressing: "pyramids", dressingAmount: 7, dressingColor: "#9e7b47", dressingScale: 5, dressingVariance: { x: 30, y: 30, z: 30}, dressingUniformScale: true, grid: "dots", gridColor: "#4b779a"}
-};    
-
+};
 
 
 
@@ -40,7 +39,7 @@ AFRAME.registerComponent('environment', {
 
     ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
     groundYScale: {type: 'float', default: 3, min: 0, max: 50},
-    groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares']},
+    groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares', 'noise', 'walkernoise']},
     groundColor:  {type: 'color', default: '#553e35'},
     groundColor2: {type: 'color', default: '#694439'},
 
@@ -57,7 +56,7 @@ AFRAME.registerComponent('environment', {
 
   init: function () {
 
-    this.STAGE_SIZE = 200;
+    this.STAGE_RADIUS = 200;
 
     // assets
     this.conv_table = '!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{¬|}~';
@@ -86,9 +85,9 @@ AFRAME.registerComponent('environment', {
         {type: 'lathe', vertices: [0.001, 0.714, 0.109, 0.794, 0.056, 0.812, 0.195, 0.9, 0.128, 0.934, 0.227, 0.982, 0.095, 0.99]}
       ],
       'apparatus': [
-        {type: 'lathe', vertices: [0.071, 0.244, 0.079, 0.498, 0.036, 0.498, 0.038, 0.576, 0.083, 0.574, 0.101, 0.936, 0.089, 0.942, 0.113, 0.95, 0.115, 0.996]},
-        {type: 'lathe', vertices: [0.436, 0.182, 0.054, 0.434, 0.071, 0.442, 0.073, 0.52, 0.056, 0.53, 0.095, 0.598, 0.079, 0.994]},
-        {type: 'lathe', vertices: [0.002, 0.03, 0.016, 0.86, 0.331, 0.786, 0.189, 0.898, 0.252, 0.91, 0.176, 0.916, 0.083, 0.992]},
+        {type: 'lathe', segments: 15, vertices: [0.071, 0.244, 0.079, 0.498, 0.036, 0.498, 0.038, 0.576, 0.083, 0.574, 0.101, 0.936, 0.089, 0.942, 0.113, 0.95, 0.115, 0.996]},
+        {type: 'lathe', segments: 19, vertices: [0.436, 0.182, 0.054, 0.434, 0.071, 0.442, 0.073, 0.52, 0.056, 0.53, 0.095, 0.598, 0.079, 0.994]},
+        {type: 'lathe', segments: 15, vertices: [0.002, 0.03, 0.016, 0.86, 0.331, 0.786, 0.189, 0.898, 0.252, 0.91, 0.176, 0.916, 0.083, 0.992]},
         {type: 'lathe', segments: 5, vertices: [0.002, 0.476, 0.016, 0.836, 0.052, 0.848, 0.073, 0.948, 0.122, 0.95, 0.065, 0.994]}
       ],
       'mushrooms': [
@@ -110,7 +109,7 @@ AFRAME.registerComponent('environment', {
     // create sky
 
     this.sky = document.createElement('a-sky');
-    this.sky.setAttribute('radius', this.STAGE_SIZE / 2);
+    this.sky.setAttribute('radius', this.STAGE_RADIUS / 2);
     this.sky.setAttribute('theta-length', 110);
 
     this.stars = null;
@@ -120,10 +119,17 @@ AFRAME.registerComponent('environment', {
     this.groundMaterial = null;
     this.ground = document.createElement('a-entity');
     this.ground.setAttribute('rotation', '-90 0 0');
+    this.ground.setAttribute('position', '0 -0.01 0');
     this.groundCanvas = null;
     this.groundTexture = null;
     this.groundMaterial = null;
     this.groundGeometry = null;
+
+    this.playarea = document.createElement('a-entity');
+    this.playarea.setAttribute('rotation', '-90 0 0');
+    this.playareaCanvas = null;
+    this.playareaTexture = null;
+    this.playareaMaterial = null;
 
     this.dressing = document.createElement('a-entity');
 
@@ -150,6 +156,7 @@ AFRAME.registerComponent('environment', {
     this.el.appendChild(this.hemilight);
     this.el.appendChild(this.sunlight);
     this.el.appendChild(this.ground);
+    this.el.appendChild(this.playarea);
     this.el.appendChild(this.dressing);
     this.el.appendChild(this.sky);
   },
@@ -214,8 +221,6 @@ AFRAME.registerComponent('environment', {
     }
     if (this.sunlight) {
       this.sunlight.setAttribute('position', this.data.sunPosition);
-      this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
-      this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
       if (skyType != 'atmosphere') {
         // dim down the sky color for the light
         var skycol = new THREE.Color(this.data.skyColor);
@@ -223,6 +228,12 @@ AFRAME.registerComponent('environment', {
         skycol.g = (skycol.g + 1.0) / 2.0;
         skycol.b = (skycol.b + 1.0) / 2.0;
         this.hemilight.setAttribute('light', {'color': '#' + skycol.getHexString()});
+        this.sunlight.setAttribute('light', {'intensity': 0.6});
+        this.hemilight.setAttribute('light', {'intensity': 0.6});
+      }
+      else {
+        this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
+        this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
       }
     } 
 
@@ -254,7 +265,7 @@ AFRAME.registerComponent('environment', {
     if (this.data.fog > 0) {
       this.el.sceneEl.setAttribute('fog', {
         color: this.getFogColor(skyType, sunPos.y), 
-        far: (1.01 - this.data.fog) * this.STAGE_SIZE * 2
+        far: (1.01 - this.data.fog) * this.STAGE_RADIUS * 2
       });
     }
     else {
@@ -286,7 +297,7 @@ AFRAME.registerComponent('environment', {
         this.data.gridColor != oldData.gridColor ||
         this.data.grid != oldData.grid
         ) {
-      this.updateGround(this.data.seed != oldData.seed || this.data.ground != oldData.ground);
+      this.updateGround(this.data.seed != oldData.seed || this.data.ground != oldData.ground || this.data.flatShading != oldData.flatShading);
       if (this.hemilight) this.hemilight.setAttribute('light', {'groundColor': this.data.groundColor});
     }
 
@@ -400,7 +411,7 @@ AFRAME.registerComponent('environment', {
       this.ground.setAttribute('visible', visibleground);
       if (!visibleground) return;
 
-      if (!this.groundGeometry) this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_SIZE + 2, this.STAGE_SIZE + 2, resolution - 1, resolution - 1);
+      if (!this.groundGeometry) this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_RADIUS + 2, this.STAGE_RADIUS + 2, resolution - 1, resolution - 1);
       var perlin = new PerlinNoise();
       var verts = this.groundGeometry.vertices;
       var numVerts = this.groundGeometry.vertices.length;
@@ -451,7 +462,12 @@ AFRAME.registerComponent('environment', {
       }
 
       this.groundGeometry.computeFaceNormals();
-      this.groundGeometry.computeVertexNormals();
+      if (this.data.flatShading) {
+        this.groundGeometry.computeFlatVertexNormals();
+      } 
+      else {
+        this.groundGeometry.computeVertexNormals();
+      }
 
       this.groundGeometry.verticesNeedUpdate = true;
       this.groundGeometry.facesNeedUpdate = true;
@@ -460,70 +476,72 @@ AFRAME.registerComponent('environment', {
 
     this.ground.setAttribute('scale', {z: this.data.groundYScale});
 
-    // update ground texture
+    // update ground, playarea and grid textures.
 
-    var texResolution = 512;
 
-    if (!this.groundCanvas || this.groundCanvas.width != texResolution) {
+    var groundResolution = 1024;
+
+    if (!this.groundCanvas || this.groundCanvas.width != groundResolution) {
+      var texrepeat = this.STAGE_RADIUS;
       this.gridCanvas = document.createElement('canvas');
-      this.gridCanvas.width = texResolution;
-      this.gridCanvas.height = texResolution;
+      this.gridCanvas.width = groundResolution;
+      this.gridCanvas.height = groundResolution;
       this.gridTexture = new THREE.Texture(this.gridCanvas);
       this.gridTexture.wrapS = THREE.RepeatWrapping;
       this.gridTexture.wrapT = THREE.RepeatWrapping;
+      this.gridTexture.repeat.set(texrepeat, texrepeat);
       //this.gridTexture.anisotropy  = this.el.sceneEl.renderer.getMaxAnisotropy();
+
       this.groundCanvas = document.createElement('canvas');
-      this.groundCanvas.width = texResolution;
-      this.groundCanvas.height = texResolution;
+      this.groundCanvas.width = groundResolution;
+      this.groundCanvas.height = groundResolution;
       this.groundTexture = new THREE.Texture(this.groundCanvas);
       this.groundTexture.wrapS = THREE.RepeatWrapping;
       this.groundTexture.wrapT = THREE.RepeatWrapping;
+      this.groundTexture.repeat.set(texrepeat, texrepeat);
+
       this.groundMaterial = new THREE.MeshLambertMaterial({
         map: this.groundTexture,
         emissive: new THREE.Color(0xFFFFFF),
         emissiveMap: this.gridTexture,
-        wireframe: false
+        wireframe: false,
+        shading: this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading
       });
     }
 
-    //this.groundMaterial.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
+    var playareaResolution = 2048;
 
-    var texrepeat = 50;
+    if (!this.playareaCanvas) {
+      this.playareaCanvas = document.createElement('canvas');
+      this.playareaCanvas.width = playareaResolution;
+      this.playareaCanvas.height = playareaResolution;
+      this.playareaTexture = new THREE.Texture(this.playareaCanvas);
+      this.playareaMaterial = new THREE.MeshLambertMaterial({
+        map: this.playareaTexture,
+        transparent: true
+      });
 
-    var res2 = texResolution / 2;
-    var ctx = this.groundCanvas.getContext('2d');
-    ctx.fillStyle = this.data.groundColor;
-    ctx.fillRect(0, 0, texResolution, texResolution);
-    if (this.data.groundTexture == 'checkerboard') {
-      ctx.fillStyle = this.data.groundColor2;
-      ctx.fillRect(0, 0, res2, res2);
-      ctx.fillRect(res2, res2, res2, res2);
-    }
-    else if (this.data.groundTexture == 'squares') {
-      var numSquares = 8;
-      var squareSize = texResolution / numSquares;
-      var col1 = new THREE.Color(this.data.groundColor);
-      var col2 = new THREE.Color(this.data.groundColor2);
-      for (var i = 0; i < numSquares * numSquares; i++) {
-        var col = this.random(i + 3) > 0.5 ? col1.clone() : col2.clone();
-        col.addScalar(this.random(i + 3) * 0.1 - 0.05);
-        ctx.fillStyle = '#' + col.getHexString();
-        ctx.fillRect((i % numSquares) * squareSize, Math.floor(i / numSquares) * squareSize, squareSize, squareSize);
+      if (!this.playarea.getObject3D('mesh')) {
+        var playareageo = new THREE.PlaneBufferGeometry(4, 4);
+        var playareamesh = new THREE.Mesh(playareageo, this.playareaMaterial);
+        this.playarea.setObject3D('mesh', playareamesh);
       }
     }
-//    console.log(this.groundCanvas);
 
-    this.drawGrid(ctx, texResolution)
-
+    var groundctx = this.groundCanvas.getContext('2d');
+    var playareactx = this.playareaCanvas.getContext('2d');
     var gridctx = this.gridCanvas.getContext('2d');
-    gridctx.fillStyle = '#000';
-    gridctx.fillRect(0, 0, texResolution, texResolution);
-    this.drawGrid(gridctx, texResolution)
 
-    this.groundTexture.repeat.set(texrepeat, texrepeat);
+    this.drawTexture(groundctx, groundResolution);
+    this.drawPlayarea(playareactx, groundResolution)
+
+    gridctx.fillStyle = '#000000';
+    gridctx.fillRect(0, 0, groundResolution, groundResolution);
+    this.drawGrid(gridctx, groundResolution)
+
     this.groundTexture.needsUpdate = true;
-    this.gridTexture.repeat.set(texrepeat, texrepeat);
     this.gridTexture.needsUpdate = true;
+    this.playareaTexture.needsUpdate = true;
 
     if (updateGeometry) {
       var mesh = new THREE.Mesh(this.groundGeometry, this.groundMaterial)
@@ -534,66 +552,121 @@ AFRAME.registerComponent('environment', {
     }
   },
 
-  drawGrid: function (ctx, resolution) {
+  drawGrid: function (ctx, size) {
+
     if (this.data.grid == 'none') return;
-    var res = resolution;
-    var res2 = res / 2;
+
     ctx.fillStyle = this.data.gridColor;
     switch (this.data.grid) {
       case 'squares':
-        ctx.fillRect(0, 0, res, 1);
-        ctx.fillRect(res2, 0, 1, res);
-        ctx.fillRect(0, 0, 1, res);
-        ctx.fillRect(0, res2, res, 1);
+        ctx.fillRect(0, 0, size, 1);
+        ctx.fillRect(0, 0, 1, size);
       break;
       case 'crosses':
-        var l = 40;
-        var l2 = 20;
-        ctx.globalAlpha = 0.7;
-        ctx.fillRect(0, 0, 3, 3);
-        ctx.fillRect(0, res2, 3, 3);
-        ctx.fillRect(res2, 0, 3, 3);
-        ctx.fillRect(res2, res2, 3, 3);
-        
-        ctx.globalAlpha = 1;
-        
-        ctx.fillRect(0, 1, l2 - 1, 1);
-        ctx.fillRect(1, 0, 1, l2 - 1);
-        ctx.fillRect(res - l2 + 3, 1, l2 - 2, 1);
-        ctx.fillRect(1, res - l2 + 3, 1, l2 - 2);
-
-        ctx.fillRect(res2 - l2 + 1, 1, l, 1);
-        ctx.fillRect(res2 + 1, 0, 1, l2 - 1);
-        ctx.fillRect(res2 + 1, res - l2 + 3, 1, l2 - 2);
-
-        ctx.fillRect(1, res2 - l2 - 1, 1, l);
-        ctx.fillRect(1, res2 + 1, l2 - 1, 1);
-        ctx.fillRect(res - l2 + 3, res2 + 1, l2 - 2, 1);
-
-        ctx.fillRect(res2 - l2 + 1, res2 + 1, l, 1);
-        ctx.fillRect(res2 + 1, res2 - l2 + 1, 1, l);
-
+        var l = 10;
+        ctx.fillRect(0, 0, l, 1);
+        ctx.fillRect(0, 0, 1, l);
+        ctx.fillRect(size - l + 1, 0, l, 1);
+        ctx.fillRect(0, size - l + 1, 1, l);
       break;
       case 'dots':
-        function circle(ctx, x, y, r) {
-          ctx.beginPath();
-          ctx.arc(x, y, r, 0, 2 * Math.PI);
-          ctx.fill();
-        }
-        circle(ctx, 2, 2, 2);
-        circle(ctx, res2 + 2, 2, 2);
-        circle(ctx, 2, res2 + 2, 2);
-        circle(ctx, res2 + 2, res2 + 2, 2);
+        ctx.beginPath(); ctx.arc(0, 0, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(size, 0, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(size, size, 2, 0, Math.PI * 2); ctx.fill();
+        ctx.beginPath(); ctx.arc(0, size, 2, 0, Math.PI * 2); ctx.fill();
       break;
       case 'xlines':
-        ctx.fillRect(0, 0, res, 1);
-        ctx.fillRect(0, res2, res, 1);
+        ctx.fillRect(0, 0, size, 1);
       break;
       case 'ylines':
-        ctx.fillRect(res2, 0, 1, res);
-        ctx.fillRect(0, 0, 1, res);
+        ctx.fillRect(0, 0, 1, size);
       break;
     }
+  },
+
+  drawTexture: function(ctx, size) {
+    // fill all with ground Color
+    ctx.fillStyle = this.data.groundColor;
+    ctx.fillRect(0, 0, size, size);
+
+    if (this.data.groundTexture == 'none') return;
+    var size2 = size / 2;
+    switch(this.data.groundTexture) {
+      case 'checkerboard':
+        ctx.fillStyle = this.data.groundColor2;
+        ctx.fillRect(0, 0, size2, size2);
+        ctx.fillRect(size2, size2, size2, size2);
+      break;
+      case 'squares':
+        var numSquares = 8;
+        var squareSize = size / numSquares;
+        var col1 = new THREE.Color(this.data.groundColor);
+        var col2 = new THREE.Color(this.data.groundColor2);
+        for (var i = 0; i < numSquares * numSquares; i++) {
+          var col = this.random(i + 3) > 0.5 ? col1.clone() : col2.clone();
+          col.addScalar(this.random(i + 3) * 0.1 - 0.05);
+          ctx.fillStyle = '#' + col.getHexString();
+          ctx.fillRect((i % numSquares) * squareSize, Math.floor(i / numSquares) * squareSize, squareSize, squareSize);
+        }
+      break;
+      case 'noise':
+      // TODO: fix
+        var imdata = ctx.getImageData(0, 0, size, size);
+        var im = imdata.data;
+        var col1 = new THREE.Color(this.data.groundColor);
+        var col2 = new THREE.Color(this.data.groundColor2);
+        var diff = new THREE.Color(col2.r - col1.r, col2.g - col1.g, col2.b - col1.b);
+        var perlin = new PerlinNoise();
+        for (var i = 0, j = 0, numpixels = im.length; i < numpixels; i += 4, j++){
+          var rnd = perlin.noise((j % size) / size, Math.floor(j / size) / size, 0);
+          im[i + 0] = Math.floor((col1.r + diff.r * rnd) * 255);
+          im[i + 1] = Math.floor((col1.g + diff.g * rnd) * 255);
+          im[i + 2] = Math.floor((col1.b + diff.b * rnd) * 255);
+        }
+        ctx.putImageData(imdata, 0, 0);
+      break;
+      case 'walkernoise':
+      // TODO: fix
+        var imdata = ctx.getImageData(0, 0, size, size);
+        var im = imdata.data;
+        var col1 = new THREE.Color(this.data.groundColor);
+        var col2 = new THREE.Color(this.data.groundColor2);
+        var walkers = [];
+        var numwalkers = 1000;
+        for (var i = 0; i < numwalkers; i++) {
+          var col = col1.clone().lerp(col2, Math.random());
+          walkers.push({
+            x: Math.random() * size,
+            y: Math.random() * size,
+            r: Math.floor(col.r * 255),
+            g: Math.floor(col.g * 255),
+            b: Math.floor(col.b * 255)
+          });
+        }
+        var iterations = 5000;
+        for (var it = 0; it< iterations; it++){
+          for (var i = 0; i < numwalkers; i++) {
+            var walker = walkers[i];
+            var pos = Math.floor((walker.y * size + walker.x)) * 4;
+            im[pos + 0] = walker.r;
+            im[pos + 1] = walker.g;
+            im[pos + 2] = walker.b;
+            walker.x += Math.floor(Math.random() * 3) - 1;
+            walker.y += Math.floor(Math.random() * 3) - 1;
+            if (walker.x > size) walker.x = walker.x - size;
+            if (walker.y > size) walker.y = walker.y - size;
+            if (walker.x < 0) walker.x = size + walker.x;
+            if (walker.y < 0) walker.y = size + walker.y;
+          }
+        }
+        ctx.putImageData(imdata, 0, 0);
+      break;
+    }
+  },
+
+  drawPlayarea: function(ctx, size) {
+    ctx.fillStyle = '#f00';
+    ctx.fillRect(0, 0, size, size);
   },
 
   getAssetGeometry: function(data) {
@@ -697,7 +770,7 @@ AFRAME.registerComponent('environment', {
       // set random position, rotation and scale
       var ds = this.data.dressingScale;
       var dv = new THREE.Vector3(this.data.dressingVariance.x, this.data.dressingVariance.y, this.data.dressingVariance.z);
-      var distance = 10 + Math.max(dv.x, dv.z) + 10 * this.random(r + 1) + this.random(r + 2) * this.STAGE_SIZE / 3;
+      var distance = 10 + Math.max(dv.x, dv.z) + 10 * this.random(r + 1) + this.random(r + 2) * this.STAGE_RADIUS / 3;
       var direction = this.random(r + 3) * Math.PI * 2; 
       var matrix = new THREE.Matrix4();
       var scale = this.random(r + 4);
@@ -723,7 +796,7 @@ AFRAME.registerComponent('environment', {
           )
         );
 
-      // merge with dressing mother geometry
+      // merge with mother geometry
       geometry.merge(geo, matrix);
     }
 
@@ -752,7 +825,7 @@ AFRAME.registerComponent('environment', {
     var numStars = 2000;
     var geometry = new THREE.BufferGeometry();
     var positions = new Float32Array( numStars * 3 );
-    var radius = this.STAGE_SIZE / 2 - 1;
+    var radius = this.STAGE_RADIUS / 2 - 1;
     var v = new THREE.Vector3();
     for (var i = 0; i < positions.length; i += 3) {
       v.set(this.random(i + 23) - 0.5, this.random(i + 24), this.random(i + 25) - 0.5);
