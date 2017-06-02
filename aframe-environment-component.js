@@ -479,10 +479,10 @@ AFRAME.registerComponent('environment', {
     // update ground, playarea and grid textures.
 
 
-    var groundResolution = 1024;
+    var groundResolution = 2048;
 
     if (!this.groundCanvas || this.groundCanvas.width != groundResolution) {
-      var texrepeat = this.STAGE_RADIUS;
+      var texrepeat = this.STAGE_RADIUS / 20; // this makes a texture of 40 x 40 meters
       this.gridCanvas = document.createElement('canvas');
       this.gridCanvas.width = groundResolution;
       this.gridCanvas.height = groundResolution;
@@ -609,6 +609,7 @@ AFRAME.registerComponent('environment', {
           ctx.fillRect((i % numSquares) * squareSize, Math.floor(i / numSquares) * squareSize, squareSize, squareSize);
         }
       break;
+
       case 'noise':
       // TODO: fix
         var imdata = ctx.getImageData(0, 0, size, size);
@@ -625,9 +626,17 @@ AFRAME.registerComponent('environment', {
         }
         ctx.putImageData(imdata, 0, 0);
       break;
+
       case 'walkernoise':
       // TODO: fix
-        var imdata = ctx.getImageData(0, 0, size, size);
+        var s = Math.floor(size / 2);
+        var tex = document.createElement('canvas');
+        tex.width = s;
+        tex.height = s;
+        var texctx = tex.getContext('2d');
+        texctx.fillStyle = this.data.groundColor;
+        texctx.fillRect(0, 0, s, s);
+        var imdata = texctx.getImageData(0, 0, s, s);
         var im = imdata.data;
         var col1 = new THREE.Color(this.data.groundColor);
         var col2 = new THREE.Color(this.data.groundColor2);
@@ -636,8 +645,8 @@ AFRAME.registerComponent('environment', {
         for (var i = 0; i < numwalkers; i++) {
           var col = col1.clone().lerp(col2, Math.random());
           walkers.push({
-            x: Math.random() * size,
-            y: Math.random() * size,
+            x: Math.random() * s,
+            y: Math.random() * s,
             r: Math.floor(col.r * 255),
             g: Math.floor(col.g * 255),
             b: Math.floor(col.b * 255)
@@ -647,19 +656,20 @@ AFRAME.registerComponent('environment', {
         for (var it = 0; it< iterations; it++){
           for (var i = 0; i < numwalkers; i++) {
             var walker = walkers[i];
-            var pos = Math.floor((walker.y * size + walker.x)) * 4;
+            var pos = Math.floor((walker.y * s + walker.x)) * 4;
             im[pos + 0] = walker.r;
             im[pos + 1] = walker.g;
             im[pos + 2] = walker.b;
             walker.x += Math.floor(Math.random() * 3) - 1;
             walker.y += Math.floor(Math.random() * 3) - 1;
-            if (walker.x > size) walker.x = walker.x - size;
-            if (walker.y > size) walker.y = walker.y - size;
-            if (walker.x < 0) walker.x = size + walker.x;
-            if (walker.y < 0) walker.y = size + walker.y;
+            if (walker.x >= s) walker.x = walker.x - s;
+            if (walker.y >= s) walker.y = walker.y - s;
+            if (walker.x < 0) walker.x = s + walker.x;
+            if (walker.y < 0) walker.y = s + walker.y;
           }
         }
-        ctx.putImageData(imdata, 0, 0);
+        texctx.putImageData(imdata, 0, 0);
+        ctx.drawImage(tex, 0, 0, size, size);
       break;
     }
   },
