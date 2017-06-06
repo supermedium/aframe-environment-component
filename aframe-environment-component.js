@@ -53,13 +53,11 @@ AFRAME.registerComponent('environment', {
 
   init: function () {
     this.STAGE_SIZE = 200;
-
     // assets
     this.conv_table = '!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{¬|}~';
     this.conv_table += '¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ'
     this.conv_table += 'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſ';
     this.conv_table += 'ƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƟƞƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ';
-    
     this.assets = {
       'stones': [
         {
@@ -185,31 +183,9 @@ AFRAME.registerComponent('environment', {
     return '#'+fogColor.getHexString();
   },
 
-  play: function () {
-    if (this.data.preset !== 'none') {
-      var preset = this.presets[this.data.preset];
-      var defaults = {};
-      var i;
-      //build defaults object
-      for (i in this.schema) {
-        defaults[i] = this.schema[i].default;
-      }
-
-      var diff = AFRAME.utils.diff(defaults, this.data);
-      //apply differences to preset
-      for (i in diff) {
-        if (i == 'preset') continue;
-        preset[i] = diff[i];
-      }
-      this.el.setAttribute('environment', preset);
-    }
-  },
-
   update: function (oldData) {
-    
     // preset changed
-
-    if (oldData['preset'] !== undefined && oldData.preset !== this.data.preset) {
+    if (oldData.preset === undefined || oldData.preset !== this.data.preset) {
       console.log('changing preset');
       this.el.setAttribute('environment', this.presets[this.data.preset]);
       return;
