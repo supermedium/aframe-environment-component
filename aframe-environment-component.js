@@ -1,4 +1,4 @@
-/* global AFRAME, THREE */
+/* eslint-disable */
 
 function logPreset () {
   document.querySelector('[environment]').components['environment'].logPreset();
@@ -9,7 +9,7 @@ AFRAME.registerComponent('environment', {
     preset: {default: 'none', oneOf: ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'starry', 'osiris']},
     seed: {type: 'int', default: 1, min: 0, max: 1000},
 
-    skyType: {default: 'atmosphere', oneOf:['color', 'gradient', 'atmosphere']},
+    skyType: {default: 'color', oneOf:['color', 'gradient', 'atmosphere']},
     skyColor: {type: 'color', default: '#88c'},
     horizonColor: {type: 'color', default: '#ddd'},
     autoLights: {default: true},
@@ -223,8 +223,7 @@ AFRAME.registerComponent('environment', {
     } 
 
     // update sky colors
-
-    if (!oldData || 
+    if (!oldData.skyType || 
       skyType != oldData.skyType ||
       this.data.skyColor != oldData.skyColor ||
       this.data.horizonColor != oldData.horizonColor) {
@@ -413,6 +412,7 @@ AFRAME.registerComponent('environment', {
   updateGround: function (updateGeometry) {
 
     var resolution = 64;
+    var updateGeometry = updateGeometry || !this.ground.getObject3D('mesh');
 
     if (updateGeometry) {
       var visibleground = this.data.ground != 'none';
@@ -1270,3 +1270,4 @@ PerlinNoise.prototype.noise = function(x, y, z) {
   }
 
 } )();
+/* eslint-enable */
