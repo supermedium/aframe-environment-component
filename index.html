@@ -87,12 +87,12 @@
 
 
     <a-scene>
-      <a-entity environment="preset: goaland;" id="ENVIRONMENT"></a-entity>
+      <a-entity environment id="environment"></a-entity>
     </a-scene>
 
 
   <script>
-    var presets = Object.keys(AFRAME.__environment_presets__);
+    var presets = ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'starry', 'osiris'];
     var preset = 1;
     function nextPreset(dir) {
       if (preset === 1 && dir === -1) preset = presets.length;
