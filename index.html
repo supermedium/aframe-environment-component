@@ -13,21 +13,25 @@
       h1 {
         position: absolute;
         z-index: 7000;
-        top: 40px;
-        left: 40px;
+        bottom: 30px;
+        left: 40%;
+        left: calc( 50% - 160px );
         margin: 0;
         font: 28px 'Voces', sans-serif;
-        color: black;
+        color: #000;
       }
       h1 b{
         color: white;
         text-shadow: 1px 2px 0px black;
+        width: 300px;
+        display: inline-block;
+        text-align: center;
       }
       #about {
         position: absolute;
         z-index: 7001;
         width: 300px;
-        top: 90px;
+        top: 40px;
         left: 40px;
         font: 14px 'Voces', Arial, sans-serif;
         color: white;
@@ -44,15 +48,16 @@
       }
       #about a{
         font-size: 14px;
-        color: black;
+        color: #000;
         font-weight: bold;
         text-decoration: none;
-        border-bottom: 1px solid black;
         transition: border-bottom-width 0.1s;
         display: inline-block;
+        background: rgba(255,255,255,0.4);
+        padding: 0 3px;
       }
       #about a:hover{
-        border-bottom: 4px solid black;
+        background: rgba(255,255,255,1);
       }
       h1 a{
         color: white;
@@ -63,10 +68,6 @@
     </style>
   </head>
   <body>
-    <h1>Preset 
-      <a href="javascript:;" onclick="nextPreset(-1)">◀</a>
-      <b>default</b>
-      <a href="javascript:;" onclick="nextPreset(1)">►</a></h1>
     <div id="about">
         
       <b>aframe-environment-component</b>
@@ -78,15 +79,20 @@
         <a href="http://github.com/feiss/aframe-environment-component">GitHub / How to use it</a>
       </p>
     </div>
-    <a-scene>
+    <h1>
+      <a href="javascript:;" onclick="nextPreset(-1)">◀</a>
+      <b>default</b>
+      <a href="javascript:;" onclick="nextPreset(1)">►</a>
+    </h1>
 
-      <a-entity environment="preset:default" id="ENVIRONMENT"></a-entity>
-  <a-sphere position="0 1 0"></a-sphere>
+
+    <a-scene>
+      <a-entity environment="preset: goaland;" id="ENVIRONMENT"></a-entity>
     </a-scene>
 
 
   <script>
-    var presets = Object.keys(__environment_presets__);
+    var presets = Object.keys(AFRAME.__environment_presets__);
     var preset = 1;
     function nextPreset(dir) {
       if (preset === 1 && dir === -1) preset = presets.length;

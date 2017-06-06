@@ -6,17 +6,17 @@ function logPreset () {
   c.logPreset();
 }
 
-__environment_presets__ = {
+AFRAME.__environment_presets__ = {
       'none' : {},
       'default' : {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: -0.11999999999999988, y: 1, z: 0.33999999999999997}, fog: 0.7799999999999999, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#795449", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
-      'contact': {seed: 2, skyType: "gradient", skyColor: "#564b89", horizonColor: "#88c", autoLights: true, sunPosition: { x: 0, y: 2.01, z: -1}, fog: 0.74, flatShading: false, ground: "spikes", groundYScale: 3.2600000000000002, groundTexture: "none", groundColor: "#473263", groundColor2: "#694439", dressing: "apparatus", dressingAmount: 10, dressingColor: "#b6aaca", dressingScale: 20, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "squares", gridColor: "#a2869c"},
+      'contact': {seed: 2, skyType: "gradient", skyColor: "#564b89", horizonColor: "#88c", autoLights: true, sunPosition: { x: 0, y: 2.01, z: -1}, fog: 0.74, flatShading: false, ground: "spikes", groundYScale: 3.2600000000000002, groundTexture: "none", groundColor: "#473263", groundColor2: "#694439", dressing: "apparatus", dressingAmount: 10, dressingColor: "#b6aaca", dressingScale: 20, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "1x1", gridColor: "#a2869c"},
       'egypt': {seed: 7, skyType: "gradient", skyColor: "#1b7660", horizonColor: "#e4b676", autoLights: true, sunPosition: { x: 0, y: 1.65, z: -1}, fog: 0.75, flatShading: false, ground: "hills", groundYScale: 5, groundTexture: "none", groundColor: "#664735", groundColor2: "#7c5c45", dressing: "pyramids", dressingAmount: 15, dressingColor: "#7c5c45", dressingScale: 5, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "spots", gridColor: "#e4b676"},
       'checkerboard': {seed: 1, skyType: "gradient", skyColor: "#0d0d0d", horizonColor: "#404040", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.2}, fog: 0.81, flatShading: true, ground: "hills", groundYScale: 4.81, groundTexture: "checkerboard", groundColor: "#252525", groundColor2: "#111111", dressing: "cubes", dressingAmount: 10, dressingColor: "#9f9f9f", dressingScale: 1.5099999999999998, dressingVariance: { x: 5, y: 20, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#ccc"},
       'forest': {seed: 1, skyType: "gradient", skyColor: "#498f7c", horizonColor: "#e1e2d3", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.7}, fog: 0.6, flatShading: false, ground: "noise", groundYScale: 3.0800000000000005, groundTexture: "squares", groundColor: "#625233", groundColor2: "#695e45", dressing: "trees", dressingAmount: 1000, dressingColor: "#a4aa59", dressingScale: 3, dressingVariance: { x: 5, y: 5, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
       'goaland': {seed: 17, skyType: "gradient", skyColor: "#239893", horizonColor: "#a3dab8", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.56}, fog: 0.73, flatShading: false, ground: "noise", groundYScale: 0.81, groundTexture: "none", groundColor: "#E95867", groundColor2: "#db4453", dressing: "mushrooms", dressingAmount: 50, dressingColor: "#fb6f84", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#239893"},
       'yavapai': {seed: 11, skyType: "gradient", skyColor: "#239849", horizonColor: "#cfe0af", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "canyon", groundYScale: 9.76, groundTexture: "none", groundColor: "#C66344", groundColor2: "#c96b4b", dressing: "none", dressingAmount: 50, dressingColor: "#dd7d44", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
       'threetowers': {seed: 5, skyType: "gradient", skyColor: "#23a06b", horizonColor: "#f5e170", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "spikes", groundYScale: 4.260000000000002, groundTexture: "none", groundColor: "#273a49", groundColor2: "#273a49", dressing: "towers", dressingAmount: 3, dressingColor: "#5f6d94", dressingScale: 20, dressingVariance: { x: 5, y: 100, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
-      'starry': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: -0.01, z: -0.46}, fog: 0.7, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#694439", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "squares", gridColor: "#283133"},
+      'starry': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: -0.01, z: -0.46}, fog: 0.7, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#694439", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "1x1", gridColor: "#283133"},
       'osiris': {seed: 4, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 0.019999999999999997, z: -0.46}, fog: 0, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#9e7b47", groundColor2: "#9e7b47", dressing: "pyramids", dressingAmount: 7, dressingColor: "#9e7b47", dressingScale: 5, dressingVariance: { x: 30, y: 30, z: 30}, dressingUniformScale: true, grid: "dots", gridColor: "#4b779a"}
 };
 
@@ -24,7 +24,7 @@ __environment_presets__ = {
 
 AFRAME.registerComponent('environment', {
   schema: {
-    preset: {default: 'none', oneOf: Object.keys(__environment_presets__)},
+    preset: {default: 'none', oneOf: Object.keys(AFRAME.__environment_presets__)},
     //ImFeelingLucky: {default: false}, 
     seed: {type: 'int', default: 1, min: 0, max: 1000},
 
@@ -36,6 +36,8 @@ AFRAME.registerComponent('environment', {
     fog: {type:'float', default: 0.7, min: 0, max: 1},
 
     flatShading: {default: false},
+
+    playArea: {type: 'float', default: 1, min: 1, max: 100},
 
     ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
     groundYScale: {type: 'float', default: 3, min: 0, max: 50},
@@ -50,13 +52,12 @@ AFRAME.registerComponent('environment', {
     dressingVariance: {type: 'vec3', default: '1 1 1'},
     dressingUniformScale: {default: true},
 
-    grid: {default:'none', oneOf:['none', 'squares', 'crosses', 'dots', 'xlines', 'ylines']},
+    grid: {default:'none', oneOf:['none', '1x1', '2x2', 'crosses', 'dots', 'xlines', 'ylines']},
     gridColor: {type: 'color', default: '#ccc'}
   },
 
   init: function () {
-
-    this.STAGE_RADIUS = 200;
+    this.STAGE_SIZE = 200;
 
     // assets
     this.conv_table = '!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{¬|}~';
@@ -107,9 +108,8 @@ AFRAME.registerComponent('environment', {
     }
 
     // create sky
-
     this.sky = document.createElement('a-sky');
-    this.sky.setAttribute('radius', this.STAGE_RADIUS / 2);
+    this.sky.setAttribute('radius', this.STAGE_SIZE / 2);
     this.sky.setAttribute('theta-length', 110);
 
     this.stars = null;
@@ -119,18 +119,17 @@ AFRAME.registerComponent('environment', {
     this.groundMaterial = null;
     this.ground = document.createElement('a-entity');
     this.ground.setAttribute('rotation', '-90 0 0');
-    this.ground.setAttribute('position', '0 -0.01 0');
     this.groundCanvas = null;
     this.groundTexture = null;
     this.groundMaterial = null;
     this.groundGeometry = null;
-
+/*
     this.playarea = document.createElement('a-entity');
     this.playarea.setAttribute('rotation', '-90 0 0');
     this.playareaCanvas = null;
     this.playareaTexture = null;
     this.playareaMaterial = null;
-
+*/
     this.dressing = document.createElement('a-entity');
 
     this.gridCanvas = null;
@@ -156,7 +155,7 @@ AFRAME.registerComponent('environment', {
     this.el.appendChild(this.hemilight);
     this.el.appendChild(this.sunlight);
     this.el.appendChild(this.ground);
-    this.el.appendChild(this.playarea);
+//    this.el.appendChild(this.playarea);
     this.el.appendChild(this.dressing);
     this.el.appendChild(this.sky);
   },
@@ -199,6 +198,25 @@ AFRAME.registerComponent('environment', {
     return '#'+fogColor.getHexString();
   },
 
+  play: function () {
+    if (this.data.preset !== 'none') {
+      var preset = AFRAME.__environment_presets__[this.data.preset];
+      var defaults = {};
+      var i;
+      //build defaults object
+      for (i in this.schema) {
+        defaults[i] = this.schema[i].default;
+      }
+
+      var diff = AFRAME.utils.diff(defaults, this.data);
+      //apply differences to preset
+      for (i in diff) {
+        if (i == 'preset') continue;
+        preset[i] = diff[i];
+      }
+      this.el.setAttribute('environment', preset);
+    }
+  },
   update: function (oldData) {
     /*
     if (oldData['ImFeelingLucky'] !== undefined && this.data.ImFeelingLucky != oldData.ImFeelingLucky) {
@@ -206,10 +224,10 @@ AFRAME.registerComponent('environment', {
     }
     else 
     */
-    if (oldData['preset'] !== undefined && this.data.preset != oldData.preset) {
-      for (var i in __environment_presets__[this.data.preset]) {
-        this.data[i] = __environment_presets__[this.data.preset][i];
-      }
+    if (oldData['preset'] !== undefined && oldData.preset !== this.data.preset) {
+      console.log('changing preset');
+      this.el.setAttribute('environment', AFRAME.__environment_presets__[this.data.preset]);
+      return;
     }
 
     var skyType = this.data.skyType;
@@ -218,7 +236,7 @@ AFRAME.registerComponent('environment', {
     if (skyType == 'atmosphere') {
       this.sky.setAttribute('material', {'sunPosition': sunPos});
       this.setStars((1 - Math.max(0, (sunPos.y + 0.08) * 8)) * 2000 );
-    }
+    } 
     if (this.sunlight) {
       this.sunlight.setAttribute('position', this.data.sunPosition);
       if (skyType != 'atmosphere') {
@@ -246,7 +264,9 @@ AFRAME.registerComponent('environment', {
 
       if (skyType != oldData['skyType']) {
         mat.shader = {'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
-        this.stars.setAttribute('visible', skyType == 'atmosphere'); 
+        if (this.stars) {
+          this.stars.setAttribute('visible', skyType == 'atmosphere'); 
+        }
       }
       if (skyType == 'color') {
         mat.color = this.data.skyColor;
@@ -265,7 +285,7 @@ AFRAME.registerComponent('environment', {
     if (this.data.fog > 0) {
       this.el.sceneEl.setAttribute('fog', {
         color: this.getFogColor(skyType, sunPos.y), 
-        far: (1.01 - this.data.fog) * this.STAGE_RADIUS * 2
+        far: (1.01 - this.data.fog) * this.STAGE_SIZE * 2
       });
     }
     else {
@@ -286,18 +306,23 @@ AFRAME.registerComponent('environment', {
       this.updateGrid();
     }
 */
+    var updateGroundGeometry = 
+      this.data.seed != oldData.seed || 
+      this.data.ground != oldData.ground || 
+      this.data.playArea != oldData.playArea || 
+      this.data.flatShading != oldData.flatShading;
+
     if (!oldData || 
-        this.data.seed != oldData.seed ||
-        this.data.flatShading != oldData.flatShading ||
-        this.data.ground != oldData.ground ||
+        updateGroundGeometry ||
         this.data.groundColor != oldData.groundColor ||
         this.data.groundColor2 != oldData.groundColor2 ||
         this.data.groundYScale != oldData.groundYScale ||
         this.data.groundTexture != oldData.groundTexture ||
         this.data.gridColor != oldData.gridColor ||
         this.data.grid != oldData.grid
-        ) {
-      this.updateGround(this.data.seed != oldData.seed || this.data.ground != oldData.ground || this.data.flatShading != oldData.flatShading);
+        ) 
+    {
+      this.updateGround(updateGroundGeometry);
       if (this.hemilight) this.hemilight.setAttribute('light', {'groundColor': this.data.groundColor});
     }
 
@@ -344,7 +369,7 @@ AFRAME.registerComponent('environment', {
   dumpParametersDiff: function () {
     var dec3 = (v) => Math.floor(v * 1000) / 1000; // trim number to 3 decimals
     var params = [];
-    var usingPreset = this.data.preset != 'none' ? __environment_presets__[this.data.preset] : false;
+    var usingPreset = this.data.preset != 'none' ? AFRAME.__environment_presets__[this.data.preset] : false;
 
     if (usingPreset) {
       params.push('preset: ' + this.data.preset);
@@ -411,7 +436,7 @@ AFRAME.registerComponent('environment', {
       this.ground.setAttribute('visible', visibleground);
       if (!visibleground) return;
 
-      if (!this.groundGeometry) this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_RADIUS + 2, this.STAGE_RADIUS + 2, resolution - 1, resolution - 1);
+      if (!this.groundGeometry) this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_SIZE + 2, this.STAGE_SIZE + 2, resolution - 1, resolution - 1);
       var perlin = new PerlinNoise();
       var verts = this.groundGeometry.vertices;
       var numVerts = this.groundGeometry.vertices.length;
@@ -453,8 +478,9 @@ AFRAME.registerComponent('environment', {
         // flat ground in the center
         var xx = x * 2 / frequency - 1; 
         var yy = y * 2 / frequency - 1; 
-        xx = Math.max(0, Math.min(1, (Math.abs(xx) - 0.1) * 5 ))
-        yy = Math.max(0, Math.min(1, (Math.abs(yy) - 0.1) * 5 ))
+        var pa = this.data.playArea;
+        xx = Math.max(0, Math.min(1, (Math.abs(xx) - (pa - 0.9)) * (1 / pa) ));
+        yy = Math.max(0, Math.min(1, (Math.abs(yy) - (pa - 0.9)) * (1 / pa) ));
         h *= xx > yy ? xx : yy;
 
         // set height
@@ -480,16 +506,17 @@ AFRAME.registerComponent('environment', {
 
 
     var groundResolution = 2048;
+    var texMeters = 20; // ground texture of 20 x 20 meters
+    var texRepeat = this.STAGE_SIZE / texMeters;
 
     if (!this.groundCanvas || this.groundCanvas.width != groundResolution) {
-      var texrepeat = this.STAGE_RADIUS / 20; // this makes a texture of 40 x 40 meters
       this.gridCanvas = document.createElement('canvas');
       this.gridCanvas.width = groundResolution;
       this.gridCanvas.height = groundResolution;
       this.gridTexture = new THREE.Texture(this.gridCanvas);
       this.gridTexture.wrapS = THREE.RepeatWrapping;
       this.gridTexture.wrapT = THREE.RepeatWrapping;
-      this.gridTexture.repeat.set(texrepeat, texrepeat);
+      this.gridTexture.repeat.set(texRepeat, texRepeat);
       //this.gridTexture.anisotropy  = this.el.sceneEl.renderer.getMaxAnisotropy();
 
       this.groundCanvas = document.createElement('canvas');
@@ -498,7 +525,7 @@ AFRAME.registerComponent('environment', {
       this.groundTexture = new THREE.Texture(this.groundCanvas);
       this.groundTexture.wrapS = THREE.RepeatWrapping;
       this.groundTexture.wrapT = THREE.RepeatWrapping;
-      this.groundTexture.repeat.set(texrepeat, texrepeat);
+      this.groundTexture.repeat.set(texRepeat, texRepeat);
 
       this.groundMaterial = new THREE.MeshLambertMaterial({
         map: this.groundTexture,
@@ -508,7 +535,7 @@ AFRAME.registerComponent('environment', {
         shading: this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading
       });
     }
-
+/*
     var playareaResolution = 2048;
 
     if (!this.playareaCanvas) {
@@ -527,21 +554,21 @@ AFRAME.registerComponent('environment', {
         this.playarea.setObject3D('mesh', playareamesh);
       }
     }
-
+*/
     var groundctx = this.groundCanvas.getContext('2d');
-    var playareactx = this.playareaCanvas.getContext('2d');
+    //var playareactx = this.playareaCanvas.getContext('2d');
     var gridctx = this.gridCanvas.getContext('2d');
 
-    this.drawTexture(groundctx, groundResolution);
-    this.drawPlayarea(playareactx, groundResolution)
+    this.drawTexture(groundctx, groundResolution, texMeters);
+    //this.drawPlayarea(playareactx, groundResolution)
 
     gridctx.fillStyle = '#000000';
     gridctx.fillRect(0, 0, groundResolution, groundResolution);
-    this.drawGrid(gridctx, groundResolution)
+    this.drawGrid(gridctx, groundResolution, texMeters);
 
     this.groundTexture.needsUpdate = true;
     this.gridTexture.needsUpdate = true;
-    this.playareaTexture.needsUpdate = true;
+    //this.playareaTexture.needsUpdate = true;
 
     if (updateGeometry) {
       var mesh = new THREE.Mesh(this.groundGeometry, this.groundMaterial)
@@ -552,53 +579,80 @@ AFRAME.registerComponent('environment', {
     }
   },
 
-  drawGrid: function (ctx, size) {
+  drawGrid: function (ctx, size, texMeters) {
 
     if (this.data.grid == 'none') return;
 
+    // one grid feature each 2 meters
+
+    var num = Math.floor(texMeters / 2); 
+    var step = size / (texMeters / 2); // 2 meters == <step> pixels
+
     ctx.fillStyle = this.data.gridColor;
+
     switch (this.data.grid) {
-      case 'squares':
-        ctx.fillRect(0, 0, size, 1);
-        ctx.fillRect(0, 0, 1, size);
+      case '1x1':
+      case '2x2':
+        if (this.data.grid == '1x1') { 
+          num = num * 2;
+          step = size / texMeters;
+        }
+        for (var i = 0; i < num; i++) {
+          var ii = Math.floor(i * step);
+          ctx.fillRect(0, ii, size, 1);
+          ctx.fillRect(ii, 0, 1, size);
+        }
       break;
       case 'crosses':
-        var l = 10;
-        ctx.fillRect(0, 0, l, 1);
-        ctx.fillRect(0, 0, 1, l);
-        ctx.fillRect(size - l + 1, 0, l, 1);
-        ctx.fillRect(0, size - l + 1, 1, l);
+        var l = Math.floor(step / 20);
+        for (var i = 0; i < num + 1; i++) {
+          var ii = Math.floor(i * step);
+          for (var j = 0; j < num + 1; j++) {
+            var jj = Math.floor(-l + j * step);
+            ctx.fillRect(jj, ii, l * 2, 1);
+            ctx.fillRect(ii, jj, 1, l * 2);
+          }
+        }
       break;
       case 'dots':
-        ctx.beginPath(); ctx.arc(0, 0, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(size, 0, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(size, size, 2, 0, Math.PI * 2); ctx.fill();
-        ctx.beginPath(); ctx.arc(0, size, 2, 0, Math.PI * 2); ctx.fill();
+        for (var i = 0; i < num + 1; i++) {
+          for (var j = 0; j < num + 1; j++) {
+            ctx.beginPath(); ctx.arc(Math.floor(j * step), Math.floor(i * step), 4, 0, Math.PI * 2); ctx.fill();
+          }
+        }
       break;
       case 'xlines':
-        ctx.fillRect(0, 0, size, 1);
+        for (var i = 0; i < num; i++) {
+          ctx.fillRect(Math.floor(i * step), 0, 1, size);
+        }
       break;
       case 'ylines':
-        ctx.fillRect(0, 0, 1, size);
+        for (var i = 0; i < num; i++) {
+          ctx.fillRect(0, Math.floor(i * step), size, 1);
+        }
       break;
     }
   },
 
-  drawTexture: function(ctx, size) {
+  drawTexture: function(ctx, size, texMeters) {
     // fill all with ground Color
     ctx.fillStyle = this.data.groundColor;
     ctx.fillRect(0, 0, size, size);
 
     if (this.data.groundTexture == 'none') return;
-    var size2 = size / 2;
     switch(this.data.groundTexture) {
       case 'checkerboard':
         ctx.fillStyle = this.data.groundColor2;
-        ctx.fillRect(0, 0, size2, size2);
-        ctx.fillRect(size2, size2, size2, size2);
+        var num = Math.floor(texMeters / 2); 
+        var step = size / (texMeters / 2); // 2 meters == <step> pixels
+        for (var i = 0; i < num + 1; i += 2) {
+          for (var j = 0; j < num + 1; j ++) {
+            ctx.fillRect(Math.floor((i + j % 2) * step), Math.floor(j * step), Math.floor(step), Math.floor(step));
+          }
+        }
       break;
       case 'squares':
-        var numSquares = 8;
+        var numSquares = 16;
         var squareSize = size / numSquares;
         var col1 = new THREE.Color(this.data.groundColor);
         var col2 = new THREE.Color(this.data.groundColor2);
@@ -780,7 +834,7 @@ AFRAME.registerComponent('environment', {
       // set random position, rotation and scale
       var ds = this.data.dressingScale;
       var dv = new THREE.Vector3(this.data.dressingVariance.x, this.data.dressingVariance.y, this.data.dressingVariance.z);
-      var distance = 10 + Math.max(dv.x, dv.z) + 10 * this.random(r + 1) + this.random(r + 2) * this.STAGE_RADIUS / 3;
+      var distance = 10 + Math.max(dv.x, dv.z) + 10 * this.random(r + 1) + this.random(r + 2) * this.STAGE_SIZE / 3;
       var direction = this.random(r + 3) * Math.PI * 2; 
       var matrix = new THREE.Matrix4();
       var scale = this.random(r + 4);
@@ -835,7 +889,7 @@ AFRAME.registerComponent('environment', {
     var numStars = 2000;
     var geometry = new THREE.BufferGeometry();
     var positions = new Float32Array( numStars * 3 );
-    var radius = this.STAGE_RADIUS / 2 - 1;
+    var radius = this.STAGE_SIZE / 2 - 1;
     var v = new THREE.Vector3();
     for (var i = 0; i < positions.length; i += 3) {
       v.set(this.random(i + 23) - 0.5, this.random(i + 24), this.random(i + 25) - 0.5);
@@ -847,7 +901,7 @@ AFRAME.registerComponent('environment', {
     }
     geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setDrawRange(0, 0);
-    var material = new THREE.PointsMaterial({size: 0.3, color: 0xCCCCCC, fog: false});
+    var material = new THREE.PointsMaterial({size: 0.01, color: 0xCCCCCC, fog: false});
     this.stars.setObject3D('mesh', new THREE.Points(geometry, material));
   },
 
