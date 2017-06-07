@@ -13,7 +13,7 @@ AFRAME.registerComponent('environment', {
     skyColor: {type: 'color'},
     horizonColor: {type: 'color'},
     lights: {default: 'sun', oneOf: ['none', 'sun', 'room']},
-    lightPosition: {type:'vec3', default: '0 1 -0.2'},
+    lightPosition: {type:'vec3', default: {x: 0, y: 1, z: -0.2}},
     fog: {type:'float', default: 0, min: 0, max: 1},
 
     flatShading: {default: false},
@@ -30,7 +30,7 @@ AFRAME.registerComponent('environment', {
     dressingAmount: {type: 'int', default: 10, min: 0, max: 1000},
     dressingColor:  {type: 'color', default: '#795449'},
     dressingScale: {type: 'float', default: 5, min: 0, max: 100},
-    dressingVariance: {type: 'vec3', default: '1 1 1'},
+    dressingVariance: {type: 'vec3', default: {x: 1, y: 1, z: 1}},
     dressingUniformScale: {default: true},
 
     grid: {default:'none', oneOf:['none', '1x1', '2x2', 'crosses', 'dots', 'xlines', 'ylines']},
@@ -200,13 +200,6 @@ AFRAME.registerComponent('environment', {
     var sunPos = new THREE.Vector3(this.data.lightPosition.x, this.data.lightPosition.y, this.data.lightPosition.z);
     sunPos.normalize();
     
-    // set atmosphere sky and stars
-
-    if (skyType == 'atmosphere') {
-      this.sky.setAttribute('material', {'sunPosition': sunPos});
-      this.setStars((1 - Math.max(0, (sunPos.y + 0.08) * 8)) * 2000 );
-    } 
-
     // update light colors and intensities
 
     if (this.sunlight) {
@@ -254,6 +247,13 @@ AFRAME.registerComponent('environment', {
 
       this.sky.setAttribute('material', mat);
     }
+
+    // set atmosphere sun position and stars
+
+    if (skyType == 'atmosphere') {
+      this.sky.setAttribute('material', {'sunPosition': sunPos});
+      this.setStars((1 - Math.max(0, (sunPos.y + 0.08) * 8)) * 2000 );
+    } 
 
     // set fog color
 
