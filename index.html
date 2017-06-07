@@ -86,19 +86,20 @@
 
 
     <a-scene>
-      <a-entity environment id="environment"></a-entity>
+      <a-entity environment="" id="environment"></a-entity>
+      <a-sphere radius="0.3" position="0 1.7 -2"></a-sphere>
     </a-scene>
 
 
   <script>
-    var presets = ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'starry', 'osiris'];
+    var presets = ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'poison', 'starry', 'osiris'];
     var preset = 1;
     function nextPreset(dir) {
       if (preset === 1 && dir === -1) preset = presets.length;
       preset = (preset + dir) % presets.length;
       if (preset === 0) preset = 1;
-      document.querySelector('[environment]').setAttribute('environment', {preset: presets[preset]});
       document.querySelector('h1 b').innerHTML = presets[preset];
+      document.querySelector('[environment]').setAttribute('environment', {preset: presets[preset]});
     };
     document.querySelector('[environment]').setAttribute('environment', {preset: 'default'});
   </script>

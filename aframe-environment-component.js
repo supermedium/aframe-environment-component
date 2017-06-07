@@ -6,15 +6,15 @@ function logPreset () {
 
 AFRAME.registerComponent('environment', {
   schema: {
-    preset: {default: 'none', oneOf: ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'starry', 'osiris']},
+    preset: {default: 'default', oneOf: ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'poison', 'starry', 'osiris']},
     seed: {type: 'int', default: 1, min: 0, max: 1000},
 
     skyType: {default: 'color', oneOf:['color', 'gradient', 'atmosphere']},
-    skyColor: {type: 'color', default: '#88c'},
-    horizonColor: {type: 'color', default: '#ddd'},
-    autoLights: {default: true},
-    sunPosition: {type:'vec3', default: '0 1 -0.2'},
-    fog: {type:'float', default: 0.7, min: 0, max: 1},
+    skyColor: {type: 'color'},
+    horizonColor: {type: 'color'},
+    lights: {default: 'sun', oneOf: ['none', 'sun', 'room']},
+    lightPosition: {type:'vec3', default: '0 1 -0.2'},
+    fog: {type:'float', default: 0, min: 0, max: 1},
 
     flatShading: {default: false},
 
@@ -26,8 +26,8 @@ AFRAME.registerComponent('environment', {
     groundColor:  {type: 'color', default: '#553e35'},
     groundColor2: {type: 'color', default: '#694439'},
 
-    dressing: {default: 'none', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'towers', 'mushrooms', 'trees', 'apparatus']},
-    dressingAmount: {type: 'int', default: 100, min: 0, max: 1000},
+    dressing: {default: 'none', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'towers', 'mushrooms', 'trees', 'apparatus', 'torii']},
+    dressingAmount: {type: 'int', default: 10, min: 0, max: 1000},
     dressingColor:  {type: 'color', default: '#795449'},
     dressingScale: {type: 'float', default: 5, min: 0, max: 100},
     dressingVariance: {type: 'vec3', default: '1 1 1'},
@@ -39,25 +39,23 @@ AFRAME.registerComponent('environment', {
 
   presets: {
     'none' : {},
-    'default' : {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: -0.11999999999999988, y: 1, z: 0.33999999999999997}, fog: 0.7799999999999999, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#795449", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
-    'contact': {seed: 14, skyType: "gradient", skyColor: "#564b89", horizonColor: "#88c", autoLights: true, sunPosition: { x: 0, y: 2.01, z: -1}, fog: 0.74, flatShading: false, ground: "spikes", groundYScale: 3.2600000000000002, groundTexture: "none", groundColor: "#473263", groundColor2: "#694439", dressing: "apparatus", dressingAmount: 7, dressingColor: "#b6aaca", dressingScale: 20, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "1x1", gridColor: "#a2869c"},
-    'egypt': {seed: 7, skyType: "gradient", skyColor: "#1b7660", horizonColor: "#e4b676", autoLights: true, sunPosition: { x: 0, y: 1.65, z: -1}, fog: 0.75, flatShading: false, ground: "hills", groundYScale: 5, groundTexture: "none", groundColor: "#664735", groundColor2: "#7c5c45", dressing: "pyramids", dressingAmount: 15, dressingColor: "#7c5c45", dressingScale: 5, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "spots", gridColor: "#e4b676"},
-    'checkerboard': {seed: 1, skyType: "gradient", skyColor: "#0d0d0d", horizonColor: "#404040", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.2}, fog: 0.81, flatShading: true, ground: "hills", groundYScale: 4.81, groundTexture: "checkerboard", groundColor: "#252525", groundColor2: "#111111", dressing: "cubes", dressingAmount: 10, dressingColor: "#9f9f9f", dressingScale: 1.5099999999999998, dressingVariance: { x: 5, y: 20, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#ccc"},
-    'forest': {seed: 1, skyType: "gradient", skyColor: "#498f7c", horizonColor: "#e1e2d3", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.7}, fog: 0.6, flatShading: false, ground: "noise", groundYScale: 3.0800000000000005, groundTexture: "squares", groundColor: "#625233", groundColor2: "#695e45", dressing: "trees", dressingAmount: 1000, dressingColor: "#a4aa59", dressingScale: 3, dressingVariance: { x: 5, y: 5, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
-    'goaland': {seed: 17, skyType: "gradient", skyColor: "#239893", horizonColor: "#a3dab8", autoLights: true, sunPosition: { x: 0, y: 1, z: -0.56}, fog: 0.73, flatShading: false, ground: "noise", groundYScale: 0.81, groundTexture: "none", groundColor: "#E95867", groundColor2: "#db4453", dressing: "mushrooms", dressingAmount: 50, dressingColor: "#fb6f84", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#239893"},
-    'yavapai': {seed: 11, skyType: "gradient", skyColor: "#239849", horizonColor: "#cfe0af", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "canyon", groundYScale: 9.76, groundTexture: "none", groundColor: "#C66344", groundColor2: "#c96b4b", dressing: "none", dressingAmount: 50, dressingColor: "#dd7d44", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
-    'threetowers': {seed: 5, skyType: "gradient", skyColor: "#23a06b", horizonColor: "#f5e170", autoLights: true, sunPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, ground: "spikes", groundYScale: 4.260000000000002, groundTexture: "none", groundColor: "#273a49", groundColor2: "#273a49", dressing: "towers", dressingAmount: 3, dressingColor: "#5f6d94", dressingScale: 20, dressingVariance: { x: 5, y: 100, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
-    'starry': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: -0.01, z: -0.46}, fog: 0.7, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#694439", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "1x1", gridColor: "#283133"},
-    'osiris': {seed: 4, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", autoLights: true, sunPosition: { x: 0, y: 0.019999999999999997, z: -0.46}, fog: 0, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#9e7b47", groundColor2: "#9e7b47", dressing: "pyramids", dressingAmount: 7, dressingColor: "#9e7b47", dressingScale: 5, dressingVariance: { x: 30, y: 30, z: 30}, dressingUniformScale: true, grid: "dots", gridColor: "#4b779a"}
+    'default' : {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", lights: 'sun', lightPosition: { x: -0.11, y: 1, z: 0.33}, fog: 0.78, flatShading: false, playArea: 1, ground: "hills", groundYScale: 3, groundTexture: "checkerboard", groundColor: "#454545", groundColor2: "#5d5d5d", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "none", gridColor: "#ccc"},
+    'contact': {seed: 14, skyType: "gradient", skyColor: "#564b89", horizonColor: "#88c", lights: 'sun', lightPosition: { x: 0, y: 2.01, z: -1}, fog: 0.74, flatShading: false, ground: "spikes", groundYScale: 3.26, groundTexture: "none", groundColor: "#473263", groundColor2: "#694439", dressing: "apparatus", dressingAmount: 7, dressingColor: "#b6aaca", dressingScale: 20, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "1x1", gridColor: "#a2869c"},
+    'egypt': {seed: 26, skyType: "gradient", skyColor: "#1b7660", horizonColor: "#e4b676", lights: "sun", lightPosition: { x: 0, y: 1.65, z: -1}, fog: 0.75, flatShading: false, playArea: 1, ground: "hills", groundYScale: 5, groundTexture: "walkernoise", groundColor: "#664735", groundColor2: "#6c4b39", dressing: "pyramids", dressingAmount: 10, dressingColor: "#7c5c45", dressingScale: 5, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "spots", gridColor: "#e4b676"},
+    'checkerboard': {seed: 1, skyType: "gradient", skyColor: "#0d0d0d", horizonColor: "#404040", lights: 'sun', lightPosition: { x: 0, y: 1, z: -0.2}, fog: 0.81, flatShading: true, ground: "hills", groundYScale: 4.81, groundTexture: "checkerboard", groundColor: "#252525", groundColor2: "#111111", dressing: "cubes", dressingAmount: 10, dressingColor: "#9f9f9f", dressingScale: 1.51, dressingVariance: { x: 5, y: 20, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#ccc"},
+    'forest': {seed: 8, skyType: "gradient", skyColor: "#24b59f", horizonColor: "#eff9b7", lights: "sun", lightPosition: { x: -1.2, y: 0.88, z: -0.55}, fog: 0.8, flatShading: false, playArea: 1, ground: "noise", groundYScale: 4.18, groundTexture: "squares", groundColor: "#937a24", groundColor2: "#987d2e", dressing: "trees", dressingAmount: 500, dressingColor: "#888b1d", dressingScale: 1, dressingVariance: { x: 10, y: 10, z: 10}, dressingUniformScale: true, grid: "none", gridColor: "#c5a543"},
+    'goaland': {seed: 17, skyType: "gradient", skyColor: "#239893", horizonColor: "#a3dab8", lights: "room", lightPosition: { x: 0.1, y: 4, z: 0.56}, fog: 0.73, flatShading: false, playArea: 1, ground: "noise", groundYScale: 0.81, groundTexture: "none", groundColor: "#E95867", groundColor2: "#db4453", dressing: "mushrooms", dressingAmount: 150, dressingColor: "#df5361", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "dots", gridColor: "#239893"},
+    'yavapai': {seed: 11, skyType: "gradient", skyColor: "#239849", horizonColor: "#cfe0af", lights: "sun", lightPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, playArea: 1, ground: "canyon", groundYScale: 9.76, groundTexture: "walkernoise", groundColor: "#C66344", groundColor2: "#c96b4b", dressing: "none", dressingAmount: 50, dressingColor: "#dd7d44", dressingScale: 5, dressingVariance: { x: 5, y: 10, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
+    'threetowers': {seed: 5, skyType: "gradient", skyColor: "#23a06b", horizonColor: "#f5e170", lights: "sun", lightPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, playArea: 1, ground: "spikes", groundYScale: 4.26, groundTexture: "walkernoise", groundColor: "#273a49", groundColor2: "#2b464f", dressing: "towers", dressingAmount: 3, dressingColor: "#5f6d94", dressingScale: 20, dressingVariance: { x: 5, y: 100, z: 5}, dressingUniformScale: true, grid: "none", gridColor: "#239893"},
+    'poison': {seed: 92, skyType: "gradient", skyColor: "#1ea84a", horizonColor: "#177132", lights: "sun", lightPosition: { x: 0.5, y: 1, z: 0}, fog: 0.8, flatShading: false, playArea: 1, ground: "canyon", groundYScale: 9.76, groundTexture: "none", groundColor: "#851f31", groundColor2: "#912235", dressing: "cubes", dressingAmount: 20, dressingColor: "#c7415b", dressingScale: 10, dressingVariance: { x: 1, y: 200, z: 1}, dressingUniformScale: false, grid: "crosses", gridColor: "#de4e67"},
+    'starry': {seed: 1, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", lights: 'sun', lightPosition: { x: 0, y: -0.01, z: -0.46}, fog: 0.7, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#553e35", groundColor2: "#694439", dressing: "none", dressingAmount: 100, dressingColor: "#795449", dressingScale: 5, dressingVariance: { x: 1, y: 1, z: 1}, dressingUniformScale: true, grid: "1x1", gridColor: "#283133"},
+    'osiris': {seed: 46, skyType: "atmosphere", skyColor: "#88c", horizonColor: "#ddd", lights: 'sun', lightPosition: { x: 0, y: 0.02, z: -0.46}, fog: 0, flatShading: false, ground: "hills", groundYScale: 3, groundTexture: "none", groundColor: "#9e7b47", groundColor2: "#9e7b47", dressing: "pyramids", dressingAmount: 7, dressingColor: "#9e7b47", dressingScale: 5, dressingVariance: { x: 30, y: 30, z: 30}, dressingUniformScale: true, grid: "dots", gridColor: "#4b779a"},
+    //'japan': {seed: 7, skyType: "gradient", skyColor: "#1b7660", horizonColor: "#e4b676", lights: 'sun', lightPosition: { x: 0, y: 1.65, z: -1}, fog: 0.75, flatShading: false, ground: "hills", groundYScale: 5, groundTexture: "none", groundColor: "#664735", groundColor2: "#7c5c45", dressing: "torii", dressingAmount: 5, dressingColor: "#7c5c45", dressingScale: 5, dressingVariance: { x: 20, y: 20, z: 20}, dressingUniformScale: true, grid: "spots", gridColor: "#e4b676"}
   },
 
   init: function () {
     this.STAGE_SIZE = 200;
     // assets
-    this.conv_table = '!#$%&()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[]^_`abcdefghijklmnopqrstuvwxyz{¬|}~';
-    this.conv_table += '¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîïðñòóôõö÷øùúûüýþÿ'
-    this.conv_table += 'ĀāĂăĄąĆćĈĉĊċČčĎďĐđĒēĔĕĖėĘęĚěĜĝĞğĠġĢģĤĥĦħĨĩĪīĬĭĮįİıĲĳĴĵĶķĸĹĺĻļĽľĿŀŁłŃńŅņŇňŊŋŌōŎŏŐőŒœŔŕŖŗŘřŚśŜŝŞşŠšŢţŤťŦŧŨũŪūŬŭŮůŰűŲųŴŵŶŷŸŹźŻżŽžſ';
-    this.conv_table += 'ƀƁƂƃƄƅƆƇƈƉƊƋƌƍƎƏƐƑƒƓƔƕƖƗƘƙƚƛƜƝƟƞƠơƢƣƤƥƦƧƨƩƪƫƬƭƮƯưƱƲƳƴƵƶƷƸƹƺƻƼƽƾƿǀǁǂǃǄǅǆǇǈǉǊǋǌǍǎǏǐǑǒǓǔǕǖǗǘǙǚǛǜǝǞǟǠǡǢǣǤǥǦǧǨǩǪǫǬǭǮǯǰǱǲǳǴǵǶǷǸǹǺǻǼǽǾǿȀȁȂȃȄȅȆȇȈȉȊȋȌȍȎȏȐȑȒȓȔȕȖȗȘșȚțȜȝȞȟȠȡȢȣȤȥȦȧȨȩȪȫȬȭȮȯȰȱȲȳȴȵȶȷȸȹȺȻȼȽȾȿɀɁɂɃɄɅɆɇɈɉɊɋɌɍɎɏ';
     this.assets = {
       'stones': [
         {
@@ -65,8 +63,13 @@ AFRAME.registerComponent('environment', {
           vertices: [-148,-453,-18,142,-196,-26,-40,124,-109,36,-835,37,-282,-72,97,-40,-158,170,2,125,87,-174,125,-20,-65,-356,42,83,-555,-147,5,-182,-62,172,123,-12,193,-489,-60,4,-727,97,120,-767,16,39,-704,-88,-27,-801,-16,-16,-211,30,-119,-327,-8,-139,-349,93,213,124,-213,89,-589,-87,-229,-235,122,54,-537,-57,-173,124,11,28,124,-224,-176,124,205,107,-107,41,34,-21,167,110,-52,195,213,-124,88,161,-173,126,232,122,44,99,-202,87,74,-165,152,80,122,48,181,123,188,-99,-410,-79,-104,-690,-14,138,124,2,121,-356,-83,-301,124,113,-223,-282,20,-232,-62,192,151,-230,-208,-17,125,-106,222,-436,-100,50,-276,-211,165,-154,47,23,124,148,253,122,132,-131,124,-79,-110,124,101,-130,-633,81,100,124,-79,104,-713,-56,100,124,83,113,-468,87,-256,124,22,-270,124,194,-117,-265,164,-31,124,-7,-32,-175,-16,-34,124,157,-47,-289,130,128,124,-266,1,-500,-128,265,124,-100,269,-228,-74,89,123,6,113,-404,-7,168,121,7,34,-149,107,95,122,217],
           faces: [0,37,38,53,13,52,1,54,39,13,16,3,16,14,3,14,13,3,4,58,42,4,59,41,5,17,6,6,63,5,19,18,8,9,66,47,47,44,9,10,45,66,10,69,45,11,69,70,70,68,11,68,46,20,1,57,14,14,55,1,2,40,15,15,37,2,38,15,16,17,64,8,7,62,18,18,42,7,19,64,60,60,22,19,12,23,21,23,9,21,9,12,21,68,70,12,22,60,43,43,4,22,70,10,23,0,53,24,24,51,0,47,66,25,25,65,47,26,59,43,43,5,26,27,48,33,28,49,72,28,73,49,31,48,30,30,48,32,32,50,30,31,34,33,34,31,29,29,28,34,27,72,35,35,71,27,29,50,36,36,73,29,0,38,53,0,51,37,52,13,56,1,39,56,1,55,40,1,40,54,2,37,51,13,53,16,16,55,14,14,57,13,4,41,58,5,60,64,5,64,17,6,17,61,7,42,58,8,64,19,19,42,18,18,62,8,9,44,46,47,65,44,11,68,67,20,67,68,46,68,12,57,56,13,1,56,57,2,54,40,15,40,55,16,53,38,38,37,15,15,55,16,17,8,62,62,61,17,7,61,62,19,22,42,20,46,44,20,44,65,12,70,23,23,66,9,9,46,12,22,4,42,43,59,4,23,10,66,70,69,10,24,53,52,25,66,45,26,5,63,43,60,5,27,33,72,27,71,48,30,50,31,32,48,71,33,34,72,33,48,31,34,28,72,29,73,28,35,72,49,29,31,50]
         }
-        //v : '-148,-453Ą1ăā2ĉ96Ą2Đą0,124ĉ09,3ē835ĝ7đ8č-7č9ĤĔĉ5ċ7ĕčėĢ8Ĭ17ęĴđĕ-6Ģ-ġĐ4čĠĄ5ňĉ4ĤŀĊħ6ĳĩĖ2ĈĀĳ9ŕĂĜľĕęĨ2ĤīœĽ76Ĥ1Đ3śıŞ8ă-ŠĄ801ĉēŨđ1ŵ3Ľźś3ű-ů1ŪĄ34ĜŘ,2ƄœŞƌĈ8śįśĶđ2śŔĢėč5ŞćĬ5ķ7Ĉėĺŵ2ċĘƗŞĸĐƦƋ0ƛ0ķƴ,4ŻƏŵŨŧ1Ľ5ŗĢƐĉƫŮĖ6ŵĀƤœĐŔĳ2č4ę9ƙ0ŅĤĹŶƛǀ,ųœǑċ8ƻŔĖǆ-ǔĄƸŤśƾŞ69Žĺ3ƪęǏǉłŲŕżǣƧŕǐǾĦƱđƀĄŐĖ9ĳ5ǉŔĽ20ƃŧ2ō0ǍǐǩĞĚĕ5ȍťŹƻĿĮęŋƋƥƫāăȒȥĳȄĀ3ǼĄ7ǬƾƎĖŴĉżȅ3Ƒƻ0ĕưĨĜǭȰƍ-5ƯȽȴņźř6ăƖŰɆȴȖŰıȴ19ƭĸđȠŨŞȮȴĨƆħĸōēƇɖƢǩĬƩɁȸėǴɛƯŇɈŖȨɜƫĀɈĒƙƩȰęƒœĈƯɄ40ŞŧɍœŵĤɧĀƈȵšƛȖƌ7',
-        //f : '0,37ā8,53,1Ĉ52ĉĆ4ā9ĉĈ16āĉĖ1ĐĔĐĊėĐ5ą4čĠĒ41ĆĉăĖĬċĉĒ1ąąĒ6Ė4ăķ,4ĐİĀ45,ĵĉĀ6Ħŀ1ĨŅ,7ĀŌŁąňŏĺĖ2ĀĨ5ăĚĉĠŇ,ĤŖŇŀĂŞĄĉŇęīĐąīčıĉĢčřĴĐ6ńĀ2ŭİč2Ĉ2Ĩż,ĒžƁĉŻŉūŖŻčŵĺĈ4ƎŞűŖŷĈĀćŞĐ2ĠĨľīŔŀ2ŀ6ŀĹ2Ė5ĦƎĮƦŞĸą3ŽĢĒ7ŻūƎĒ3Ĩ4ƯĀ3ľƯč3č5ƽƽĨ3ěĈǈāſƂƂƯƙăƴāŢŀ7ſă2ĒǄāĖ3Ė7ŽĒƽąƗƖǇăČēĆęđǬĎ5ƤŖĺƖƙāǩĨĞƗĕĘĆŇĝĠřƐħĆǥŁńĠŁĝīĪŁĨĸǃĲȊįȔģůȗ6čĳĺĐ4ĶīƤĝƇŁǙńīĢĬŐǃǩęĔǯŘŤ5ȝŠǴǾǽƗ3ƯƯřšȶǼ1ăąșŁƋǹǒȎɄȔŸĺŻľĶƙľŴŇƒŞŽĈłĒĦęƊĺɌƍĆĦɕŃŁǠńĽƘĆċŻƢĶƠƧŁƪȇĩ2ăưŋŻǒƺƼĆǆāĤūǇǊĐǓɶƻǌāƙūŻƳƱǔɷĺǎʇǄ'
+      ],
+      'torii': [
+        {
+          type: 'mesh',
+          vertices: [692,-966,52,661,-834,52,692,-966,-52,661,-834,-52,0,-894,52,0,-776,52,0,-894,-52,0,-776,-52,518,-935,-52,345,-913,-52,170,-899,-52,162,-779,-52,328,-790,-52,494,-808,-52,170,-899,52,345,-913,52,518,-935,52,494,-808,52,328,-790,52,162,-779,52,0,-618,-16,0,-697,-16,0,-618,16,0,-697,16,586,-618,-16,586,-697,-16,586,-618,16,586,-697,16,331,29,75,331,-766,52,369,29,65,357,-766,45,396,29,37,377,-766,26,406,29,0,384,-766,0,396,29,-37,377,-766,-26,369,29,-65,357,-766,-45,331,29,-75,331,-766,-52,294,29,-65,305,-766,-45,267,29,-37,286,-766,-26,257,29,0,279,-766,0,267,29,37,286,-766,26,294,29,65,305,-766,45,0,-777,-85,0,-681,-33,333,-762,75,333,-806,75,371,-762,65,371,-806,65,398,-762,37,398,-806,37,408,-762,0,408,-806,0,398,-762,-37,398,-806,-37,371,-762,-65,371,-806,-65,333,-762,-75,333,-806,-75,296,-762,-65,296,-806,-65,268,-762,-37,268,-806,-37,258,-762,0,258,-806,0,268,-762,37,268,-806,37,296,-762,65,296,-806,65,0,-681,33,0,-777,85,52,-681,-33,52,-777,-85,52,-681,33,52,-777,85],
+          faces: [4,10,14,1,13,17,11,6,7,0,3,1,16,1,17,4,19,5,14,18,19,15,17,18,3,8,13,13,9,12,12,10,11,19,7,5,19,12,11,18,13,12,16,2,0,15,8,16,14,9,15,23,26,22,27,24,26,25,20,24,26,20,22,23,25,27,29,30,28,31,32,30,33,34,32,35,36,34,37,38,36,39,40,38,41,42,40,43,44,42,45,46,44,47,48,46,49,50,48,51,28,50,55,56,54,57,58,56,59,60,58,61,62,60,63,64,62,79,81,83,65,66,64,82,53,78,67,68,66,81,53,80,69,70,68,83,80,82,71,72,70,79,82,78,73,74,72,75,63,59,75,76,74,77,54,76,60,68,76,4,6,10,1,3,13,11,10,6,0,2,3,16,0,1,4,14,19,14,15,18,15,16,17,3,2,8,13,8,9,12,9,10,19,11,7,19,18,12,18,17,13,16,8,2,15,9,8,14,10,9,23,27,26,27,25,24,25,21,20,26,24,20,23,21,25,29,31,30,31,33,32,33,35,34,35,37,36,37,39,38,39,41,40,41,43,42,43,45,44,45,47,46,47,49,48,49,51,50,51,29,28,55,57,56,57,59,58,59,61,60,61,63,62,63,65,64,79,52,81,65,67,66,82,80,53,67,69,68,81,52,53,69,71,70,83,81,80,71,73,72,79,83,82,73,75,74,59,57,55,55,77,75,75,73,71,71,69,75,67,65,63,63,61,59,59,55,75,75,69,67,67,63,75,75,77,76,77,55,54,76,54,56,56,58,76,60,62,68,64,66,68,68,70,72,72,74,68,76,58,60,62,64,68,68,74,76]
+        }
       ],
       'towers': [
         {type: 'extrude', vertices:  [-0.054, -0.178, -0.007, -0.182, 0.069, -0.027, 0.189, 0.079, 0.178, 0.124, -0.007, 0.097, -0.145, 0.182, -0.178, 0.144, -0.079, -0.021]},
@@ -74,35 +77,38 @@ AFRAME.registerComponent('environment', {
         {type: 'lathe', segments: 5, vertices: [0.069, 0.216, 0.067, 0.562, 0.126, 0.562, 0.128, 0.774, 0.191, 0.774, 0.193, 0.986]}
       ],
       'trees': [
-        {type: 'lathe', vertices: [0.001, 0.008, 0.142, 0.362, 0.081, 0.348, 0.26, 0.742, 0.146, 0.69, 0.288, 0.918, 0.04, 0.932, 0.046, 0.998]},
-        {type: 'lathe', vertices: [0.001, 0.666, 0.107, 0.748, 0.044, 0.746, 0.193, 0.868, 0.087, 0.864, 0.282, 0.97, 0.044, 0.938, 0.042, 0.994]},
-        {type: 'lathe', vertices: [0.001, 0.714, 0.109, 0.794, 0.056, 0.812, 0.195, 0.9, 0.128, 0.934, 0.227, 0.982, 0.095, 0.99]}
+        //{type: 'lathe', noise: 0.015, segments: 16, vertices: [0.01, 0.054, 0.093, 0.194, 0.063, 0.192, 0.16, 0.374, 0.111, 0.362, 0.258, 0.616, 0.193, 0.6, 0.317, 0.836, 0.25, 0.818, 0.337, 0.992]},
+        {type: 'lathe', noise: 0.015, segments: 6, vertices: [0.004, 0.826, 0.054, 0.832, 0.105, 0.854, 0.136, 0.9, 0.136, 0.958, 0.118, 0.994]},
+        {type: 'lathe', noise: 0.015, segments: 14, vertices:  [0.004, 0.01, 0.069, 0.022, 0.13, 0.068, 0.178, 0.18, 0.189, 0.32, 0.191, 0.59, 0.193, 0.75, 0.138, 0.79, 0.018, 0.808, 0.018, 0.996]},
+        {type: 'lathe', noise: 0.015, segments: 14, vertices: [0.002, 0.436, 0.126, 0.46, 0.201, 0.57, 0.219, 0.72, 0.154, 0.846, 0.028, 0.884, 0.034, 0.996]}
       ],
       'apparatus': [
-        // cilynder
+        // cylinder
         {type: 'lathe', segments: 10, vertices: [0.004, 0.23, 0.042, 0.23, 0.069, 0.36, 0.038, 0.362, 0.038, 0.372, 0.06, 0.372, 0.073, 0.572, 0.024, 0.572, 0.024, 0.67, 0.069, 0.67, 0.075, 0.722, 0.097, 0.724, 0.105, 0.852, 0.083, 0.902, 0.065, 0.902, 0.065, 0.924, 0.128, 0.924, 0.146, 0.996]},
         // high antenna
         {type: 'lathe', segments: 16, vertices: [0.001, 0.232, 0.229, 0.182, 0.486, 0.07, 0.356, 0.182, 0.213, 0.242, 0.154, 0.242, 0.144, 0.262, 0.178, 0.262, 0.126, 0.314, 0.04, 0.328, 0.038, 0.374, 0.058, 0.374, 0.071, 0.408, 0.026, 0.406, 0.03, 0.42, 0.091, 0.418, 0.034, 0.496, 0.01, 0.498, 0.03, 0.506, 0.014, 0.998]},
       ],
       'mushrooms': [
-        {type: 'lathe', vertices: [0.001, 0.04, 0.203, 0.058, 0.372, 0.124, 0.48, 0.218, 0.254, 0.21, 0.062, 0.26, 0.056, 0.84, 0.085, 0.95, 0.122, 0.998]},
-        {type: 'lathe', vertices: [0.001, 0.662, 0.13, 0.686, 0.223, 0.78, 0.256, 0.928, 0.111, 0.914, 0.115, 0.998]},
-        {type: 'lathe', vertices: [0.001, 0.454, 0.264, 0.522, 0.461, 0.614, 0.418, 0.656, 0.174, 0.78, 0.176, 0.916, 0.223, 0.994]}
+        {type: 'lathe', noise: 0.02, segments: 14, vertices:  [0.001, 0.006, 0.13, 0.018, 0.341, 0.084, 0.437, 0.144, 0.492, 0.234, 0.484, 0.246, 0.276, 0.232, 0.107, 0.284, 0.046, 0.346, 0.062, 0.852, 0.097, 0.956, 0.166, 0.998]},
+        {type: 'lathe', noise: 0.02, segments: 10, vertices:  [0.001, 0.562, 0.091, 0.572, 0.172, 0.61, 0.223, 0.666, 0.256, 0.74, 0.258, 0.806, 0.246, 0.824, 0.062, 0.826, 0.065, 0.948, 0.097, 0.998]},
+        {type: 'lathe', noise: 0.02, segments: 10, vertices:  [0.001, 0.768, 0.099, 0.772, 0.219, 0.802, 0.306, 0.844, 0.352, 0.886, 0.352, 0.908, 0.118, 0.904, 0.107, 0.93, 0.115, 0.966, 0.14, 0.996]}
       ]
     };
 
     // scale mesh assets (coordinates saved in integers for better compression)
-    for(i in this.assets){
-      if (this.assets[i].type != 'mesh') continue;
-      var len = this.assets[i].vertices.length;
-      for (var v = 0; v < len; v++) {
-        this.assets[i].vertices[v] /= 1000.0;
+    for (i in this.assets){
+      for (var j = 0; j < this.assets[i].length; j++) {
+        var asset = this.assets[i][j];
+        if (asset.type != 'mesh') continue;
+        for (var v = 0, len = asset.vertices.length; v < len; v++) {
+          asset.vertices[v] /= 1000.0;
+        }
       }
     }
 
     // create sky
     this.sky = document.createElement('a-sky');
-    this.sky.setAttribute('radius', this.STAGE_SIZE / 2);
+    this.sky.setAttribute('radius', this.STAGE_SIZE);
     this.sky.setAttribute('theta-length', 110);
 
     this.stars = null;
@@ -133,7 +139,7 @@ AFRAME.registerComponent('environment', {
       intensity: 0.4
     });
     this.sunlight = document.createElement('a-entity');
-    this.sunlight.setAttribute('position', this.data.sunPosition);
+    this.sunlight.setAttribute('position', this.data.lightPosition);
     this.sunlight.setAttribute('light', {intensity: 0.6});
 
     // add everything to the scene
@@ -186,13 +192,12 @@ AFRAME.registerComponent('environment', {
   update: function (oldData) {
     // preset changed
     if (oldData.preset === undefined || oldData.preset !== this.data.preset) {
-      console.log('changing preset');
       this.el.setAttribute('environment', this.presets[this.data.preset]);
       return;
     }
 
     var skyType = this.data.skyType;
-    var sunPos = new THREE.Vector3(this.data.sunPosition.x, this.data.sunPosition.y, this.data.sunPosition.z);
+    var sunPos = new THREE.Vector3(this.data.lightPosition.x, this.data.lightPosition.y, this.data.lightPosition.z);
     sunPos.normalize();
     
     // set atmosphere sky and stars
@@ -205,7 +210,7 @@ AFRAME.registerComponent('environment', {
     // update light colors and intensities
 
     if (this.sunlight) {
-      this.sunlight.setAttribute('position', this.data.sunPosition);
+      this.sunlight.setAttribute('position', this.data.lightPosition);
       if (skyType != 'atmosphere') {
         // dim down the sky color for the light
         var skycol = new THREE.Color(this.data.skyColor);
@@ -223,14 +228,13 @@ AFRAME.registerComponent('environment', {
     } 
 
     // update sky colors
-    if (!oldData.skyType || 
-      skyType != oldData.skyType ||
+    if (skyType != oldData.skyType ||
       this.data.skyColor != oldData.skyColor ||
       this.data.horizonColor != oldData.horizonColor) {
 
       var mat = {};
 
-      if (skyType != oldData['skyType']) {
+      if (skyType != oldData.skyType) {
         mat.shader = {'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
         if (this.stars) {
           this.stars.setAttribute('visible', skyType == 'atmosphere'); 
@@ -263,23 +267,25 @@ AFRAME.registerComponent('environment', {
       this.el.sceneEl.removeAttribute('fog');
     }
 
-    // turn on/off scene lights
+    // scene lights
 
-    if (this.data.autoLights !== oldData.autoLights) {
-      this.sunlight.setAttribute('visible', this.data.autoLights);
-      this.hemilight.setAttribute('visible', this.data.autoLights);
+    if (this.data.lights !== oldData.lights) {
+      this.sunlight.setAttribute('light', {type: this.data.lights == 'room' ? 'point' : 'directional'});
+      this.sunlight.setAttribute('visible', this.data.lights !== 'none');
+      this.hemilight.setAttribute('visible', this.data.lights !== 'none');
     }
+
 
     // update ground attributes (also geometry?)
 
     var updateGroundGeometry = 
+      !this.groundGeometry ||
       this.data.seed != oldData.seed || 
       this.data.ground != oldData.ground || 
       this.data.playArea != oldData.playArea || 
       this.data.flatShading != oldData.flatShading;
 
-    if (!oldData || 
-        updateGroundGeometry ||
+    if (updateGroundGeometry ||
         this.data.groundColor != oldData.groundColor ||
         this.data.groundColor2 != oldData.groundColor2 ||
         this.data.groundYScale != oldData.groundYScale ||
@@ -295,8 +301,7 @@ AFRAME.registerComponent('environment', {
 
     // update dressing
 
-    if (!oldData ||
-        this.data.seed != oldData.seed ||
+    if (this.data.seed != oldData.seed ||
         this.data.dressing != oldData.dressing ||
         this.data.flatShading != oldData.flatShading ||
         this.data.dressingAmount != oldData.dressingAmount ||
@@ -390,8 +395,8 @@ AFRAME.registerComponent('environment', {
 
   randomizeAll: function() {
     this.data.seed = Math.floor(1 + Math.random() * 1000);
-    var discard = ['seed', 'preset', 'autoLights', 'ImFeelingLucky'];
-    this.data.autoLights = true;
+    var discard = ['seed', 'preset', 'lights', 'ImFeelingLucky'];
+    this.data.lights = true;
     for (var i in this.schema){
       if (discard.indexOf(i) != -1) continue;
       var p = this.schema[i];
@@ -412,7 +417,6 @@ AFRAME.registerComponent('environment', {
   updateGround: function (updateGeometry) {
 
     var resolution = 64;
-    var updateGeometry = updateGeometry || !this.ground.getObject3D('mesh');
 
     if (updateGeometry) {
       var visibleground = this.data.ground != 'none';
@@ -698,6 +702,17 @@ AFRAME.registerComponent('environment', {
   getAssetGeometry: function(data) {
     if (!data) return null;
     var geoset = [];
+    var self = this;
+
+    function applyNoise(g, noise) {
+      var n = new THREE.Vector3();
+      for (var i = 0, numVerts = g.vertices.length; i < numVerts; i++) {
+        n.x = (self.random(i) - 0.5) * noise;
+        n.y = (self.random(i + numVerts) - 0.5) * noise;
+        n.z = (self.random(i + numVerts * 2) - 0.5) * noise;
+        g.vertices[i].add(n);
+      }
+    }
 
     for (var j = 0; j < data.length; j++) {
 
@@ -714,6 +729,7 @@ AFRAME.registerComponent('environment', {
         var g = new THREE.LatheGeometry(points, data[j]['segments'] || 8);
         g.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI, 0, 0)));
         g.applyMatrix(new THREE.Matrix4().makeTranslation(0, maxy, 0));
+        if (data[j]['noise']) applyNoise(g, data[j].noise);
         geoset.push(g);
       }
 
@@ -726,6 +742,7 @@ AFRAME.registerComponent('environment', {
         }
         g = new THREE.ExtrudeGeometry(shape, {amount: 1, bevelEnabled: false});
         g.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
+        if (data[j]['noise']) applyNoise(g, data[j].noise);
         geoset.push(g);
       }
 
@@ -736,13 +753,17 @@ AFRAME.registerComponent('environment', {
         for (var v = 0; v < verts.length; v += 3) {
           g.vertices.push(new THREE.Vector3(verts[v], verts[v + 1], verts[v + 2]));
         }
-        for (var f = 0; f < data.faces.length; f += 3) {
+        for (var f = 0; f < faces.length; f += 3) {
           g.faces.push(new THREE.Face3(faces[f], faces[f + 1], faces[f + 2]))
         }
         g.computeFaceNormals();
+        if (data[j]['noise']) applyNoise(g, data[j].noise);
         geoset.push(g);
       }
     }
+
+
+
     return geoset;
   },
 
@@ -785,7 +806,7 @@ AFRAME.registerComponent('environment', {
     
       var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)];
       var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - this.random(66 + i) * 0.3);
-
+/*
       for (var f = 0, fl = geo.faces.length; f < fl; f++) {
         var face = geo.faces[f];
         for (var v = 0; v < 3; v++) {
@@ -794,7 +815,7 @@ AFRAME.registerComponent('environment', {
           face.vertexColors[v] = new THREE.Color(color.r * floorao, color.g * floorao, color.b * floorao);
         }
       }
-
+*/
       // set random position, rotation and scale
       var ds = this.data.dressingScale;
       var dv = new THREE.Vector3(this.data.dressingVariance.x, this.data.dressingVariance.y, this.data.dressingVariance.z);
