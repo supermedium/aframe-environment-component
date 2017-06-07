@@ -37,6 +37,7 @@
         line-height: 1.3rem;
         background: rgba(0,0,0,0.2);
         padding: 1rem;
+        box-sizing: border-box;
       }
       #about b{
           font-weight: bold;
@@ -64,6 +65,20 @@
         text-shadow: 1px 2px 0px black;
         font-size: 20px;
       }
+
+    @media (max-width: 400px), (max-height: 300px) {
+      #about {
+        left: 5%;
+        top: 5%;
+        width: 90%;
+      }
+      h1 {
+        left: 5%;
+      }
+      h1 b {
+        width: auto;
+      }
+    }
     </style>
   </head>
   <body>
@@ -95,15 +110,26 @@
 
 
   <script>
-    var presets = ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'poison', 'starry', 'osiris', 'japan'];
-    var preset = 1;
+    var presets = ['default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'poison', 'starry', 'osiris', 'japan'];
+    var preset = 0;
+    
     function nextPreset(dir) {
-      if (preset === 1 && dir === -1) preset = presets.length;
-      preset = (preset + dir) % presets.length;
-      if (preset === 0) preset = 1;
+      if (preset === 0 && dir === -1) { 
+        preset = presets.length - 1;
+      }
+      else {
+        preset = (preset + dir) % presets.length;
+      }
       document.querySelector('h1 b').innerHTML = presets[preset];
       document.querySelector('[environment]').setAttribute('environment', {preset: presets[preset]});
     };
+
+    window.addEventListener('keydown', function (evt) {
+      if (evt.keyCode == 32) {
+        nextPreset(1);
+      }
+    });
+
   </script>
   </body>
 </html>
