@@ -1,4 +1,4 @@
-/* global AFRAME, THREE */
+/* eslint-disable */
 
 function logPreset () {
   document.querySelector('[environment]').components['environment'].logPreset();
@@ -9,12 +9,12 @@ AFRAME.registerComponent('environment', {
     preset: {default: 'default', oneOf: ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'threetowers', 'poison', 'starry', 'osiris']},
     seed: {type: 'int', default: 1, min: 0, max: 1000},
 
-    skyType: {default: '', oneOf:['color', 'gradient', 'atmosphere']},
+    skyType: {default: 'color', oneOf:['color', 'gradient', 'atmosphere']},
     skyColor: {type: 'color'},
     horizonColor: {type: 'color'},
     lights: {default: 'sun', oneOf: ['none', 'sun', 'room']},
     lightPosition: {type:'vec3', default: '0 1 -0.2'},
-    fog: {type:'float', default: -1, min: 0, max: 1},
+    fog: {type:'float', default: 0, min: 0, max: 1},
 
     flatShading: {default: false},
 
@@ -1291,3 +1291,4 @@ PerlinNoise.prototype.noise = function(x, y, z) {
   }
 
 } )();
+/* eslint-enable */

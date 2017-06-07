@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <title>A-Frame Environment Component test</title>
     <meta name="description" content="A-Frame">
-    <script src="https://rawgit.com/aframevr/aframe/9a92135/dist/aframe-master.js"></script>
+    <script src="aframe.js"></script>
     <script src="aframe-environment-component.js"></script>
     <link href="https://fonts.googleapis.com/css?family=Voces" rel="stylesheet">
 
@@ -101,7 +101,7 @@
       document.querySelector('h1 b').innerHTML = presets[preset];
       document.querySelector('[environment]').setAttribute('environment', {preset: presets[preset]});
     };
-
+    document.querySelector('[environment]').setAttribute('environment', {preset: 'default'});
   </script>
   </body>
 </html>
