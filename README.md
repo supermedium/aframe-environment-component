@@ -1,3 +1,5 @@
+![gif](https://github.com/feiss/aframe-environment-component/blob/master/assets/aframeenvironment.gif?raw=true)
+
 # Aframe-environment-component
 
 A simple way of setting up a whole basic environment for your [A-Frame](http://aframe.io) VR scene. 
