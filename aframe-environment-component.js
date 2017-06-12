@@ -24,7 +24,7 @@ AFRAME.registerComponent('environment', {
 
     ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
     groundYScale: {type: 'float', default: 3, min: 0, max: 50},
-    groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares', 'noise', 'walkernoise']},
+    groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares', 'walkernoise']},
     groundColor:  {type: 'color', default: '#553e35'},
     groundColor2: {type: 'color', default: '#694439'},
 
