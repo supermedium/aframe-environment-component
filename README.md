@@ -1,8 +1,9 @@
+# aframe-environment-component
+
+A simple way of setting up a whole basic environment for your
+[A-Frame](http://aframe.io) VR scene.
+
 ![gif](https://github.com/feiss/aframe-environment-component/blob/master/assets/aframeenvironment.gif?raw=true)
-
-# Aframe-environment-component
-
-A simple way of setting up a whole basic environment for your [A-Frame](http://aframe.io) VR scene. 
 
 Just include `aframe-environment-component.js` in your .html:
 
@@ -36,15 +37,15 @@ You can view and try all the presets in the **[aframe-environment-component Test
 Apart from using a preset, you can tweak the environment with many parameters, like this:
 
 ```html
-  <a-entity stage="sunPosition:1 5 -2; groundColor: #445"></a-entity>
+  <a-entity environment="sunPosition: 1 5 -2; groundColor: #445"></a-entity>
 ```
 
 You can also select a preset but change some of its parameters:
 ```html
-  <a-entity stage="preset: forest; groundColor: #445; grid: cross"></a-entity>
+  <a-entity environment="preset: forest; groundColor: #445; grid: cross"></a-entity>
 ```
 
-This is the list of the available parameters. 
+This is the list of the available parameters.
 
 
 | Parameter   | Default | Description |
