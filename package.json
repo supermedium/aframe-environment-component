@@ -1,0 +1,27 @@
+{
+  "name": "aframe-environment-component",
+  "version": "1.0.0",
+  "description": "Infinite A-Frame environments.",
+  "main": "aframe-environment-component.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/feiss/aframe-environment-component.git"
+  },
+  "keywords": [
+    "aframe",
+    "webvr",
+    "vr",
+    "component",
+    "aframe-component",
+    "virtual-reality"
+  ],
+  "author": "Diego Goberna",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/feiss/aframe-environment-component/issues"
+  },
+  "homepage": "https://github.com/feiss/aframe-environment-component#readme"
+}
