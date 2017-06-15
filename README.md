@@ -71,8 +71,8 @@ This is the list of the available parameters.
 | **dressingScale** | 5   | Height (in meters) of dressing objects |
 | **dressingVariance** | '1 1 1' | Maximum x,y,z meters to randomize the size and rotation of each dressing object. Use `0 0 0` for no variation in size nor rotation |
 | **dressingUniformScale** | true | If `false`, a different value is used for each coordinate x, y, z in the random variance of size.|
-| grid    | 'none'  | Valid values: `none`, `1x1`, `2x2`, `crosses`, `dots`, `xlines`, `ylines`. 1x1 and 2x2 are rectangular grids of 1 and 2 meters side, respectively.  |
-| `gridColor` | '#ccc' | Color of the grid. |
+| **grid**    | 'none'  | Valid values: `none`, `1x1`, `2x2`, `crosses`, `dots`, `xlines`, `ylines`. 1x1 and 2x2 are rectangular grids of 1 and 2 meters side, respectively.  |
+| **gridColor** | '#ccc' | Color of the grid. |
 
 
 The best way to work with them is to press `ctrl-alt-i` to open the [inspector](https://aframe.io/docs/master/introduction/visual-inspector-and-dev-tools.html#a-frame-inspector), search for 'environment' in the filter box and select it, and tweak the parameters while checking the changes in realtime. When you are happy, you can use the `Copy attributes` button or even better, copy the attributes logged in the browser's dev tools console.
