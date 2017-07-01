@@ -16,6 +16,8 @@ AFRAME.registerComponent('environment', {
     skyColor: {type: 'color'},
     horizonColor: {type: 'color'},
     lights: {default: 'sun', oneOf: ['none', 'sun', 'room']},
+    shadow: {default: false},
+    shadowSize: { default: 10},
     lightPosition: {type:'vec3', default: {x: 0, y: 1, z: -0.2}},
     fog: {type:'float', default: 0, min: 0, max: 1},
 
@@ -248,6 +250,14 @@ AFRAME.registerComponent('environment', {
         this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
         this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
       }
+
+      this.sunlight.setAttribute('light', {
+        castShadow: this.data.shadow,
+        shadowCameraLeft: -this.data.shadowSize,
+        shadowCameraBottom: -this.data.shadowSize,
+        shadowCameraRight: this.data.shadowSize,
+        shadowCameraTop: this.data.shadowSize
+      });
     } 
 
     // update sky colors
@@ -548,6 +558,11 @@ AFRAME.registerComponent('environment', {
     else {
       this.ground.getObject3D('mesh').material = this.groundMaterial;
     }
+    
+    this.ground.setAttribute('shadow', {
+      cast: false,
+      receive: this.data.shadow
+    });
   },
 
   // draw grid to a canvas context
