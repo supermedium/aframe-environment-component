@@ -1,5 +1,9 @@
 /* global AFRAME, THREE */
 
+if (typeof AFRAME === 'undefined') {
+  throw new Error('Component attempted to register before AFRAME was available.');
+}
+
 /**
  * enviroGetSettings() - console function for printing out the current environment settings
  */
@@ -41,6 +45,8 @@ AFRAME.registerComponent('environment', {
     grid: {default:'none', oneOf:['none', '1x1', '2x2', 'crosses', 'dots', 'xlines', 'ylines']},
     gridColor: {type: 'color', default: '#ccc'}
   },
+
+  multiple: false,
 
   presets: {
     'none' : {},

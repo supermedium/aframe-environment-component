@@ -8,10 +8,10 @@ A simple way of setting up a whole basic environment for your
 Just include `aframe-environment-component.js` in your .html:
 
 ```html
-  <script src="path/to/aframe-environment-component.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component/dist/aframe-environment-component.min.js"></script>
 ```
 
-and add the component `environment` to an entity:
+and add the `environment` component to an entity:
 
 ```html
   <a-entity environment></a-entity>
@@ -20,7 +20,6 @@ and add the component `environment` to an entity:
 That's it! :)
 
 ## Presets
-
 
 The previous code will setup a default scene, but you have a bunch of already predefined presets to choose from, using the `preset` parameter, like this:
 
