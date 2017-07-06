@@ -54,7 +54,7 @@ This is the list of the available parameters.
 | **skyType**     | 'atmosphere' | Valid values: `color`, `gradient`, `atmosphere` |
 | **skyColor**    |         | When `skyType` is `color` or  `gradient`, it sets the main sky color |
 | **horizonColor**|         | When `skyType` is `gradient`, it sets the color of the sky near the horizon |
-| **lights**      | 'sun'   | Valid values: `none`, `sun`, `room`. A hemisphere light and a key light (directional in the case of `sun` and pooint in the case of `room`) are added to the scene automatically when using the component. Use `none` if you don't want this automatic lighting set being added. The color and intensity are estimated automatically. |
+| **lighting**      | 'distant'   | Valid values: `none`, `distant`, `point`. A hemisphere light and a key light (directional or point) are added to the scene automatically when using the component. Use `none` if you don't want this automatic lighting set being added. The color and intensity are estimated automatically. |
 | **shadow**  | false | Shadows on/off. Sky light casts shadows on the ground of all those objects with `shadow` component applied |
 | **shadowSize** | 10 | Shadows size |
 | **lightPosition** | 0 1 -0.2 | Position of the main light. If `skyType` is `atmospheric`, only the orientation matters (is a directional light) and it can turn the scene into night when lowered towards the horizon. |
