@@ -8,7 +8,7 @@ A simple way of setting up a whole basic environment for your
 Just include `aframe-environment-component.js` in your .html:
 
 ```html
-  <script src="https://cdn.rawgit.com/feiss/aframe-environment-component/3e9b9050/dist/aframe-environment-component.js"></script>
+  <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
 ```
 
 and add the `environment` component to an entity:
