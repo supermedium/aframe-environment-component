@@ -49,6 +49,7 @@ This is the list of the available parameters.
 
 | Parameter   | Default | Description |
 |-------------|---------|-------------|
+| **active**  | true    | Show/hides the component. Use this instead of using the `visible` attribute |
 | **preset**      | 'default'  | Valid values: `none`, `default`, `contact`, `egypt`, `checkerboard`, `forest`, `goaland`, `yavapai`, `goldmine`, `threetowers`, `poison`, `arches`, `tron`, `japan`, `dream`, `volcano`, `starry`, `osiris` |
 | **seed**        | 1       | Seed for randomization. If you don't like the layout of the elements, try another value for the seed.  |
 | **skyType**     | 'atmosphere' | Valid values: `color`, `gradient`, `atmosphere` |
