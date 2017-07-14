@@ -5,7 +5,7 @@ A simple way of setting up a whole basic environment for your
 
 ![gif](https://github.com/feiss/aframe-environment-component/blob/master/assets/aframeenvironment.gif?raw=true)
 
-Just include `aframe-environment-component.js` in your .html:
+Make sure you are using __A-Frame 0.6.0__ or later. Then just include `aframe-environment-component.js` in your HTML:
 
 ```html
   <script src="https://rawgit.com/feiss/aframe-environment-component/master/dist/aframe-environment-component.min.js"></script>
@@ -18,6 +18,7 @@ and add the `environment` component to an entity:
 ```
 
 That's it! :)
+
 
 ## Presets
 
