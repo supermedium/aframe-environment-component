@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tests</title>
+    <meta name="description" content="A-Frame Environment Component">
+    <meta name="author" content="Diego F. Goberna">
+    <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+    <script src="../dist/aframe-environment-component.min.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Voces" rel="stylesheet">
+
+    <style>
+      body{
+        font: 12px 'Voces', sans-serif;
+        color: #444;
+        padding: 10px;
+      }
+      h1{
+        font-size: 16px;
+        margin: 0;
+        margin-bottom: 10px;
+      }
+      a{
+        color: #275;
+        text-decoration: none;
+      }
+      a:hover{
+        color: #396;
+      }
+      ol  {
+        padding: 0;
+        list-style-position: inside;
+      }
+      li {
+        margin-bottom: 4px;
+      }
+      .input {
+        margin-bottom: 10px;
+      }
+      input {
+        border: 1px solid #aaa;
+        padding: 2px 4px;
+        font-family: monospace;
+        width: 40rem;
+      }
+      a-scene {
+        height: 400px;
+        width: calc (100px - 20px);
+        background: #ccc;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Environment Component Tests</h1>
+    <ol>
+      <li><a href="#" onclick="return setParams(this, '')">None</a></li>
+      <li><a href="#" onclick="return setParams(this)">preset:forest</a></li>
+      <li><a href="#" onclick="return setParams(this)">preset:forest; dressing:pyramids</a></li>
+      <li><a href="#" onclick="return setParams(this)">dressing:cubes; dressingAmount:20; dressingColor: #f88</a></li>
+    </ol>
+    <div class="input">
+      Params: <input type="text" id="custom" value="" placeholder="None" />
+        <button onclick="test()">Test</button>
+        <!-- <button onclick="external()">Test in blank page</button> -->
+    </div>    
+
+    <a-scene embedded id="scene">
+      <a-sphere radius="0.3" position="0 1.7 -2" shadow></a-sphere>
+    </a-scene>
+  
+  <script>
+    var enviro = null;
+    function setParams(el, params) {
+      if (params !== undefined) {
+        document.getElementById('custom').value = params;
+      }
+      else {
+        document.getElementById('custom').value = el.innerText || el.textContent;
+      }
+      return false;
+    }
+    function test() {
+      var p = document.getElementById('custom').value;
+      if (enviro) { document.getElementById('scene').removeChild(enviro); }
+      enviro = document.createElement('a-entity');
+      enviro.setAttribute('environment', p);
+      document.getElementById('scene').appendChild(enviro);
+    }
+  
+  </script>
+
+
+  </body>
+</html>
