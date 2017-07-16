@@ -234,13 +234,13 @@ AFRAME.registerComponent('environment', {
 
   update: function (oldData) {
     // preset changed
-    if (oldData.preset === undefined || oldData.preset !== this.data.preset) {
+    if (!oldData || (oldData.preset === undefined || oldData.preset !== this.data.preset)) {
       var newData = Object.assign({}, this.presets[this.data.preset]);
-      if (oldData.preset === undefined) {
+      if (!oldData || oldData.preset === undefined) {
         Object.assign(newData, this.el.components.environment.attrValue);
       }
       this.el.setAttribute('environment', newData);
-      return;
+      if (oldData) { return; } else { oldData = {}; }
     }
 
     var skyType = this.data.skyType;
