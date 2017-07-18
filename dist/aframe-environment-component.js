@@ -75,7 +75,7 @@
 	    flatShading: {default: false},
 	    playArea: {type: 'float', default: 1, min: 1, max: 100},
 
-	    ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']}, 
+	    ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']},
 	    groundYScale: {type: 'float', default: 3, min: 0, max: 50},
 	    groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares', 'walkernoise']},
 	    groundColor:  {type: 'color', default: '#553e35'},
@@ -154,7 +154,7 @@
 	      'torii': [
 	        {
 	          type: 'mesh',
-	          mirror: true, 
+	          mirror: true,
 	          flatShading: true,
 	          vertices: [692,966,-52,661,834,-52,692,966,52,661,834,52,0,894,-52,0,776,-52,0,894,52,0,776,52,518,935,52,345,913,52,170,899,52,162,779,52,328,790,52,494,808,52,170,899,-52,345,913,-52,518,935,-52,494,808,-52,328,790,-52,162,779,-52,0,618,16,0,697,16,0,618,-16,0,697,-16,586,618,16,586,697,16,586,618,-16,586,697,-16,331,-29,-75,331,766,-52,369,-29,-65,357,766,-45,396,-29,-37,377,766,-26,406,-29,0,384,766,0,396,-29,37,377,766,26,369,-29,65,357,766,45,331,-29,75,331,766,52,294,-29,65,305,766,45,267,-29,37,286,766,26,257,-29,0,279,766,0,267,-29,-37,286,766,-26,294,-29,-65,305,766,-45,0,777,85,0,681,33,333,762,-75,333,806,-75,371,762,-65,371,806,-65,398,762,-37,398,806,-37,408,762,0,408,806,0,398,762,37,398,806,37,371,762,65,371,806,65,333,762,75,333,806,75,296,762,65,296,806,65,268,762,37,268,806,37,258,762,0,258,806,0,268,762,-37,268,806,-37,296,762,-65,296,806,-65,0,681,-33,0,777,-85,52,681,33,52,777,85,52,681,-33,52,777,-85],
 	          faces: [4,10,14,1,13,17,11,6,7,0,3,1,16,1,17,4,19,5,14,18,19,15,17,18,3,8,13,13,9,12,12,10,11,19,7,5,19,12,11,18,13,12,16,2,0,15,8,16,14,9,15,23,26,22,27,24,26,25,20,24,26,20,22,23,25,27,29,30,28,31,32,30,33,34,32,35,36,34,37,38,36,39,40,38,41,42,40,43,44,42,45,46,44,47,48,46,49,50,48,51,28,50,55,56,54,57,58,56,59,60,58,61,62,60,63,64,62,79,81,83,65,66,64,82,53,78,67,68,66,81,53,80,69,70,68,83,80,82,71,72,70,79,82,78,73,74,72,75,63,59,75,76,74,77,54,76,60,68,76,4,6,10,1,3,13,11,10,6,0,2,3,16,0,1,4,14,19,14,15,18,15,16,17,3,2,8,13,8,9,12,9,10,19,11,7,19,18,12,18,17,13,16,8,2,15,9,8,14,10,9,23,27,26,27,25,24,25,21,20,26,24,20,23,21,25,29,31,30,31,33,32,33,35,34,35,37,36,37,39,38,39,41,40,41,43,42,43,45,44,45,47,46,47,49,48,49,51,50,51,29,28,55,57,56,57,59,58,59,61,60,61,63,62,63,65,64,79,52,81,65,67,66,82,80,53,67,69,68,81,52,53,69,71,70,83,81,80,71,73,72,79,83,82,73,75,74,59,57,55,55,77,75,75,73,71,71,69,75,67,65,63,63,61,59,59,55,75,75,69,67,67,63,75,75,77,76,77,55,54,76,54,56,56,58,76,60,62,68,64,66,68,68,70,72,72,74,68,76,58,60,62,64,68,68,74,76]
@@ -210,6 +210,7 @@
 	    this.groundMaterial = null;
 	    this.ground = document.createElement('a-entity');
 	    this.ground.setAttribute('rotation', '-90 0 0');
+	    this.ground.classList.add('environmentGround');
 	    this.groundCanvas = null;
 	    this.groundTexture = null;
 	    this.groundMaterial = null;
@@ -292,7 +293,7 @@
 	    var skyType = this.data.skyType;
 	    var sunPos = new THREE.Vector3(this.data.lightPosition.x, this.data.lightPosition.y, this.data.lightPosition.z);
 	    sunPos.normalize();
-	    
+
 	    // update light colors and intensities
 	    if (this.sunlight) {
 	      this.sunlight.setAttribute('position', this.data.lightPosition);
@@ -318,7 +319,7 @@
 	        shadowCameraRight: this.data.shadowSize,
 	        shadowCameraTop: this.data.shadowSize
 	      });
-	    } 
+	    }
 
 	    // update sky colors
 	    if (skyType != oldData.skyType ||
@@ -330,7 +331,7 @@
 	      var mat = {};
 	      mat.shader = {'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
 	      if (this.stars) {
-	        this.stars.setAttribute('visible', skyType == 'atmosphere'); 
+	        this.stars.setAttribute('visible', skyType == 'atmosphere');
 	      }
 	      if (skyType == 'color') {
 	        mat.color = this.data.skyColor;
@@ -347,12 +348,12 @@
 	    if (skyType == 'atmosphere') {
 	      this.sky.setAttribute('material', {'sunPosition': sunPos});
 	      this.setStars((1 - Math.max(0, (sunPos.y + 0.08) * 8)) * 2000 );
-	    } 
+	    }
 
 	    // set fog color
 	    if (this.data.fog > 0) {
 	      this.el.sceneEl.setAttribute('fog', {
-	        color: this.getFogColor(skyType, sunPos.y), 
+	        color: this.getFogColor(skyType, sunPos.y),
 	        far: (1.01 - this.data.fog) * this.STAGE_SIZE * 2
 	      });
 	    }
@@ -369,11 +370,11 @@
 
 
 	    // check if ground geometry needs to be calculated
-	    var updateGroundGeometry = 
+	    var updateGroundGeometry =
 	      !this.groundGeometry ||
-	      this.data.seed != oldData.seed || 
-	      this.data.ground != oldData.ground || 
-	      this.data.playArea != oldData.playArea || 
+	      this.data.seed != oldData.seed ||
+	      this.data.ground != oldData.ground ||
+	      this.data.playArea != oldData.playArea ||
 	      this.data.flatShading != oldData.flatShading;
 
 	    // check if any parameter of the ground was changed, and update it
@@ -384,7 +385,7 @@
 	        this.data.groundTexture != oldData.groundTexture ||
 	        this.data.gridColor != oldData.gridColor ||
 	        this.data.grid != oldData.grid
-	        ) 
+	        )
 	    {
 	      this.updateGround(updateGroundGeometry);
 	      // set bounce light color to ground color
@@ -402,7 +403,7 @@
 	        this.data.dressingVariance.x != oldData.dressingVariance.x ||
 	        this.data.dressingVariance.y != oldData.dressingVariance.y ||
 	        this.data.dressingVariance.z != oldData.dressingVariance.z ||
-	        this.data.dressingUniformScale != oldData.dressingUniformScale 
+	        this.data.dressingUniformScale != oldData.dressingUniformScale
 	      ) {
 	      this.updateDressing();
 	    }
@@ -429,13 +430,13 @@
 	      str += i + ': ';
 	      var type = this.schema[i].type;
 	      if (type == 'vec3') {
-	        str += '{ x: ' + this.data[i].x + ', y: ' + this.data[i].y + ', z: ' + this.data[i].z + '}'; 
+	        str += '{ x: ' + this.data[i].x + ', y: ' + this.data[i].y + ', z: ' + this.data[i].z + '}';
 	      }
 	      else if (type == 'string' || type == 'color') {
-	        str += '"' + this.data[i] + '"'; 
+	        str += '"' + this.data[i] + '"';
 	      }
 	      else {
-	        str += this.data[i]; 
+	        str += this.data[i];
 	      }
 	      str += ', ';
 	    }
@@ -448,9 +449,9 @@
 
 	    // trim number to 3 decimals
 	    function dec3 (v) {
-	      return Math.floor(v * 1000) / 1000; 
+	      return Math.floor(v * 1000) / 1000;
 	    }
-	    
+
 	    var params = [];
 	    var usingPreset = this.data.preset != 'none' ? this.presets[this.data.preset] : false;
 
@@ -480,7 +481,7 @@
 	          if (this.schema[i].type == 'number') {
 	            data = dec3(data);
 	          }
-	          params.push(i + ': ' + data); 
+	          params.push(i + ': ' + data);
 	        }
 	      }
 	    }
@@ -516,11 +517,11 @@
 
 	      for (var i = 0, x = 0, y = 0; i < numVerts; i++) {
 	        if (this.data.ground == 'flat') {
-	          verts[i].z = 0; 
+	          verts[i].z = 0;
 	          continue;
 	        }
 
-	        var h; 
+	        var h;
 	        switch (this.data.ground) {
 	          case 'hills': {
 	            h = Math.max(0, perlin.noise(x, y, 0));
@@ -544,8 +545,8 @@
 	        h += this.random(i + 2) * 0.1; // add some randomness
 
 	        // flat ground in the center
-	        var xx = x * 2 / frequency - 1; 
-	        var yy = y * 2 / frequency - 1; 
+	        var xx = x * 2 / frequency - 1;
+	        var yy = y * 2 / frequency - 1;
 	        var pa = this.data.playArea;
 	        xx = Math.max(0, Math.min(1, (Math.abs(xx) - (pa - 0.9)) * (1 / pa) ));
 	        yy = Math.max(0, Math.min(1, (Math.abs(yy) - (pa - 0.9)) * (1 / pa) ));
@@ -565,7 +566,7 @@
 	      this.groundGeometry.computeFaceNormals();
 	      if (this.data.flatShading) {
 	        this.groundGeometry.computeFlatVertexNormals();
-	      } 
+	      }
 	      else {
 	        this.groundGeometry.computeVertexNormals();
 	      }
@@ -599,7 +600,7 @@
 	      this.groundTexture.wrapT = THREE.RepeatWrapping;
 	      this.groundTexture.repeat.set(texRepeat, texRepeat);
 
-	      // ground material diffuse map is the regular ground texture and the grid texture 
+	      // ground material diffuse map is the regular ground texture and the grid texture
 	      // is used in the emissive map. This way, the grid is always equally visible, even at night.
 	      this.groundMaterial = new THREE.MeshLambertMaterial({
 	        map: this.groundTexture,
@@ -628,7 +629,7 @@
 	    else {
 	      this.ground.getObject3D('mesh').material = this.groundMaterial;
 	    }
-	    
+
 	    this.ground.setAttribute('shadow', {
 	      cast: false,
 	      receive: this.data.shadow
@@ -642,7 +643,7 @@
 
 	    // one grid feature each 2 meters
 
-	    var num = Math.floor(texMeters / 2); 
+	    var num = Math.floor(texMeters / 2);
 	    var step = size / (texMeters / 2); // 2 meters == <step> pixels
 	    var i, j, ii;
 
@@ -709,7 +710,7 @@
 	    switch(this.data.groundTexture) {
 	      case 'checkerboard': {
 	        ctx.fillStyle = this.data.groundColor2;
-	        var num = Math.floor(texMeters / 2); 
+	        var num = Math.floor(texMeters / 2);
 	        var step = size / (texMeters / 2); // 2 meters == <step> pixels
 	        for (i = 0; i < num + 1; i += 2) {
 	          for (var j = 0; j < num + 1; j ++) {
@@ -909,7 +910,7 @@
 	    }
 
 	    for (var i = 0, r = 88343; i < this.data.dressingAmount; i++, r++) {
-	    
+
 	      var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)];
 	/*
 	      // change vertex colors
@@ -931,12 +932,12 @@
 	      var onPlayArea = this.random(r) < this.data.dressingOnPlayArea;
 	      if (onPlayArea) {
 	        distance = this.random(r + 1) * 15;
-	      } 
+	      }
 	      else {
 	        distance = 10 + Math.max(dv.x, dv.z) + 10 * this.random(r + 1) + this.random(r + 2) * this.STAGE_SIZE / 3;
 	      }
 
-	      var direction = this.random(r + 3) * Math.PI * 2; 
+	      var direction = this.random(r + 3) * Math.PI * 2;
 	      var matrix = new THREE.Matrix4();
 	      var scale = this.random(r + 4);
 	      var uniformScale = this.data.dressingUniformScale;
@@ -944,13 +945,13 @@
 	      matrix.compose(
 	        // position
 	        new THREE.Vector3(
-	          Math.cos(direction) * distance, 
-	          0, 
+	          Math.cos(direction) * distance,
+	          0,
 	          Math.sin(direction) * distance
 	          ),
 	        // rotation
 	        new THREE.Quaternion().setFromAxisAngle(
-	          new THREE.Vector3(0, 1, 0), 
+	          new THREE.Vector3(0, 1, 0),
 	          (this.random(r + 5) - 0.5) * dv.length() * Math.PI * 2
 	          ),
 	        // scale
@@ -971,7 +972,7 @@
 
 	    // setup material
 	    var material = new THREE.MeshLambertMaterial({
-	      color: new THREE.Color(this.data.dressingColor), 
+	      color: new THREE.Color(this.data.dressingColor),
 	      vertexColors: THREE.VertexColors
 	    });
 
@@ -1057,7 +1058,7 @@
 	    // constants for atmospheric scattering'
 	    'const float e = 2.71828182845904523536028747135266249775724709369995957;',
 	    'const float pi = 3.141592653589793238462643383279502884197169;',
-	    
+
 	    // refractive index of air
 	    'const float n = 1.0003;',
 	    // number of molecules per unit volume for air at'
@@ -1157,7 +1158,7 @@
 	    'float sR = rayleighZenithLength / (cos(zenithAngle) + 0.15 * pow(93.885 - ((zenithAngle * 180.0) / pi), -1.253));',
 	    'float sM = mieZenithLength / (cos(zenithAngle) + 0.15 * pow(93.885 - ((zenithAngle * 180.0) / pi), -1.253));',
 
-	    // combined extinction factor 
+	    // combined extinction factor
 	    'vec3 Fex = exp(-(betaR * sR + betaM * sM));',
 
 	    // in scattering
@@ -1216,7 +1217,7 @@
 	    topColor: {type: 'color', default: '1 0 0', is: 'uniform'},
 	    bottomColor: {type: 'color', default: '0 0 1', is: 'uniform'}
 	  },
-	  
+
 	  vertexShader: [
 	    'varying vec3 vWorldPosition;',
 	    'void main() {',
@@ -1241,7 +1242,7 @@
 	// perlin noise generator
 	// from https://gist.github.com/banksean/304522
 
-	var PerlinNoise = function(r) { 
+	var PerlinNoise = function(r) {
 	  if (r == undefined) r = Math;
 	  this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];
 	  this.p = [];
@@ -1249,86 +1250,86 @@
 	  for (i=0; i<256; i++) {
 	    this.p[i] = Math.floor(r.random(666)*256);
 	  }
-	  // To remove the need for index wrapping, double the permutation table length 
-	  this.perm = []; 
+	  // To remove the need for index wrapping, double the permutation table length
+	  this.perm = [];
 	  for(i=0; i<512; i++) {
 	    this.perm[i]=this.p[i & 255];
 	  }
 	};
 
-	PerlinNoise.prototype.dot = function(g, x, y, z) { 
-	  return g[0]*x + g[1]*y + g[2]*z; 
+	PerlinNoise.prototype.dot = function(g, x, y, z) {
+	  return g[0]*x + g[1]*y + g[2]*z;
 	};
 
-	PerlinNoise.prototype.mix = function(a, b, t) { 
-	  return (1.0-t)*a + t*b; 
+	PerlinNoise.prototype.mix = function(a, b, t) {
+	  return (1.0-t)*a + t*b;
 	};
 
-	PerlinNoise.prototype.fade = function(t) { 
-	  return t*t*t*(t*(t*6.0-15.0)+10.0); 
+	PerlinNoise.prototype.fade = function(t) {
+	  return t*t*t*(t*(t*6.0-15.0)+10.0);
 	};
 
-	// Classic Perlin noise, 3D version 
-	PerlinNoise.prototype.noise = function(x, y, z) { 
-	  // Find unit grid cell containing point 
-	  var X = Math.floor(x); 
-	  var Y = Math.floor(y); 
-	  var Z = Math.floor(z); 
-	  
-	  // Get relative xyz coordinates of point within that cell 
-	  x = x - X; 
-	  y = y - Y; 
-	  z = z - Z; 
-	  
-	  // Wrap the integer cells at 255 (smaller integer period can be introduced here) 
-	  X = X & 255; 
-	  Y = Y & 255; 
+	// Classic Perlin noise, 3D version
+	PerlinNoise.prototype.noise = function(x, y, z) {
+	  // Find unit grid cell containing point
+	  var X = Math.floor(x);
+	  var Y = Math.floor(y);
+	  var Z = Math.floor(z);
+
+	  // Get relative xyz coordinates of point within that cell
+	  x = x - X;
+	  y = y - Y;
+	  z = z - Z;
+
+	  // Wrap the integer cells at 255 (smaller integer period can be introduced here)
+	  X = X & 255;
+	  Y = Y & 255;
 	  Z = Z & 255;
-	  
-	  // Calculate a set of eight hashed gradient indices 
-	  var gi000 = this.perm[X+this.perm[Y+this.perm[Z]]] % 12; 
-	  var gi001 = this.perm[X+this.perm[Y+this.perm[Z+1]]] % 12; 
-	  var gi010 = this.perm[X+this.perm[Y+1+this.perm[Z]]] % 12; 
-	  var gi011 = this.perm[X+this.perm[Y+1+this.perm[Z+1]]] % 12; 
-	  var gi100 = this.perm[X+1+this.perm[Y+this.perm[Z]]] % 12; 
-	  var gi101 = this.perm[X+1+this.perm[Y+this.perm[Z+1]]] % 12; 
-	  var gi110 = this.perm[X+1+this.perm[Y+1+this.perm[Z]]] % 12; 
-	  var gi111 = this.perm[X+1+this.perm[Y+1+this.perm[Z+1]]] % 12; 
-	  
-	  // The gradients of each corner are now: 
-	  // g000 = grad3[gi000]; 
-	  // g001 = grad3[gi001]; 
-	  // g010 = grad3[gi010]; 
-	  // g011 = grad3[gi011]; 
-	  // g100 = grad3[gi100]; 
-	  // g101 = grad3[gi101]; 
-	  // g110 = grad3[gi110]; 
-	  // g111 = grad3[gi111]; 
-	  // Calculate noise contributions from each of the eight corners 
-	  var n000= this.dot(this.grad3[gi000], x, y, z); 
-	  var n100= this.dot(this.grad3[gi100], x-1, y, z); 
-	  var n010= this.dot(this.grad3[gi010], x, y-1, z); 
-	  var n110= this.dot(this.grad3[gi110], x-1, y-1, z); 
-	  var n001= this.dot(this.grad3[gi001], x, y, z-1); 
-	  var n101= this.dot(this.grad3[gi101], x-1, y, z-1); 
-	  var n011= this.dot(this.grad3[gi011], x, y-1, z-1); 
-	  var n111= this.dot(this.grad3[gi111], x-1, y-1, z-1); 
-	  // Compute the fade curve value for each of x, y, z 
-	  var u = this.fade(x); 
-	  var v = this.fade(y); 
-	  var w = this.fade(z); 
-	   // Interpolate along x the contributions from each of the corners 
-	  var nx00 = this.mix(n000, n100, u); 
-	  var nx01 = this.mix(n001, n101, u); 
-	  var nx10 = this.mix(n010, n110, u); 
-	  var nx11 = this.mix(n011, n111, u); 
-	  // Interpolate the four results along y 
-	  var nxy0 = this.mix(nx00, nx10, v); 
-	  var nxy1 = this.mix(nx01, nx11, v); 
-	  // Interpolate the two last results along z 
-	  var nxyz = this.mix(nxy0, nxy1, w); 
 
-	  return nxyz; 
+	  // Calculate a set of eight hashed gradient indices
+	  var gi000 = this.perm[X+this.perm[Y+this.perm[Z]]] % 12;
+	  var gi001 = this.perm[X+this.perm[Y+this.perm[Z+1]]] % 12;
+	  var gi010 = this.perm[X+this.perm[Y+1+this.perm[Z]]] % 12;
+	  var gi011 = this.perm[X+this.perm[Y+1+this.perm[Z+1]]] % 12;
+	  var gi100 = this.perm[X+1+this.perm[Y+this.perm[Z]]] % 12;
+	  var gi101 = this.perm[X+1+this.perm[Y+this.perm[Z+1]]] % 12;
+	  var gi110 = this.perm[X+1+this.perm[Y+1+this.perm[Z]]] % 12;
+	  var gi111 = this.perm[X+1+this.perm[Y+1+this.perm[Z+1]]] % 12;
+
+	  // The gradients of each corner are now:
+	  // g000 = grad3[gi000];
+	  // g001 = grad3[gi001];
+	  // g010 = grad3[gi010];
+	  // g011 = grad3[gi011];
+	  // g100 = grad3[gi100];
+	  // g101 = grad3[gi101];
+	  // g110 = grad3[gi110];
+	  // g111 = grad3[gi111];
+	  // Calculate noise contributions from each of the eight corners
+	  var n000= this.dot(this.grad3[gi000], x, y, z);
+	  var n100= this.dot(this.grad3[gi100], x-1, y, z);
+	  var n010= this.dot(this.grad3[gi010], x, y-1, z);
+	  var n110= this.dot(this.grad3[gi110], x-1, y-1, z);
+	  var n001= this.dot(this.grad3[gi001], x, y, z-1);
+	  var n101= this.dot(this.grad3[gi101], x-1, y, z-1);
+	  var n011= this.dot(this.grad3[gi011], x, y-1, z-1);
+	  var n111= this.dot(this.grad3[gi111], x-1, y-1, z-1);
+	  // Compute the fade curve value for each of x, y, z
+	  var u = this.fade(x);
+	  var v = this.fade(y);
+	  var w = this.fade(z);
+	   // Interpolate along x the contributions from each of the corners
+	  var nx00 = this.mix(n000, n100, u);
+	  var nx01 = this.mix(n001, n101, u);
+	  var nx10 = this.mix(n010, n110, u);
+	  var nx11 = this.mix(n011, n111, u);
+	  // Interpolate the four results along y
+	  var nxy0 = this.mix(nx00, nx10, v);
+	  var nxy1 = this.mix(nx01, nx11, v);
+	  // Interpolate the two last results along z
+	  var nxyz = this.mix(nxy0, nxy1, w);
+
+	  return nxyz;
 	};
 
 
