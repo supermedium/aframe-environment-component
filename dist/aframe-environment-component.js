@@ -63,7 +63,7 @@
 	    preset: {default: 'default', oneOf: ['none', 'default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'goldmine', 'arches', 'threetowers', 'poison', 'tron', 'japan', 'dream', 'volcano', 'starry', 'osiris']},
 	    seed: {type: 'int', default: 1, min: 0, max: 1000},
 
-	    skyType: {default: 'color', oneOf:['color', 'gradient', 'atmosphere']},
+	    skyType: {default: 'color', oneOf:['none', 'color', 'gradient', 'atmosphere']},
 	    skyColor: {type: 'color'},
 	    horizonColor: {type: 'color'},
 	    lighting: {default: 'distant', oneOf: ['none', 'distant', 'point']},
@@ -245,7 +245,7 @@
 	  getFogColor: function (skyType, sunHeight) {
 
 	    var fogColor;
-	    if (skyType == 'color'){
+	    if (skyType == 'color' || skyType == 'none'){
 	      fogColor = new THREE.Color(this.data.skyColor);
 	    }
 	    else if (skyType == 'gradient'){
@@ -329,7 +329,7 @@
 	      this.sky.removeAttribute('material');
 
 	      var mat = {};
-	      mat.shader = {'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
+	      mat.shader = {'none': 'flat', 'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
 	      if (this.stars) {
 	        this.stars.setAttribute('visible', skyType == 'atmosphere');
 	      }
@@ -407,6 +407,8 @@
 	      ) {
 	      this.updateDressing();
 	    }
+
+	    this.sky.setAttribute('visible', skyType !== 'none');
 
 	    this.el.setAttribute('visible', this.data.active);
 	    if (!this.data.active) {
