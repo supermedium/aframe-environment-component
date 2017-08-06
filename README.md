@@ -86,6 +86,12 @@ The main idea of this component is to have a complete and visually interesting e
 
 Apart from the parameter `dressingAmount`, there is not much difference among different values in parameters in terms of performance. Just keep `dressingAmount` value under watch and lower it if the performance is not optimal.
 
+If you have raycasters or colliders in your scene, make sure they are not testing against the environment meshes. For example, you could tell the raycaster component to ignore the environment:
+
+```html
+<a-entity cursor raycaster="objects: a-entity:not([environment])"></a-entity>
+```
+
 ## Help and contact
 
 PRs are appreciated, issues are welcomed. For any question, ping @feiss at [aframevr in Slack](https://aframevr-slack.herokuapp.com/) or Twitter.
