@@ -28,6 +28,7 @@
         text-align: center;
       }
       #about {
+        display: none;
         position: absolute;
         z-index: 7001;
         width: 300px;
@@ -84,26 +85,68 @@
   </head>
   <body>
     <div id="about">
-        
+
       <b>aframe-environment-component</b>
-      <p>A component for adding simple backgrounds to your <a href="http://aframe.io">A-Frame</a> demos and experiences.</p>
+      <p>A component for adding procedural environments to your <a href="http://aframe.io">A-Frame</a> demos and experiences.</p>
       <p>
         Press <b>ctrl + alt + i</b> to enter inspector and tweak parameters.</p>
       <p>
-      
+
         <a href="http://github.com/feiss/aframe-environment-component">GitHub / How to use it</a>
       </p>
     </div>
     <h1>
-      <a href="javascript:;" onclick="nextPreset(-1)">◀</a>
-      <b>default</b>
-      <a href="javascript:;" onclick="nextPreset(1)">►</a>
+      <a class="previousPreset" href="#">&larr;</a>
+      <b>forest</b>
+      <a class="nextPreset" href="#">&rarr;</a>
     </h1>
 
+    <script>
+      AFRAME.registerComponent('overlay-visibility', {
+        init: function () {
+          if (!this.el.isMobile) {
+            document.querySelector('#about').style.display = 'block';
+          }
+        }
+      });
 
-    <a-scene>
-      
-      <a-entity environment id="environment"></a-entity>
+      AFRAME.registerComponent('preset-switcher', {
+        init: function () {
+          var el = this.el;
+          var presets = ['forest', 'default', 'contact', 'egypt', 'checkerboard', 'goaland', 'yavapai', 'goldmine', 'threetowers', 'poison', 'arches', 'tron', 'japan', 'dream', 'volcano', 'starry', 'osiris'];
+          var preset = 0;
+
+          window.addEventListener('keydown', function (evt) {
+            if (evt.keyCode == 32) {
+              nextPreset(1);
+            }
+          });
+
+          document.querySelector('.previousPreset').addEventListener('click', function () {
+            nextPreset(-1);
+          });
+
+          document.querySelector('.nextPreset').addEventListener('click', function () {
+            nextPreset(1);
+          });
+
+          function nextPreset(dir) {
+            if (preset === 0 && dir === -1) {
+              preset = presets.length - 1;
+            }
+            else {
+              preset = (preset + dir) % presets.length;
+            }
+            document.querySelector('h1 b').innerHTML = presets[preset];
+            el.setAttribute('environment', {preset: presets[preset]});
+          };
+        }
+      });
+    </script>
+
+    <a-scene overlay-visibility>
+
+      <a-entity environment="preset: forest" preset-switcher id="environment"></a-entity>
 
       <a-sphere radius="0.3" position="0 1.7 -2" shadow></a-sphere>
 
@@ -111,28 +154,6 @@
 
 
   <script>
-    var presets = ['default', 'contact', 'egypt', 'checkerboard', 'forest', 'goaland', 'yavapai', 'goldmine', 'threetowers', 'poison', 'arches', 'tron', 'japan', 'dream', 'volcano', 'starry', 'osiris'];
-    var preset = 0;
-    
-    function nextPreset(dir) {
-      if (preset === 0 && dir === -1) { 
-        preset = presets.length - 1;
-      }
-      else {
-        preset = (preset + dir) % presets.length;
-      }
-      document.querySelector('h1 b').innerHTML = presets[preset];
-      document.querySelector('[environment]').setAttribute('environment', {preset: presets[preset]});
-    };
-
-    window.addEventListener('keydown', function (evt) {
-      if (evt.keyCode == 32) {
-        nextPreset(1);
-      }
-    });
-
-
-
     // google analytics
     var _gaq = [['_setAccount', 'UA-5753152-1'], ['_trackPageview']];
     (function(d, t) {
