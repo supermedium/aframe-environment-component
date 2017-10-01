@@ -163,7 +163,6 @@ AFRAME.registerComponent('environment', {
     // create ground
     this.groundMaterial = null;
     this.ground = document.createElement('a-entity');
-    this.ground.setAttribute('rotation', '-90 0 0');
     this.ground.classList.add('environmentGround');
     this.groundCanvas = null;
     this.groundTexture = null;
@@ -529,10 +528,11 @@ AFRAME.registerComponent('environment', {
 
       this.groundGeometry.verticesNeedUpdate = true;
       this.groundGeometry.normalsNeedUpdate = true;
+      this.groundGeometry.rotateX(- Math.PI / 2)
     }
 
     // apply Y scale. There's no need to recalculate the geometry for this. Just change scale
-    this.ground.setAttribute('scale', {z: this.data.groundYScale});
+    this.ground.setAttribute('scale', {y: this.data.groundYScale});
 
     // update ground, playarea and grid textures.
     var groundResolution = 2048;
