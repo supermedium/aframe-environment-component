@@ -173,6 +173,15 @@ AFRAME.registerComponent('environment', {
     this.dressing = document.createElement('a-entity');
     this.dressing.classList.add('environmentDressing');
 
+    // add static-body component to the ground if physics available
+    const physicsAvail = !!this.el.sceneEl.getAttribute('physics');
+    if (physicsAvail) {
+        this.ground.setAttribute('static-body', 'shape', 'none');
+        // Specifying hull as shape works but is slow. We create
+        // a Heightfield shape at the same time as modifying the plane
+        // geometry and attach it to the body.
+    }
+
     this.gridCanvas = null;
     this.gridTexture = null;
 
@@ -463,14 +472,26 @@ AFRAME.registerComponent('environment', {
         return;
       }
 
+      var segments = resolution - 1;
+      var planeSize = this.STAGE_SIZE + 2;
+      var planeSizeHalf = planeSize / 2;
+      var segmentSize = planeSize / segments;
       if (!this.groundGeometry) {
-        this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_SIZE + 2, this.STAGE_SIZE + 2, resolution - 1, resolution - 1);
+        this.groundGeometry = new THREE.PlaneGeometry(planeSize, planeSize, segments, segments);
       }
       var perlin = new PerlinNoise();
       var verts = this.groundGeometry.vertices;
       var numVerts = this.groundGeometry.vertices.length;
       var frequency = 10;
       var inc = frequency / resolution;
+      var physicsAvail = !!this.el.sceneEl.getAttribute('physics');
+      if (physicsAvail) {
+        var maxH = 0;
+        var matrix = [];
+        for (var j = 0; j < resolution; j++) {
+          matrix.push(new Float32Array(resolution));
+        }
+      }
 
       for (var i = 0, x = 0, y = 0; i < numVerts; i++) {
         if (this.data.ground == 'flat') {
@@ -512,12 +533,43 @@ AFRAME.registerComponent('environment', {
         // set height
         verts[i].z = h;
 
+        // construct matrix to create the Heightfield
+        if (physicsAvail) {
+          // We reverse the calculation that is done when creating the
+          // PlaneGeometry to get back the original x and y for the matrix.
+          matrix[Math.round((verts[i].x + planeSizeHalf) / segmentSize)][Math.round((verts[i].y + planeSizeHalf) / segmentSize)] = h * this.data.groundYScale;
+          if (h > maxH) {
+            maxH = h;
+          }
+        }
+
         // calculate next x,y ground coordinates
         x += inc;
         if (x >= 10) {
           x = 0;
           y += inc;
         }
+      }
+
+
+      if (physicsAvail) {
+        // Create the heightfield
+        var hfShape = new CANNON.Heightfield(matrix, {
+          elementSize: segmentSize,
+          minValue: 0,
+          maxValue: maxH * this.data.groundYScale
+        });
+        hfShape.offset = new THREE.Vector3(-planeSize / 2, -planeSize / 2, 0);
+        this.ground.addEventListener('body-loaded', () => {
+          this.ground.body.addShape(hfShape, hfShape.offset, hfShape.orientation);
+          // Show wireframe
+          if (this.el.sceneEl.systems.physics.debug) {
+            var bodyComponent = this.ground.components['static-body'];
+            var createWireframe = bodyComponent.createWireframe.bind(bodyComponent);
+            createWireframe(this.ground.body, hfShape);
+            this.el.sceneEl.object3D.add(bodyComponent.wireframe);
+          }
+        });
       }
 
       this.groundGeometry.computeFaceNormals();
