@@ -171,6 +171,7 @@ AFRAME.registerComponent('environment', {
     this.groundGeometry = null;
 
     this.dressing = document.createElement('a-entity');
+    this.dressing.classList.add('environmentDressing');
 
     this.gridCanvas = null;
     this.gridTexture = null;
