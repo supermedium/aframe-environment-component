@@ -563,7 +563,7 @@ AFRAME.registerComponent('environment', {
         map: this.groundTexture,
         emissive: new THREE.Color(0xFFFFFF),
         emissiveMap: this.gridTexture,
-        shading: this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading
+        flatShading: this.data.flatShading
       });
     }
 
