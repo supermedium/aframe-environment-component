@@ -565,7 +565,7 @@ AFRAME.registerComponent('environment', {
         emissiveMap: this.gridTexture
       };
 
-      // use .shading for A-Frame < 0.6.0 and .flatShading for A-Frame >= 0.7.0
+      // use .shading for A-Frame < 0.7.0 and .flatShading for A-Frame >= 0.7.0
       if (new THREE.Material().hasOwnProperty('shading')) {
         this.groundMaterialProps.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
       } else {
