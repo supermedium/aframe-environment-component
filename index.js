@@ -559,12 +559,20 @@ AFRAME.registerComponent('environment', {
 
       // ground material diffuse map is the regular ground texture and the grid texture
       // is used in the emissive map. This way, the grid is always equally visible, even at night.
-      this.groundMaterial = new THREE.MeshLambertMaterial({
+      this.groundMaterialProps = {
         map: this.groundTexture,
         emissive: new THREE.Color(0xFFFFFF),
-        emissiveMap: this.gridTexture,
-        flatShading: this.data.flatShading
-      });
+        emissiveMap: this.gridTexture
+      };
+
+      // use .shading for A-Frame < 0.6.0 and .flatShading for A-Frame >= 0.7.0
+      if (new THREE.Material().hasOwnProperty('shading')) {
+        this.groundMaterialProps.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
+      } else {
+        this.groundMaterialProps.flatShading = this.data.flatShading;
+      }
+
+      this.groundMaterial = new THREE.MeshLambertMaterial(this.groundMaterialProps);
     }
 
     var groundctx = this.groundCanvas.getContext('2d');
