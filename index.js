@@ -4,6 +4,9 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 
+const PMREMGenerator = require('./PMREMGenerator')
+const PMREMCubeUVPacker = require('./PMREMCubeUVPacker')
+
 /**
  * enviroGetSettings() - console function for printing out the current environment settings
  */
@@ -194,6 +197,14 @@ AFRAME.registerComponent('environment', {
     this.el.appendChild(this.ground);
     this.el.appendChild(this.dressing);
     this.el.appendChild(this.sky);
+    this.el.sceneEl.addEventListener('camera-set-active', () => {
+      this.generateEnvMap();
+      this.applyEnvMap();
+    })
+
+    this.el.sceneEl.addEventListener('model-loaded', () => {
+      this.applyEnvMap();
+    })
   },
 
   // returns a fog color from a specific sky type and sun height
@@ -975,6 +986,40 @@ AFRAME.registerComponent('environment', {
     }
     numStars = Math.floor(Math.min(2000, Math.max(0, numStars)));
     this.stars.getObject3D('mesh').geometry.setDrawRange(0, numStars);
+  },
+
+  generateEnvMap: function() {
+    const renderer = this.el.sceneEl.renderer;
+    if (!renderer) {
+        return;
+    }
+    const camera = new THREE.CubeCamera(1, 100000, 512)
+    const envmapScene = new THREE.Scene()
+    envmapScene.add(this.el.object3D)
+    camera.update(renderer, envmapScene)
+    const generator = new THREE.PMREMGenerator( camera.renderTarget.texture)
+    generator.update(renderer)
+
+    const packer = new THREE.PMREMCubeUVPacker(generator.cubeLods)
+    packer.update(renderer)
+    this.envMap = packer.CubeUVRenderTarget.texture
+    this.el.sceneEl.add(this.el)
+  },
+
+  applyEnvMap: function() {
+    if (!this.envMap) {
+        return;
+    }
+    const scene = this.el.sceneEl.object3D
+    scene.remove(this.el.object3D)
+    scene.traverse(o => {
+      if (o.material) {
+        o.material.envMap = this.envMap
+        o.material.needsUpdate = true
+        console.log(o)
+      }
+    })
+    scene.add(this.el.object3D)
   }
 });
 
