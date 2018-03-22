@@ -324,12 +324,9 @@ AFRAME.registerComponent('environment', {
     }
 
     // scene lights
-    if (this.data.lighting !== oldData.lighting) {
-      this.sunlight.setAttribute('light', {type: this.data.lighting == 'point' ? 'point' : 'directional'});
-      this.sunlight.setAttribute('visible', this.data.lighting !== 'none');
-      this.hemilight.setAttribute('visible', this.data.lighting !== 'none');
-    }
-
+    this.sunlight.setAttribute('light', {type: this.data.lighting == 'point' ? 'point' : 'directional'});
+    this.sunlight.setAttribute('visible', this.data.lighting !== 'none');
+    this.hemilight.setAttribute('visible', this.data.lighting !== 'none');
 
     // check if ground geometry needs to be calculated
     var updateGroundGeometry =

@@ -370,12 +370,9 @@
 	    }
 
 	    // scene lights
-	    if (this.data.lighting !== oldData.lighting) {
-	      this.sunlight.setAttribute('light', {type: this.data.lighting == 'point' ? 'point' : 'directional'});
-	      this.sunlight.setAttribute('visible', this.data.lighting !== 'none');
-	      this.hemilight.setAttribute('visible', this.data.lighting !== 'none');
-	    }
-
+	    this.sunlight.setAttribute('light', {type: this.data.lighting == 'point' ? 'point' : 'directional'});
+	    this.sunlight.setAttribute('visible', this.data.lighting !== 'none');
+	    this.hemilight.setAttribute('visible', this.data.lighting !== 'none');
 
 	    // check if ground geometry needs to be calculated
 	    var updateGroundGeometry =
@@ -613,12 +610,20 @@
 
 	      // ground material diffuse map is the regular ground texture and the grid texture
 	      // is used in the emissive map. This way, the grid is always equally visible, even at night.
-	      this.groundMaterial = new THREE.MeshLambertMaterial({
+	      this.groundMaterialProps = {
 	        map: this.groundTexture,
 	        emissive: new THREE.Color(0xFFFFFF),
-	        emissiveMap: this.gridTexture,
-	        shading: this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading
-	      });
+	        emissiveMap: this.gridTexture
+	      };
+
+	      // use .shading for A-Frame < 0.7.0 and .flatShading for A-Frame >= 0.7.0
+	      if (new THREE.Material().hasOwnProperty('shading')) {
+	        this.groundMaterialProps.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
+	      } else {
+	        this.groundMaterialProps.flatShading = this.data.flatShading;
+	      }
+
+	      this.groundMaterial = new THREE.MeshLambertMaterial(this.groundMaterialProps);
 	    }
 
 	    var groundctx = this.groundCanvas.getContext('2d');
