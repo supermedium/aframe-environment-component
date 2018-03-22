@@ -73,7 +73,7 @@
 	    fog: {type:'float', default: 0, min: 0, max: 1},
 
 	    flatShading: {default: false},
-	    playArea: {type: 'float', default: 1, min: 1, max: 100},
+	    playArea: {type: 'float', default: 1, min: 0.5, max: 10},
 
 	    ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']},
 	    groundYScale: {type: 'float', default: 3, min: 0, max: 50},
@@ -561,6 +561,7 @@
 	        xx = Math.max(0, Math.min(1, (Math.abs(xx) - (pa - 0.9)) * (1 / pa) ));
 	        yy = Math.max(0, Math.min(1, (Math.abs(yy) - (pa - 0.9)) * (1 / pa) ));
 	        h *= xx > yy ? xx : yy;
+	        if (h < 0.01) h = 0; // stick to the floor
 
 	        // set height
 	        verts[i].z = h;
