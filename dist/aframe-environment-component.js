@@ -169,18 +169,18 @@
 	        {type: 'lathe', segments: 5, vertices: [0.069, 0.216, 0.067, 0.562, 0.126, 0.562, 0.128, 0.774, 0.191, 0.774, 0.193, 0.986]}
 	      ],
 	      'trees': [
-	        {type: 'lathe', noise: 0.015, segments: 6, vertices: [0.004, 0.826, 0.054, 0.832, 0.105, 0.854, 0.136, 0.9, 0.136, 0.958, 0.118, 0.994]},
-	        {type: 'lathe', noise: 0.015, segments: 14, vertices:  [0.004, 0.01, 0.069, 0.022, 0.13, 0.068, 0.178, 0.18, 0.189, 0.32, 0.191, 0.59, 0.193, 0.75, 0.138, 0.79, 0.018, 0.808, 0.018, 0.996]},
-	        {type: 'lathe', noise: 0.015, segments: 14, vertices: [0.002, 0.436, 0.126, 0.46, 0.201, 0.57, 0.219, 0.72, 0.154, 0.846, 0.028, 0.884, 0.034, 0.996]}
+	        {type: 'lathe', noise: 0.015, segments: 6, vertices: [0.000001, 0.826, 0.054, 0.832, 0.105, 0.854, 0.136, 0.9, 0.136, 0.958, 0.118, 0.994]},
+	        {type: 'lathe', noise: 0.015, segments: 14, vertices:  [0.000001, 0.01, 0.069, 0.022, 0.13, 0.068, 0.178, 0.18, 0.189, 0.32, 0.191, 0.59, 0.193, 0.75, 0.138, 0.79, 0.018, 0.808, 0.018, 0.996]},
+	        {type: 'lathe', noise: 0.015, segments: 14, vertices: [0.000001, 0.436, 0.126, 0.46, 0.201, 0.57, 0.219, 0.72, 0.154, 0.846, 0.028, 0.884, 0.034, 0.996]}
 	      ],
 	      'apparatus': [
-	        {type: 'lathe', segments: 10, vertices: [0.004, 0.23, 0.042, 0.23, 0.069, 0.36, 0.038, 0.362, 0.038, 0.372, 0.06, 0.372, 0.073, 0.572, 0.024, 0.572, 0.024, 0.67, 0.069, 0.67, 0.075, 0.722, 0.097, 0.724, 0.105, 0.852, 0.083, 0.902, 0.065, 0.902, 0.065, 0.924, 0.128, 0.924, 0.146, 0.996]},
-	        {type: 'lathe', segments: 16, vertices: [0.001, 0.232, 0.229, 0.182, 0.486, 0.07, 0.356, 0.182, 0.213, 0.242, 0.154, 0.242, 0.144, 0.262, 0.178, 0.262, 0.126, 0.314, 0.04, 0.328, 0.038, 0.374, 0.058, 0.374, 0.071, 0.408, 0.026, 0.406, 0.03, 0.42, 0.091, 0.418, 0.034, 0.496, 0.01, 0.498, 0.03, 0.506, 0.014, 0.998]},
+	        {type: 'lathe', segments: 10, vertices: [0.000001, 0.23, 0.042, 0.23, 0.069, 0.36, 0.038, 0.362, 0.038, 0.372, 0.06, 0.372, 0.073, 0.572, 0.024, 0.572, 0.024, 0.67, 0.069, 0.67, 0.075, 0.722, 0.097, 0.724, 0.105, 0.852, 0.083, 0.902, 0.065, 0.902, 0.065, 0.924, 0.128, 0.924, 0.146, 0.996]},
+	        {type: 'lathe', segments: 16, vertices: [0.000001, 0.232, 0.229, 0.182, 0.486, 0.07, 0.356, 0.182, 0.213, 0.242, 0.154, 0.242, 0.144, 0.262, 0.178, 0.262, 0.126, 0.314, 0.04, 0.328, 0.038, 0.374, 0.058, 0.374, 0.071, 0.408, 0.026, 0.406, 0.03, 0.42, 0.091, 0.418, 0.034, 0.496, 0.01, 0.498, 0.03, 0.506, 0.014, 0.998]},
 	      ],
 	      'mushrooms': [
-	        {type: 'lathe', noise: 0.02, segments: 14, vertices:  [0.001, 0.006, 0.13, 0.018, 0.341, 0.084, 0.437, 0.144, 0.492, 0.234, 0.484, 0.246, 0.276, 0.232, 0.107, 0.284, 0.046, 0.346, 0.062, 0.852, 0.097, 0.956, 0.166, 0.998]},
-	        {type: 'lathe', noise: 0.02, segments: 10, vertices:  [0.001, 0.562, 0.091, 0.572, 0.172, 0.61, 0.223, 0.666, 0.256, 0.74, 0.258, 0.806, 0.246, 0.824, 0.062, 0.826, 0.065, 0.948, 0.097, 0.998]},
-	        {type: 'lathe', noise: 0.02, segments: 10, vertices:  [0.001, 0.768, 0.099, 0.772, 0.219, 0.802, 0.306, 0.844, 0.352, 0.886, 0.352, 0.908, 0.118, 0.904, 0.107, 0.93, 0.115, 0.966, 0.14, 0.996]}
+	        {type: 'lathe', noise: 0.02, segments: 14, vertices:  [0.000001, 0.006, 0.13, 0.018, 0.341, 0.084, 0.437, 0.144, 0.492, 0.234, 0.484, 0.246, 0.276, 0.232, 0.107, 0.284, 0.046, 0.346, 0.062, 0.852, 0.097, 0.956, 0.166, 0.998]},
+	        {type: 'lathe', noise: 0.02, segments: 10, vertices:  [0.000001, 0.562, 0.091, 0.572, 0.172, 0.61, 0.223, 0.666, 0.256, 0.74, 0.258, 0.806, 0.246, 0.824, 0.062, 0.826, 0.065, 0.948, 0.097, 0.998]},
+	        {type: 'lathe', noise: 0.02, segments: 10, vertices:  [0.000001, 0.768, 0.099, 0.772, 0.219, 0.802, 0.306, 0.844, 0.352, 0.886, 0.352, 0.908, 0.118, 0.904, 0.107, 0.93, 0.115, 0.966, 0.14, 0.996]}
 	      ]
 	    };
 
@@ -202,6 +202,7 @@
 	    this.sky = document.createElement('a-sky');
 	    this.sky.setAttribute('radius', this.STAGE_SIZE);
 	    this.sky.setAttribute('theta-length', 110);
+	    this.sky.classList.add('environment-entity');
 
 	    // stars are created when needed
 	    this.stars = null;
@@ -211,18 +212,22 @@
 	    this.ground = document.createElement('a-entity');
 	    this.ground.setAttribute('rotation', '-90 0 0');
 	    this.ground.classList.add('environmentGround');
+	    this.ground.classList.add('environment-entity');
 	    this.groundCanvas = null;
 	    this.groundTexture = null;
 	    this.groundMaterial = null;
 	    this.groundGeometry = null;
 
 	    this.dressing = document.createElement('a-entity');
+	    this.dressing.classList.add('environmentDressing');
+	    this.dressing.classList.add('environment-entity');
 
 	    this.gridCanvas = null;
 	    this.gridTexture = null;
 
 	    // create lights (one ambient hemisphere light, and one directional for the sun)
 	    this.hemilight = document.createElement('a-entity');
+	    this.hemilight.classList.add('environment-entity');
 	    this.hemilight.setAttribute('position', '0 50 0');
 	    this.hemilight.setAttribute('light', {
 	      type: 'hemisphere',
@@ -230,8 +235,11 @@
 	      intensity: 0.4
 	    });
 	    this.sunlight = document.createElement('a-entity');
+	    this.sunlight.classList.add('environment-entity');
 	    this.sunlight.setAttribute('position', this.data.lightPosition);
 	    this.sunlight.setAttribute('light', {intensity: 0.6});
+
+	    this.el.classList.add('environment-entity');
 
 	    // add everything to the scene
 	    this.el.appendChild(this.hemilight);
