@@ -1,0 +1,3 @@
+standard: Use JavaScript Standard Style (https://github.com/feross/standard)
+  /someplace/index.js:5:23: Strings must use singlequote.
+  /someplace/index.js:15:36: Extra semicolon.

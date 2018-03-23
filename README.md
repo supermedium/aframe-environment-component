@@ -62,7 +62,7 @@ This is the list of the available parameters.
 | **lightPosition** | 0 1 -0.2 | Position of the main light. If `skyType` is `atmospheric`, only the orientation matters (is a directional light) and it can turn the scene into night when lowered towards the horizon. |
 | **fog**      |  0    | Amount of fog (0 = none, 1 = full fog). The color is estimated automatically. |
 | **flatShading** | false | Whether to show everything smoothed (false) or polygonal (true). |
-| **playArea** |  1    | Radius (in maters) of the area in the center reserved for the player and the gameplay. The ground is flat in there and no objects are placed inside.|
+| **playArea** |  1    | Radius of the area in the center reserved for the player and the gameplay. The ground is flat in there and no objects are placed inside.|
 | **ground**  | 'hills' | Valid values: `none`, `flat`, `hills`, `canyon`, `spikes`, `noise`. Orography style. |
 | **groundYScale** | 3  | Maximum height (in meters) of ground's features (hills, mountains, peaks..) |
 | **groundTexture**| 'none' | Valid values: `none`, `checkerboard`, `squares`, `walkernoise`|

@@ -1,0 +1,9 @@
+@import "../node_modules/bootstrap/dist/css/bootstrap.css";
+@import "modules/foo/foo.css";
+@import "modules/bar/bar.css";
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #fff;
+    font-size: 12px;
+}

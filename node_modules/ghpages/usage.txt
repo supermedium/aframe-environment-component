@@ -1,0 +1,14 @@
+Usage
+  $ ghpages
+
+Options
+  -r, --repo    Repository (GitHub username, GitHub username/repo, full repo URL)
+  -d, --domain  Domain name (for `CNAME` to create in GitHub Pages branch)
+  -h, --help    Show help
+
+Examples
+  $ ghpages
+  $ ghpages cvan
+  $ ghpages cvan/blog
+  $ ghpages git@github.com:cvan/blog.git
+  $ ghpages -r cvan/blog -d blog.cvan.io

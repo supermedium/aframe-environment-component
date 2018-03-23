@@ -1,0 +1,7 @@
+body .foo {
+    background-color: #ccc;
+    height: 100px;
+    line-height: 100px;
+    font-size: 20px;
+    text-align: center;
+}
