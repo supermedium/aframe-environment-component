@@ -202,7 +202,7 @@
 	    this.sky = document.createElement('a-sky');
 	    this.sky.setAttribute('radius', this.STAGE_SIZE);
 	    this.sky.setAttribute('theta-length', 110);
-	    this.sky.classList.add('environment-entity');
+	    this.sky.classList.add('environment');
 
 	    // stars are created when needed
 	    this.stars = null;
@@ -212,7 +212,7 @@
 	    this.ground = document.createElement('a-entity');
 	    this.ground.setAttribute('rotation', '-90 0 0');
 	    this.ground.classList.add('environmentGround');
-	    this.ground.classList.add('environment-entity');
+	    this.ground.classList.add('environment');
 	    this.groundCanvas = null;
 	    this.groundTexture = null;
 	    this.groundMaterial = null;
@@ -220,14 +220,14 @@
 
 	    this.dressing = document.createElement('a-entity');
 	    this.dressing.classList.add('environmentDressing');
-	    this.dressing.classList.add('environment-entity');
+	    this.dressing.classList.add('environment');
 
 	    this.gridCanvas = null;
 	    this.gridTexture = null;
 
 	    // create lights (one ambient hemisphere light, and one directional for the sun)
 	    this.hemilight = document.createElement('a-entity');
-	    this.hemilight.classList.add('environment-entity');
+	    this.hemilight.classList.add('environment');
 	    this.hemilight.setAttribute('position', '0 50 0');
 	    this.hemilight.setAttribute('light', {
 	      type: 'hemisphere',
@@ -235,11 +235,9 @@
 	      intensity: 0.4
 	    });
 	    this.sunlight = document.createElement('a-entity');
-	    this.sunlight.classList.add('environment-entity');
+	    this.sunlight.classList.add('environment');
 	    this.sunlight.setAttribute('position', this.data.lightPosition);
 	    this.sunlight.setAttribute('light', {intensity: 0.6});
-
-	    this.el.classList.add('environment-entity');
 
 	    // add everything to the scene
 	    this.el.appendChild(this.hemilight);
