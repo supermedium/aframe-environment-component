@@ -37,7 +37,7 @@ You can view and try all the presets in the **[aframe-environment-component Test
 Apart from using a preset, you can tweak the environment with many parameters, like this:
 
 ```html
-  <a-entity environment="sunPosition: 1 5 -2; groundColor: #445"></a-entity>
+  <a-entity environment="lightPosition: 1 5 -2; groundColor: #445"></a-entity>
 ```
 
 You can also select a preset but change some of its parameters:
