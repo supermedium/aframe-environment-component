@@ -88,4 +88,4 @@ Apart from the parameter `dressingAmount`, there is not much difference among di
 
 ## Help and contact
 
-PRs are appreciated, issues are welcomed. For any question, ping @feiss at [aframevr in Slack](https://aframevr-slack.herokuapp.com/) or Twitter.
+PRs are appreciated, issues are welcomed. For any question, ping @feiss at [aframevr in Slack](https://aframe.io/slack-invite) or [Discord](https://supermedium.com/discord).
