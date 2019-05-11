@@ -117,6 +117,8 @@
 	  },
 
 	  init: function () {
+	    this.environmentData = {};
+
 	    // stage ground diameter (and sky radius)
 	    this.STAGE_SIZE = 200;
 
@@ -252,10 +254,10 @@
 
 	    var fogColor;
 	    if (skyType == 'color' || skyType == 'none'){
-	      fogColor = new THREE.Color(this.data.skyColor);
+	      fogColor = new THREE.Color(this.environmentData.skyColor);
 	    }
 	    else if (skyType == 'gradient'){
-	      fogColor = new THREE.Color(this.data.horizonColor);
+	      fogColor = new THREE.Color(this.environmentData.horizonColor);
 	    }
 	    else if (skyType == 'atmosphere')
 	    {
@@ -285,27 +287,31 @@
 	    return '#' + fogColor.getHexString();
 	  },
 
-	  update: function (oldData) {
-	    // preset changed
-	    if (!oldData || (oldData.preset === undefined || oldData.preset !== this.data.preset)) {
-	      var newData = Object.assign({}, this.presets[this.data.preset]);
-	      if (!oldData || oldData.preset === undefined) {
-	        Object.assign(newData, this.el.components.environment.attrValue);
-	      }
-	      this.el.setAttribute('environment', newData);
-	      if (oldData) { return; } else { oldData = {}; }
+	  update: function (oldDataNonPreset) {
+	    var oldData;
+
+	    if (!this.data.preset) {
+	      oldData = oldDataNonPreset;
+	      this.environmentData = this.data;
+	    } else {
+	      oldData = AFRAME.utils.clone(this.environmentData);
+	      this.environmentData = {};
+	      Object.assign(this.environmentData, this.data);
+	      Object.assign(this.environmentData, this.presets[this.data.preset]);
+	      Object.assign(this.environmentData, this.el.components.environment.attrValue);
+	      console.log(this.environmentData);
 	    }
 
-	    var skyType = this.data.skyType;
-	    var sunPos = new THREE.Vector3(this.data.lightPosition.x, this.data.lightPosition.y, this.data.lightPosition.z);
+	    var skyType = this.environmentData.skyType;
+	    var sunPos = new THREE.Vector3(this.environmentData.lightPosition.x, this.environmentData.lightPosition.y, this.environmentData.lightPosition.z);
 	    sunPos.normalize();
 
 	    // update light colors and intensities
 	    if (this.sunlight) {
-	      this.sunlight.setAttribute('position', this.data.lightPosition);
+	      this.sunlight.setAttribute('position', this.environmentData.lightPosition);
 	      if (skyType != 'atmosphere') {
 	        // dim down the sky color for the light
-	        var skycol = new THREE.Color(this.data.skyColor);
+	        var skycol = new THREE.Color(this.environmentData.skyColor);
 	        skycol.r = (skycol.r + 1.0) / 2.0;
 	        skycol.g = (skycol.g + 1.0) / 2.0;
 	        skycol.b = (skycol.b + 1.0) / 2.0;
@@ -319,18 +325,18 @@
 	      }
 
 	      this.sunlight.setAttribute('light', {
-	        castShadow: this.data.shadow,
-	        shadowCameraLeft: -this.data.shadowSize,
-	        shadowCameraBottom: -this.data.shadowSize,
-	        shadowCameraRight: this.data.shadowSize,
-	        shadowCameraTop: this.data.shadowSize
+	        castShadow: this.environmentData.shadow,
+	        shadowCameraLeft: -this.environmentData.shadowSize,
+	        shadowCameraBottom: -this.environmentData.shadowSize,
+	        shadowCameraRight: this.environmentData.shadowSize,
+	        shadowCameraTop: this.environmentData.shadowSize
 	      });
 	    }
 
 	    // update sky colors
-	    if (skyType != oldData.skyType ||
-	      this.data.skyColor != oldData.skyColor ||
-	      this.data.horizonColor != oldData.horizonColor) {
+	    if (skyType !== oldData.skyType ||
+	      this.environmentData.skyColor != oldData.skyColor ||
+	      this.environmentData.horizonColor != oldData.horizonColor) {
 
 	      this.sky.removeAttribute('material');
 
@@ -340,12 +346,12 @@
 	        this.stars.setAttribute('visible', skyType == 'atmosphere');
 	      }
 	      if (skyType == 'color') {
-	        mat.color = this.data.skyColor;
+	        mat.color = this.environmentData.skyColor;
 	        mat.fog = false;
 	      }
 	      else if (skyType == 'gradient') {
-	        mat.topColor = this.data.skyColor;
-	        mat.bottomColor = this.data.horizonColor;
+	        mat.topColor = this.environmentData.skyColor;
+	        mat.bottomColor = this.environmentData.horizonColor;
 	      }
 	      this.sky.setAttribute('material', mat);
 	    }
@@ -357,10 +363,10 @@
 	    }
 
 	    // set fog color
-	    if (this.data.fog > 0) {
+	    if (this.environmentData.fog > 0) {
 	      this.el.sceneEl.setAttribute('fog', {
 	        color: this.getFogColor(skyType, sunPos.y),
-	        far: (1.01 - this.data.fog) * this.STAGE_SIZE * 2
+	        far: (1.01 - this.environmentData.fog) * this.STAGE_SIZE * 2
 	      });
 	    }
 	    else {
@@ -368,53 +374,53 @@
 	    }
 
 	    // scene lights
-	    this.sunlight.setAttribute('light', {type: this.data.lighting == 'point' ? 'point' : 'directional'});
-	    this.sunlight.setAttribute('visible', this.data.lighting !== 'none');
-	    this.hemilight.setAttribute('visible', this.data.lighting !== 'none');
+	    this.sunlight.setAttribute('light', {type: this.environmentData.lighting == 'point' ? 'point' : 'directional'});
+	    this.sunlight.setAttribute('visible', this.environmentData.lighting !== 'none');
+	    this.hemilight.setAttribute('visible', this.environmentData.lighting !== 'none');
 
 	    // check if ground geometry needs to be calculated
 	    var updateGroundGeometry =
 	      !this.groundGeometry ||
-	      this.data.seed != oldData.seed ||
-	      this.data.ground != oldData.ground ||
-	      this.data.playArea != oldData.playArea ||
-	      this.data.flatShading != oldData.flatShading;
+	      this.environmentData.seed != oldData.seed ||
+	      this.environmentData.ground != oldData.ground ||
+	      this.environmentData.playArea != oldData.playArea ||
+	      this.environmentData.flatShading != oldData.flatShading;
 
 	    // check if any parameter of the ground was changed, and update it
 	    if (updateGroundGeometry ||
-	        this.data.groundColor != oldData.groundColor ||
-	        this.data.groundColor2 != oldData.groundColor2 ||
-	        this.data.groundYScale != oldData.groundYScale ||
-	        this.data.groundTexture != oldData.groundTexture ||
-	        this.data.gridColor != oldData.gridColor ||
-	        this.data.grid != oldData.grid
+	        this.environmentData.groundColor != oldData.groundColor ||
+	        this.environmentData.groundColor2 != oldData.groundColor2 ||
+	        this.environmentData.groundYScale != oldData.groundYScale ||
+	        this.environmentData.groundTexture != oldData.groundTexture ||
+	        this.environmentData.gridColor != oldData.gridColor ||
+	        this.environmentData.grid != oldData.grid
 	        )
 	    {
 	      this.updateGround(updateGroundGeometry);
 	      // set bounce light color to ground color
-	      if (this.hemilight) this.hemilight.setAttribute('light', {'groundColor': this.data.groundColor});
+	      if (this.hemilight) this.hemilight.setAttribute('light', {'groundColor': this.environmentData.groundColor});
 	    }
 
 	    // update dressing
-	    if (this.data.seed != oldData.seed ||
-	        this.data.dressingOnPlayArea != oldData.dressingOnPlayArea ||
-	        this.data.dressing != oldData.dressing ||
-	        this.data.flatShading != oldData.flatShading ||
-	        this.data.dressingAmount != oldData.dressingAmount ||
-	        this.data.dressingScale != oldData.dressingScale ||
-	        this.data.dressingColor != oldData.dressingColor  ||
-	        this.data.dressingVariance.x != oldData.dressingVariance.x ||
-	        this.data.dressingVariance.y != oldData.dressingVariance.y ||
-	        this.data.dressingVariance.z != oldData.dressingVariance.z ||
-	        this.data.dressingUniformScale != oldData.dressingUniformScale
+	    if (this.environmentData.seed != oldData.seed ||
+	        this.environmentData.dressingOnPlayArea != oldData.dressingOnPlayArea ||
+	        this.environmentData.dressing != oldData.dressing ||
+	        this.environmentData.flatShading != oldData.flatShading ||
+	        this.environmentData.dressingAmount != oldData.dressingAmount ||
+	        this.environmentData.dressingScale != oldData.dressingScale ||
+	        this.environmentData.dressingColor != oldData.dressingColor  ||
+	        this.environmentData.dressingVariance.x != oldData.dressingVariance.x ||
+	        this.environmentData.dressingVariance.y != oldData.dressingVariance.y ||
+	        this.environmentData.dressingVariance.z != oldData.dressingVariance.z ||
+	        this.environmentData.dressingUniformScale != oldData.dressingUniformScale
 	      ) {
 	      this.updateDressing();
 	    }
 
 	    this.sky.setAttribute('visible', skyType !== 'none');
 
-	    this.el.setAttribute('visible', this.data.active);
-	    if (!this.data.active) {
+	    this.el.setAttribute('visible', this.environmentData.active);
+	    if (!this.environmentData.active) {
 	      if (this.userFog) {
 	        this.el.sceneEl.setAttribute('fog', this.userFog);
 	      }
@@ -435,13 +441,13 @@
 	      str += i + ': ';
 	      var type = this.schema[i].type;
 	      if (type == 'vec3') {
-	        str += '{ x: ' + this.data[i].x + ', y: ' + this.data[i].y + ', z: ' + this.data[i].z + '}';
+	        str += '{ x: ' + this.environmentData[i].x + ', y: ' + this.environmentData[i].y + ', z: ' + this.environmentData[i].z + '}';
 	      }
 	      else if (type == 'string' || type == 'color') {
-	        str += '"' + this.data[i] + '"';
+	        str += '"' + this.environmentData[i] + '"';
 	      }
 	      else {
-	        str += this.data[i];
+	        str += this.environmentData[i];
 	      }
 	      str += ', ';
 	    }
@@ -469,7 +475,7 @@
 	        continue;
 	      }
 	      var def = usingPreset ? usingPreset[i] : this.schema[i].default;
-	      var data = this.data[i];
+	      var data = this.environmentData[i];
 	      var type = this.schema[i].type;
 	      if (type == 'vec3') {
 	        var coords = def;
@@ -493,9 +499,9 @@
 	    console.log('%c' + params.join('; '), 'color: #f48;font-weight:bold');
 	  },
 
-	  // Custom Math.random() with seed. Given this.data.seed and x, it always returns the same "random" number
+	  // Custom Math.random() with seed. Given this.environmentData.seed and x, it always returns the same "random" number
 	  random: function (x) {
-	    return parseFloat('0.' + Math.sin(this.data.seed * 9999 * x).toString().substr(7));
+	    return parseFloat('0.' + Math.sin(this.environmentData.seed * 9999 * x).toString().substr(7));
 	  },
 
 
@@ -505,7 +511,7 @@
 	    var resolution = 64; // number of divisions of the ground mesh
 
 	    if (updateGeometry) {
-	      var visibleground = this.data.ground != 'none';
+	      var visibleground = this.environmentData.ground != 'none';
 	      this.ground.setAttribute('visible', visibleground);
 	      if (!visibleground) {
 	        return;
@@ -521,13 +527,13 @@
 	      var inc = frequency / resolution;
 
 	      for (var i = 0, x = 0, y = 0; i < numVerts; i++) {
-	        if (this.data.ground == 'flat') {
+	        if (this.environmentData.ground == 'flat') {
 	          verts[i].z = 0;
 	          continue;
 	        }
 
 	        var h;
-	        switch (this.data.ground) {
+	        switch (this.environmentData.ground) {
 	          case 'hills': {
 	            h = Math.max(0, perlin.noise(x, y, 0));
 	            break;
@@ -552,7 +558,7 @@
 	        // flat ground in the center
 	        var xx = x * 2 / frequency - 1;
 	        var yy = y * 2 / frequency - 1;
-	        var pa = this.data.playArea;
+	        var pa = this.environmentData.playArea;
 	        xx = Math.max(0, Math.min(1, (Math.abs(xx) - (pa - 0.9)) * (1 / pa) ));
 	        yy = Math.max(0, Math.min(1, (Math.abs(yy) - (pa - 0.9)) * (1 / pa) ));
 	        h *= xx > yy ? xx : yy;
@@ -570,7 +576,7 @@
 	      }
 
 	      this.groundGeometry.computeFaceNormals();
-	      if (this.data.flatShading) {
+	      if (this.environmentData.flatShading) {
 	        this.groundGeometry.computeFlatVertexNormals();
 	      }
 	      else {
@@ -582,7 +588,7 @@
 	    }
 
 	    // apply Y scale. There's no need to recalculate the geometry for this. Just change scale
-	    this.ground.setAttribute('scale', {z: this.data.groundYScale});
+	    this.ground.setAttribute('scale', {z: this.environmentData.groundYScale});
 
 	    // update ground, playarea and grid textures.
 	    var groundResolution = 2048;
@@ -616,9 +622,9 @@
 
 	      // use .shading for A-Frame < 0.7.0 and .flatShading for A-Frame >= 0.7.0
 	      if (new THREE.Material().hasOwnProperty('shading')) {
-	        this.groundMaterialProps.shading = this.data.flatShading ? THREE.FlatShading : THREE.SmoothShading;
+	        this.groundMaterialProps.shading = this.environmentData.flatShading ? THREE.FlatShading : THREE.SmoothShading;
 	      } else {
-	        this.groundMaterialProps.flatShading = this.data.flatShading;
+	        this.groundMaterialProps.flatShading = this.environmentData.flatShading;
 	      }
 
 	      this.groundMaterial = new THREE.MeshLambertMaterial(this.groundMaterialProps);
@@ -646,14 +652,14 @@
 
 	    this.ground.setAttribute('shadow', {
 	      cast: false,
-	      receive: this.data.shadow
+	      receive: this.environmentData.shadow
 	    });
 	  },
 
 	  // draw grid to a canvas context
 	  drawGrid: function (ctx, size, texMeters) {
 
-	    if (this.data.grid == 'none') return;
+	    if (this.environmentData.grid == 'none') return;
 
 	    // one grid feature each 2 meters
 
@@ -661,12 +667,12 @@
 	    var step = size / (texMeters / 2); // 2 meters == <step> pixels
 	    var i, j, ii;
 
-	    ctx.fillStyle = this.data.gridColor;
+	    ctx.fillStyle = this.environmentData.gridColor;
 
-	    switch (this.data.grid) {
+	    switch (this.environmentData.grid) {
 	      case '1x1':
 	      case '2x2': {
-	        if (this.data.grid == '1x1') {
+	        if (this.environmentData.grid == '1x1') {
 	          num = num * 2;
 	          step = size / texMeters;
 	        }
@@ -715,15 +721,15 @@
 	  // draw ground texture to a canvas context
 	  drawTexture: function(ctx, size, texMeters) {
 	    // fill all with ground Color
-	    ctx.fillStyle = this.data.groundColor;
+	    ctx.fillStyle = this.environmentData.groundColor;
 	    ctx.fillRect(0, 0, size, size);
 
 	    var i, col, col1, col2, im, imdata, numpixels;
 
-	    if (this.data.groundTexture == 'none') return;
-	    switch(this.data.groundTexture) {
+	    if (this.environmentData.groundTexture == 'none') return;
+	    switch(this.environmentData.groundTexture) {
 	      case 'checkerboard': {
-	        ctx.fillStyle = this.data.groundColor2;
+	        ctx.fillStyle = this.environmentData.groundColor2;
 	        var num = Math.floor(texMeters / 2);
 	        var step = size / (texMeters / 2); // 2 meters == <step> pixels
 	        for (i = 0; i < num + 1; i += 2) {
@@ -736,8 +742,8 @@
 	      case 'squares': {
 	        var numSquares = 16;
 	        var squareSize = size / numSquares;
-	        col1 = new THREE.Color(this.data.groundColor);
-	        col2 = new THREE.Color(this.data.groundColor2);
+	        col1 = new THREE.Color(this.environmentData.groundColor);
+	        col2 = new THREE.Color(this.environmentData.groundColor2);
 	        for (i = 0; i < numSquares * numSquares; i++) {
 	          col = this.random(i + 3) > 0.5 ? col1.clone() : col2.clone();
 	          col.addScalar(this.random(i + 3) * 0.1 - 0.05);
@@ -750,8 +756,8 @@
 	      // TODO: fix
 	        imdata = ctx.getImageData(0, 0, size, size);
 	        im = imdata.data;
-	        col1 = new THREE.Color(this.data.groundColor);
-	        col2 = new THREE.Color(this.data.groundColor2);
+	        col1 = new THREE.Color(this.environmentData.groundColor);
+	        col2 = new THREE.Color(this.environmentData.groundColor2);
 	        var diff = new THREE.Color(col2.r - col1.r, col2.g - col1.g, col2.b - col1.b);
 	        var perlin = new PerlinNoise();
 	        for (i = 0, j = 0, numpixels = im.length; i < numpixels; i += 4, j++){
@@ -770,12 +776,12 @@
 	        tex.width = s;
 	        tex.height = s;
 	        var texctx = tex.getContext('2d');
-	        texctx.fillStyle = this.data.groundColor;
+	        texctx.fillStyle = this.environmentData.groundColor;
 	        texctx.fillRect(0, 0, s, s);
 	        imdata = texctx.getImageData(0, 0, s, s);
 	        im = imdata.data;
-	        col1 = new THREE.Color(this.data.groundColor);
-	        col2 = new THREE.Color(this.data.groundColor2);
+	        col1 = new THREE.Color(this.environmentData.groundColor);
+	        col2 = new THREE.Color(this.environmentData.groundColor2);
 	        var walkers = [];
 	        var numwalkers = 1000;
 	        for (i = 0; i < numwalkers; i++) {
@@ -871,7 +877,7 @@
 	        for (var f = 0; f < faces.length; f += 3) {
 	          geo.faces.push(new THREE.Face3(faces[f], faces[f + 1], faces[f + 2]));
 	        }
-	        if (this.data.flatShading || data[j]['flatShading']) {
+	        if (this.environmentData.flatShading || data[j]['flatShading']) {
 	          geo.computeFaceNormals();
 	        }
 	        else {
@@ -892,15 +898,15 @@
 	  // updates set dressing
 	  updateDressing: function () {
 	    var dressing = new THREE.Object3D();
-	    this.dressing.setAttribute('visible', this.data.dressing != 'none');
-	    if (this.data.dressing == 'none') {
+	    this.dressing.setAttribute('visible', this.environmentData.dressing != 'none');
+	    if (this.environmentData.dressing == 'none') {
 	      return;
 	    }
 	    var geometry = new THREE.Geometry(); // mother geometry that will hold all instances
 
 	    // get array of geometries
 	    var geoset;
-	    switch (this.data.dressing){
+	    switch (this.environmentData.dressing){
 	      case 'cubes': {
 	        geoset = [new THREE.BoxGeometry(1, 1, 1)];
 	        geoset[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
@@ -917,13 +923,13 @@
 	        break;
 	      }
 	      default: {
-	        geoset = this.getAssetGeometry(this.assets[this.data.dressing]);
+	        geoset = this.getAssetGeometry(this.assets[this.environmentData.dressing]);
 	        if (!geoset) return;
 	        break;
 	      }
 	    }
 
-	    for (var i = 0, r = 88343; i < this.data.dressingAmount; i++, r++) {
+	    for (var i = 0, r = 88343; i < this.environmentData.dressingAmount; i++, r++) {
 
 	      var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)];
 	/*
@@ -940,10 +946,10 @@
 	      }
 	*/
 	      // set random position, rotation and scale
-	      var ds = this.data.dressingScale;
-	      var dv = new THREE.Vector3(this.data.dressingVariance.x, this.data.dressingVariance.y, this.data.dressingVariance.z);
+	      var ds = this.environmentData.dressingScale;
+	      var dv = new THREE.Vector3(this.environmentData.dressingVariance.x, this.environmentData.dressingVariance.y, this.environmentData.dressingVariance.z);
 	      var distance;
-	      var onPlayArea = this.random(r) < this.data.dressingOnPlayArea;
+	      var onPlayArea = this.random(r) < this.environmentData.dressingOnPlayArea;
 	      if (onPlayArea) {
 	        distance = this.random(r + 1) * 15;
 	      }
@@ -954,7 +960,7 @@
 	      var direction = this.random(r + 3) * Math.PI * 2;
 	      var matrix = new THREE.Matrix4();
 	      var scale = this.random(r + 4);
-	      var uniformScale = this.data.dressingUniformScale;
+	      var uniformScale = this.environmentData.dressingUniformScale;
 
 	      matrix.compose(
 	        // position
@@ -986,11 +992,11 @@
 
 	    // setup material
 	    var material = new THREE.MeshLambertMaterial({
-	      color: new THREE.Color(this.data.dressingColor),
+	      color: new THREE.Color(this.environmentData.dressingColor),
 	      vertexColors: THREE.VertexColors
 	    });
 
-	    if (this.data.flatShading) {
+	    if (this.environmentData.flatShading) {
 	      bufgeo.computeVertexNormals();
 	    }
 
