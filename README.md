@@ -29,7 +29,7 @@ The previous code will setup a default scene, but you have a bunch of already pr
   <a-entity environment="preset: <name of the preset>"></a-entity>
 ```
 
-You can view and try all the presets in the **[aframe-environment-component Test Page](http://feiss.github.io/aframe-environment-component/)**. The current list of presets are listed in the next section.
+You can view and try all the presets in the **[aframe-environment-component Test Page](https://supermedium.com/aframe-environment-component/)**. The current list of presets are listed in the next section.
 
 
 ## Parameters
