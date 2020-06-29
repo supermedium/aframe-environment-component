@@ -976,7 +976,7 @@ AFRAME.registerComponent('environment', {
       positions[i+1] = v.y;
       positions[i+2] = v.z;
     }
-    geometry.addAttribute('position', new THREE.BufferAttribute(positions, 3));
+    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setDrawRange(0, 0); // don't draw any yet
     var material = new THREE.PointsMaterial({size: 0.01, color: 0xCCCCCC, fog: false});
     this.stars.setObject3D('mesh', new THREE.Points(geometry, material));
