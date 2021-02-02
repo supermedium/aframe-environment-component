@@ -292,8 +292,6 @@ AFRAME.registerComponent('environment', {
       this.environmentData.skyColor != oldData.skyColor ||
       this.environmentData.horizonColor != oldData.horizonColor) {
 
-      this.sky.removeAttribute('material');
-
       var mat = {};
       mat.shader = {'none': 'flat', 'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
       if (this.stars) {
@@ -307,6 +305,7 @@ AFRAME.registerComponent('environment', {
         mat.topColor = this.environmentData.skyColor;
         mat.bottomColor = this.environmentData.horizonColor;
       }
+
       this.sky.setAttribute('material', mat);
     }
 
@@ -475,14 +474,16 @@ AFRAME.registerComponent('environment', {
         this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_SIZE + 2, this.STAGE_SIZE + 2, resolution - 1, resolution - 1);
       }
       var perlin = new PerlinNoise();
-      var verts = this.groundGeometry.vertices;
-      var numVerts = this.groundGeometry.vertices.length;
+      var verts = this.groundGeometry.attributes.position.array;
+      var numVerts = verts.length;
       var frequency = 10;
       var inc = frequency / resolution;
+      var x = 0;
+      var y = 0;
 
-      for (var i = 0, x = 0, y = 0; i < numVerts; i++) {
+      for (var i = 2; i < numVerts; i+=3) {
         if (this.environmentData.ground == 'flat') {
-          verts[i].z = 0;
+          verts[i] = 0;
           continue;
         }
 
@@ -519,7 +520,7 @@ AFRAME.registerComponent('environment', {
         if (h < 0.01) h = 0; // stick to the floor
 
         // set height
-        verts[i].z = h;
+        verts[i] = h;
 
         // calculate next x,y ground coordinates
         x += inc;
@@ -530,15 +531,10 @@ AFRAME.registerComponent('environment', {
       }
 
       this.groundGeometry.computeFaceNormals();
-      if (this.environmentData.flatShading) {
-        this.groundGeometry.computeFlatVertexNormals();
-      }
-      else {
-        this.groundGeometry.computeVertexNormals();
-      }
+      this.groundGeometry.computeVertexNormals();
 
-      this.groundGeometry.verticesNeedUpdate = true;
-      this.groundGeometry.normalsNeedUpdate = true;
+      this.groundGeometry.attributes.position.needsUpdate = true;
+      this.groundGeometry.attributes.normal.needsUpdate = true;
     }
 
     // apply Y scale. There's no need to recalculate the geometry for this. Just change scale
@@ -776,15 +772,16 @@ AFRAME.registerComponent('environment', {
     if (!data) return null;
     var geoset = [];
     var self = this;
-
     function applyNoise(geo, noise) {
       var n = new THREE.Vector3();
-      for (var i = 0, numVerts = geo.vertices.length; i < numVerts; i++) {
-        n.x = (self.random(i) - 0.5) * noise;
-        n.y = (self.random(i + numVerts) - 0.5) * noise;
-        n.z = (self.random(i + numVerts * 2) - 0.5) * noise;
-        geo.vertices[i].add(n);
+      var verts = geo.attributes.position.array;
+      var numVerts = verts.length;
+      for (var i = 0; i < numVerts; i+=3) {
+        verts[i] = (self.random(i) - 0.5) * noise;
+        verts[i+1] = (self.random(i + numVerts) - 0.5) * noise;
+        verts[i+2] = (self.random(i + numVerts * 2) - 0.5) * noise;
       }
+      geo.attributes.position.needsUpdate = true;
     }
 
     var i, geo, verts;
@@ -802,9 +799,10 @@ AFRAME.registerComponent('environment', {
           }
         }
         geo = new THREE.LatheGeometry(points, data[j]['segments'] || 8);
-        geo.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI, 0, 0)));
-        geo.applyMatrix(new THREE.Matrix4().makeTranslation(0, maxy, 0));
-        if (data[j]['noise']) applyNoise(geo, data[j].noise);
+        geo.applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI, 0, 0)));
+        geo.applyMatrix4(new THREE.Matrix4().makeTranslation(0, maxy, 0));
+        //if (data[j]['noise']) applyNoise(geo, data[j].noise);
+        geo = geo.toNonIndexed();
         geoset.push(geo);
       }
 
@@ -822,27 +820,24 @@ AFRAME.registerComponent('environment', {
       }
 
       else if (data[j].type == 'mesh') {
-        geo = new THREE.Geometry();
+        geo = new THREE.BufferGeometry();
         verts = data[j].vertices;
         var faces = data[j].faces;
-        for (var v = 0; v < verts.length; v += 3) {
-          geo.vertices.push(new THREE.Vector3(verts[v], verts[v + 1], verts[v + 2]));
-        }
-        for (var f = 0; f < faces.length; f += 3) {
-          geo.faces.push(new THREE.Face3(faces[f], faces[f + 1], faces[f + 2]));
-        }
-        if (this.environmentData.flatShading || data[j]['flatShading']) {
-          geo.computeFaceNormals();
-        }
-        else {
-          geo.computeVertexNormals();
-        }
+        var positions = new Float32Array(verts);
+
+        geo.setIndex(faces);
+        geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 
         if (data[j]['mirror']) {
-          geo.merge(geo, new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0, Math.PI, 0)));
+          var mirroredGeo = geo.clone();
+          mirroredGeo.applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0, Math.PI, 0)));
+          geo = THREE.BufferGeometryUtils.mergeBufferGeometries([geo, mirroredGeo]);
         }
 
         if (data[j]['noise']) applyNoise(geo, data[j].noise);
+
+        geo = geo.toNonIndexed();
+        geo.computeVertexNormals();
         geoset.push(geo);
       }
     }
@@ -852,11 +847,11 @@ AFRAME.registerComponent('environment', {
   // updates set dressing
   updateDressing: function () {
     var dressing = new THREE.Object3D();
+    var geometries = [];
     this.dressing.setAttribute('visible', this.environmentData.dressing != 'none');
     if (this.environmentData.dressing == 'none') {
       return;
     }
-    var geometry = new THREE.Geometry(); // mother geometry that will hold all instances
 
     // get array of geometries
     var geoset;
@@ -885,7 +880,8 @@ AFRAME.registerComponent('environment', {
 
     for (var i = 0, r = 88343; i < this.environmentData.dressingAmount; i++, r++) {
 
-      var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)];
+      var clone = geoset[Math.floor(this.random(33 + i) * geoset.length)].clone;
+      var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)].clone();
 /*
       // change vertex colors
       var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - this.random(66 + i) * 0.3);
@@ -935,24 +931,18 @@ AFRAME.registerComponent('environment', {
            ds + (uniformScale ? scale : this.random(r + 8)) * dv.z
           )
         );
-
-      // merge with mother geometry
-      geometry.merge(geo, matrix);
+        geo.applyMatrix4(matrix);
+        geometries.push(geo);
     }
 
     // convert geometry to buffergeometry
-    var bufgeo = new THREE.BufferGeometry();
-    bufgeo.fromGeometry(geometry);
+    var bufgeo = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
+    bufgeo.attributes.position.needsUpdate = true;
 
-    // setup material
+    // setup Materialial
     var material = new THREE.MeshLambertMaterial({
-      color: new THREE.Color(this.environmentData.dressingColor),
-      vertexColors: THREE.VertexColors
+      color: new THREE.Color(this.environmentData.dressingColor)
     });
-
-    if (this.environmentData.flatShading) {
-      bufgeo.computeVertexNormals();
-    }
 
     // create mesh
     var mesh = new THREE.Mesh(bufgeo, material);
