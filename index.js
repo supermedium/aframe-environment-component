@@ -473,7 +473,7 @@ AFRAME.registerComponent('environment', {
       if (!this.groundGeometry) {
         this.groundGeometry = new THREE.PlaneGeometry(this.STAGE_SIZE + 2, this.STAGE_SIZE + 2, resolution - 1, resolution - 1);
       }
-      var perlin = new PerlinNoise();
+      var perlin = new PerlinNoise(this.environmentData.seed);
       var verts = this.groundGeometry.attributes.position.array;
       var numVerts = verts.length;
       var frequency = 10;
@@ -1206,13 +1206,14 @@ AFRAME.registerShader('gradientshader', {
 // perlin noise generator
 // from https://gist.github.com/banksean/304522
 
-var PerlinNoise = function(r) {
-  if (r == undefined) r = Math;
+var PerlinNoise = function(seed) {
+  var randomWithSeed;
   this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];
   this.p = [];
   var i;
   for (i=0; i<256; i++) {
-    this.p[i] = Math.floor(r.random(666)*256);
+    randomWithSeed = parseFloat('0.' + Math.sin(seed * 9999 * i).toString().substr(7));
+    this.p[i] = Math.floor(randomWithSeed * 256);
   }
   // To remove the need for index wrapping, double the permutation table length
   this.perm = [];
