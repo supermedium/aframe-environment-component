@@ -530,7 +530,6 @@ AFRAME.registerComponent('environment', {
         }
       }
 
-      this.groundGeometry.computeFaceNormals();
       this.groundGeometry.computeVertexNormals();
 
       this.groundGeometry.attributes.position.needsUpdate = true;
