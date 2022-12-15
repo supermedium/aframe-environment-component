@@ -814,7 +814,7 @@ AFRAME.registerComponent('environment', {
           else shape.lineTo(verts[i], verts[i + 1]);
         }
         geo = new THREE.ExtrudeGeometry(shape, {amount: 1, bevelEnabled: false});
-        geo.applyMatrix(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
+        geo.applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(-Math.PI / 2, 0, 0)));
         if (data[j]['noise']) applyNoise(geo, data[j].noise);
         geoset.push(geo);
       }
@@ -858,17 +858,17 @@ AFRAME.registerComponent('environment', {
     switch (this.environmentData.dressing){
       case 'cubes': {
         geoset = [new THREE.BoxGeometry(1, 1, 1)];
-        geoset[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+        geoset[0].applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
         break;
       }
       case 'pyramids': {
         geoset = [new THREE.ConeGeometry(1, 1, 4, 1, true)];
-        geoset[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+        geoset[0].applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
         break;
       }
       case 'cylinders': {
         geoset = [new THREE.CylinderGeometry(0.5, 0.5, 1, 8, 1, true)];
-        geoset[0].applyMatrix(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
+        geoset[0].applyMatrix4(new THREE.Matrix4().makeTranslation(0, 0.5, 0));
         break;
       }
       default: {
