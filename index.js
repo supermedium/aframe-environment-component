@@ -74,6 +74,9 @@ AFRAME.registerComponent('environment', {
   init: function () {
     this.environmentData = {};
 
+    // renderer system for color correction
+    this.rendererSystem = this.el.sceneEl.systems.renderer;
+
     // stage ground diameter (and sky radius)
     this.STAGE_SIZE = 200;
 
@@ -270,13 +273,18 @@ AFRAME.registerComponent('environment', {
         skycol.r = (skycol.r + 1.0) / 2.0;
         skycol.g = (skycol.g + 1.0) / 2.0;
         skycol.b = (skycol.b + 1.0) / 2.0;
-        this.hemilight.setAttribute('light', {'color': '#' + skycol.getHexString()});
+        this.hemilight.setAttribute('light', {
+          'color': '#' + skycol.getHexString(),
+          'intensity': 0.6
+        });
         this.sunlight.setAttribute('light', {'intensity': 0.6});
-        this.hemilight.setAttribute('light', {'intensity': 0.6});
       }
       else {
+        this.hemilight.setAttribute('light', {
+          'color': '#CEE4F0',
+          'intensity': 0.1 + sunPos.y * 0.5
+        });
         this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
-        this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
       }
 
       this.sunlight.setAttribute('light', {
@@ -553,6 +561,7 @@ AFRAME.registerComponent('environment', {
       this.gridTexture.wrapS = THREE.RepeatWrapping;
       this.gridTexture.wrapT = THREE.RepeatWrapping;
       this.gridTexture.repeat.set(texRepeat, texRepeat);
+      this.rendererSystem.applyColorCorrection(this.gridTexture);
 
       this.groundCanvas = document.createElement('canvas');
       this.groundCanvas.width = groundResolution;
@@ -561,6 +570,7 @@ AFRAME.registerComponent('environment', {
       this.groundTexture.wrapS = THREE.RepeatWrapping;
       this.groundTexture.wrapT = THREE.RepeatWrapping;
       this.groundTexture.repeat.set(texRepeat, texRepeat);
+      this.rendererSystem.applyColorCorrection(this.groundTexture);
 
       // ground material diffuse map is the regular ground texture and the grid texture
       // is used in the emissive map. This way, the grid is always equally visible, even at night.
@@ -943,6 +953,7 @@ AFRAME.registerComponent('environment', {
     var material = new THREE.MeshLambertMaterial({
       color: new THREE.Color(this.environmentData.dressingColor)
     });
+    this.rendererSystem.applyColorCorrection(material.color);
 
     // create mesh
     var mesh = new THREE.Mesh(bufgeo, material);
