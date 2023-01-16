@@ -5,10 +5,10 @@ A simple way of setting up a whole basic environment for your
 
 ![gif](https://github.com/feiss/aframe-environment-component/blob/master/assets/aframeenvironment.gif?raw=true)
 
-Make sure you are using __A-Frame 0.6.0__ or later. Then just include `aframe-environment-component.js` in your HTML:
+Make sure you are using __A-Frame 1.3.0__ or later. Then just include `aframe-environment-component.js` in your HTML:
 
 ```html
-  <script src="https://unpkg.com/aframe-environment-component@1.3.1/dist/aframe-environment-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
 ```
 
 and add the `environment` component to an entity:
@@ -88,4 +88,4 @@ Apart from the parameter `dressingAmount`, there is not much difference among di
 
 ## Help and contact
 
-PRs are appreciated, issues are welcomed. For any question, ping @feiss at [aframevr in Slack](https://aframe.io/slack-invite) or [Discord](https://supermedium.com/discord).
+PRs are appreciated, issues are welcomed. For any question, ping @feiss at [aframevr in Slack](https://aframevr.slack.com/join/shared_invite/zt-f6rne3ly-ekVaBU~Xu~fsZHXr56jacQ) or [Discord](https://supermedium.com/discord).

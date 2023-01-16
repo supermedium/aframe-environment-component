@@ -17,7 +17,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/feiss/aframe-environment-component.git"
+    "url": "git+https://github.com/supermedium/aframe-environment-component.git"
   },
   "keywords": [
     "aframe",
@@ -31,9 +31,9 @@
   "author": "Diego F. Goberna <github@feiss.be>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/feiss/aframe-environment-component/issues"
+    "url": "https://github.com/supermedium/aframe-environment-component/issues"
   },
-  "homepage": "https://github.com/feiss/aframe-environment-component#readme",
+  "homepage": "https://github.com/supermedium/aframe-environment-component#readme",
   "devDependencies": {
     "aframe": "*",
     "browserify": "^13.0.0",
