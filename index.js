@@ -1007,6 +1007,8 @@ AFRAME.registerShader('skyshader', {
   ].join('\n'),
 
   fragmentShader: [
+    '#include <common>',
+    '#include <dithering_pars_fragment>',
     'uniform sampler2D skySampler;',
     'uniform vec3 sunPosition;',
     'varying vec3 vWorldPosition;',
@@ -1169,6 +1171,7 @@ AFRAME.registerShader('skyshader', {
     'gl_FragColor.rgb = retColor;',
 
     'gl_FragColor.a = 1.0;',
+    '#include <dithering_fragment>',
     '}'
   ].join('\n')
 });
@@ -1192,6 +1195,8 @@ AFRAME.registerShader('gradientshader', {
   ].join('\n'),
 
   fragmentShader: [
+    '#include <common>',
+    '#include <dithering_pars_fragment>',
     'uniform vec3 bottomColor;',
     'uniform vec3 topColor;',
     'uniform float offset;',
@@ -1199,6 +1204,7 @@ AFRAME.registerShader('gradientshader', {
     'void main() {',
     ' float h = normalize( vWorldPosition ).y;',
     ' gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max(h, 0.0 ), 0.8 ), 0.0 ) ), 1.0 );',
+    ' #include <dithering_fragment>',
     '}'
   ].join('\n')
 });
