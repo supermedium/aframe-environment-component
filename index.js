@@ -831,7 +831,7 @@ AFRAME.registerComponent('environment', {
         if (data[j]['mirror']) {
           var mirroredGeo = geo.clone();
           mirroredGeo.applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0, Math.PI, 0)));
-          geo = THREE.BufferGeometryUtils.mergeBufferGeometries([geo, mirroredGeo]);
+          geo = THREE.BufferGeometryUtils.mergeGeometries([geo, mirroredGeo]);
         }
 
         if (data[j]['noise']) applyNoise(geo, data[j].noise);
@@ -936,7 +936,7 @@ AFRAME.registerComponent('environment', {
     }
 
     // convert geometry to buffergeometry
-    var bufgeo = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
+    var bufgeo = THREE.BufferGeometryUtils.mergeGeometries(geometries);
     bufgeo.attributes.position.needsUpdate = true;
 
     // setup Materialial
