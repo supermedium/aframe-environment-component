@@ -295,6 +295,7 @@ AFRAME.registerComponent('environment', {
 
       var mat = {};
       mat.shader = {'none': 'flat', 'color': 'flat', 'gradient': 'gradientshader', 'atmosphere': 'skyshader'}[skyType];
+      mat.side = 'back';
       if (this.stars) {
         this.stars.setAttribute('visible', skyType == 'atmosphere');
       }
