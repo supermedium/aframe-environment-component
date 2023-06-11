@@ -210,12 +210,15 @@ AFRAME.registerComponent('environment', {
   // returns a fog color from a specific sky type and sun height
   getFogColor: function (skyType, sunHeight) {
 
+    // Note: linear operations are performed on the sRGB fog color
+    //       so tell Three that it's NoColorSpace and let it convert
+    //       to the working color space after all computations are done
     var fogColor;
     if (skyType == 'color' || skyType == 'none'){
-      fogColor = new THREE.Color(this.environmentData.skyColor);
+      fogColor = new THREE.Color().setStyle(this.environmentData.skyColor, THREE.NoColorSpace);
     }
     else if (skyType == 'gradient'){
-      fogColor = new THREE.Color(this.environmentData.horizonColor);
+      fogColor = new THREE.Color().setStyle(this.environmentData.horizonColor, THREE.NoColorSpace);
     }
     else if (skyType == 'atmosphere')
     {
@@ -227,9 +230,9 @@ AFRAME.registerComponent('environment', {
       sunHeight = Math.min(1, sunHeight);
 
       for (var i = 0; i < fogRatios.length; i++){
-        if (sunHeight > fogRatios[i]){
-          var c1 = new THREE.Color(fogColors[i - 1]);
-          var c2 = new THREE.Color(fogColors[i]);
+        if (sunHeight > fogRatios[i]) {
+          var c1 = new THREE.Color().setStyle(fogColors[i - 1], THREE.NoColorSpace);
+          var c2 = new THREE.Color().setStyle(fogColors[i], THREE.NoColorSpace);
           var a = (sunHeight - fogRatios[i]) / (fogRatios[i - 1] - fogRatios[i]);
           c2.lerp(c1, a);
           fogColor = c2;
@@ -240,7 +243,10 @@ AFRAME.registerComponent('environment', {
     // dim down the color
     fogColor.multiplyScalar(0.9);
     // mix it a bit with ground color
-    fogColor.lerp(new THREE.Color(this.data.groundColor), 0.3);
+    fogColor.lerp(new THREE.Color().setStyle(this.data.groundColor, THREE.NoColorSpace), 0.3);
+
+    // convert the resulting color to the working color space
+    fogColor.setRGB(fogColor.r, fogColor.g, fogColor.b, THREE.SRGBColorSpace);
 
     return '#' + fogColor.getHexString();
   },
@@ -269,10 +275,13 @@ AFRAME.registerComponent('environment', {
       this.sunlight.setAttribute('position', this.environmentData.lightPosition);
       if (skyType != 'atmosphere') {
         // dim down the sky color for the light
-        var skycol = new THREE.Color(this.environmentData.skyColor);
-        skycol.r = (skycol.r + 1.0) / 2.0;
-        skycol.g = (skycol.g + 1.0) / 2.0;
-        skycol.b = (skycol.b + 1.0) / 2.0;
+        var skycol = new THREE.Color().setStyle(this.environmentData.skyColor, THREE.NoColorSpace);
+        skycol.setRGB(
+          (skycol.r + 1.0) / 2.0,
+          (skycol.g + 1.0) / 2.0,
+          (skycol.b + 1.0) / 2.0,
+          THREE.SRGBColorSpace
+        );
         this.hemilight.setAttribute('light', {
           'color': '#' + skycol.getHexString(),
           'intensity': 0.6
@@ -311,8 +320,9 @@ AFRAME.registerComponent('environment', {
         mat.fog = false;
       }
       else if (skyType == 'gradient') {
-        mat.topColor = this.environmentData.skyColor;
-        mat.bottomColor = this.environmentData.horizonColor;
+        // Gradient shader doesn't encode fragments, so pass in colors as NoColorSpace
+        mat.topColor = new THREE.Color().setStyle(this.environmentData.skyColor, THREE.NoColorSpace);
+        mat.bottomColor = new THREE.Color().setStyle(this.environmentData.horizonColor, THREE.NoColorSpace);
       }
 
       this.sky.setAttribute('material', mat);
@@ -702,26 +712,28 @@ AFRAME.registerComponent('environment', {
       case 'squares': {
         var numSquares = 16;
         var squareSize = size / numSquares;
-        col1 = new THREE.Color(this.environmentData.groundColor);
-        col2 = new THREE.Color(this.environmentData.groundColor2);
+        // Note: use THREE.NoColorSpace to perform operations on sRGB colors directly
+        col1 = new THREE.Color().setStyle(this.environmentData.groundColor, THREE.NoColorSpace);
+        col2 = new THREE.Color().setStyle(this.environmentData.groundColor2, THREE.NoColorSpace);
         for (i = 0; i < numSquares * numSquares; i++) {
           col = this.random(i + 3) > 0.5 ? col1.clone() : col2.clone();
           col.addScalar(this.random(i + 3) * 0.1 - 0.05);
-          ctx.fillStyle = '#' + col.getHexString();
+          ctx.fillStyle = '#' + col.getHexString(THREE.NoColorSpace);
+
           ctx.fillRect((i % numSquares) * squareSize, Math.floor(i / numSquares) * squareSize, squareSize, squareSize);
         }
         break;
       }
       case 'noise': {
-      // TODO: fix
+        // TODO: fix
         imdata = ctx.getImageData(0, 0, size, size);
         im = imdata.data;
-        col1 = new THREE.Color(this.environmentData.groundColor);
-        col2 = new THREE.Color(this.environmentData.groundColor2);
+        // Note: use THREE.NoColorSpace to perform operations on sRGB colors directly
+        col1 = new THREE.Color().setStyle(this.environmentData.groundColor, THREE.NoColorSpace);
+        col2 = new THREE.Color().setStyle(this.environmentData.groundColor2, THREE.NoColorSpace);
         var diff = new THREE.Color(col2.r - col1.r, col2.g - col1.g, col2.b - col1.b);
         var perlin = new PerlinNoise();
         for (i = 0, j = 0, numpixels = im.length; i < numpixels; i += 4, j++){
-          //console.log( (j % size) / size, j / size)
           var rnd = perlin.noise((j % size) / size * 3, j / size / size * 3, 0);
           im[i + 0] = Math.floor((col1.r + diff.r * rnd) * 255);
           im[i + 1] = Math.floor((col1.g + diff.g * rnd) * 255);
@@ -740,8 +752,9 @@ AFRAME.registerComponent('environment', {
         texctx.fillRect(0, 0, s, s);
         imdata = texctx.getImageData(0, 0, s, s);
         im = imdata.data;
-        col1 = new THREE.Color(this.environmentData.groundColor);
-        col2 = new THREE.Color(this.environmentData.groundColor2);
+        // Note: use THREE.NoColorSpace to perform operations on sRGB colors directly
+        col1 = new THREE.Color().setStyle(this.environmentData.groundColor, THREE.NoColorSpace);
+        col2 = new THREE.Color().setStyle(this.environmentData.groundColor2, THREE.NoColorSpace);
         var walkers = [];
         var numwalkers = 1000;
         for (i = 0; i < numwalkers; i++) {
@@ -890,21 +903,8 @@ AFRAME.registerComponent('environment', {
 
     for (var i = 0, r = 88343; i < this.environmentData.dressingAmount; i++, r++) {
 
-      var clone = geoset[Math.floor(this.random(33 + i) * geoset.length)].clone;
       var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)].clone();
-/*
-      // change vertex colors
-      var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - this.random(66 + i) * 0.3);
 
-      for (var f = 0, fl = geo.faces.length; f < fl; f++) {
-        var face = geo.faces[f];
-        for (var v = 0; v < 3; v++) {
-          p = geo.vertices[face[faceindex[v]]]; // get vertex position
-          var floorao =  p.y / 4 + 0.75;
-          face.vertexColors[v] = new THREE.Color(color.r * floorao, color.g * floorao, color.b * floorao);
-        }
-      }
-*/
       // set random position, rotation and scale
       var ds = this.environmentData.dressingScale;
       var dv = new THREE.Vector3(this.environmentData.dressingVariance.x, this.environmentData.dressingVariance.y, this.environmentData.dressingVariance.z);
@@ -949,7 +949,7 @@ AFRAME.registerComponent('environment', {
     var bufgeo = THREE.BufferGeometryUtils.mergeGeometries(geometries);
     bufgeo.attributes.position.needsUpdate = true;
 
-    // setup Materialial
+    // setup Material
     var material = new THREE.MeshLambertMaterial({
       color: new THREE.Color(this.environmentData.dressingColor)
     });
@@ -980,6 +980,7 @@ AFRAME.registerComponent('environment', {
     geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
     geometry.setDrawRange(0, 0); // don't draw any yet
     var material = new THREE.PointsMaterial({size: 0.01, color: 0xCCCCCC, fog: false});
+    this.rendererSystem.applyColorCorrection(material.color);
     this.stars.setObject3D('mesh', new THREE.Points(geometry, material));
   },
 
