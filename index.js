@@ -988,7 +988,7 @@ AFRAME.registerComponent('environment', {
 // atmosphere sky shader. From https://github.com/aframevr/aframe/blob/master/examples/test/shaders/shaders/sky.js
 AFRAME.registerShader('skyshader', {
   schema: {
-    luminance: { type: 'number', default: 1, min: 0, max: 2, is: 'uniform' },
+    exposureBias: { type: 'number', default: 1.0, min: 0, max: 10, is: 'uniform' },
     turbidity: { type: 'number', default: 2, min: 0, max: 20, is: 'uniform' },
     reileigh: { type: 'number', default: 1, min: 0, max: 4, is: 'uniform' },
     mieCoefficient: { type: 'number', default: 0.005, min: 0, max: 0.1, is: 'uniform' },
@@ -1015,7 +1015,7 @@ AFRAME.registerShader('skyshader', {
 
     'vec3 cameraPos = vec3(0., 0., 0.);',
 
-    'uniform float luminance;',
+    'uniform float exposureBias;',
     'uniform float turbidity;',
     'uniform float reileigh;',
     'uniform float mieCoefficient;',
@@ -1153,17 +1153,11 @@ AFRAME.registerShader('skyshader', {
 
     'vec3 whiteScale = 1.0/Uncharted2Tonemap(vec3(W));',
 
-    'vec3 texColor = (Lin+L0);   ',
-    'texColor *= 0.04 ;',
+    'vec3 texColor = (Lin+L0);',
+    'texColor *= 0.04;',
     'texColor += vec3(0.0,0.001,0.0025)*0.3;',
 
-    'float g_fMaxLuminance = 1.0;',
-    'float fLumScaled = 0.1 / luminance;     ',
-    'float fLumCompressed = (fLumScaled * (1.0 + (fLumScaled / (g_fMaxLuminance * g_fMaxLuminance)))) / (1.0 + fLumScaled); ',
-
-    'float ExposureBias = fLumCompressed;',
-
-    'vec3 curr = Uncharted2Tonemap((log2(2.0/pow(luminance,4.0)))*texColor);',
+    'vec3 curr = Uncharted2Tonemap(exposureBias*texColor);',
     'vec3 color = curr*whiteScale;',
 
     'vec3 retColor = pow(color,vec3(1.0/(1.2+(1.2*sunfade))));',
