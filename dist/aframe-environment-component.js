@@ -120,6 +120,9 @@
 	  init: function () {
 	    this.environmentData = {};
 
+	    // renderer system for color correction
+	    this.rendererSystem = this.el.sceneEl.systems.renderer;
+
 	    // stage ground diameter (and sky radius)
 	    this.STAGE_SIZE = 200;
 
@@ -253,12 +256,15 @@
 	  // returns a fog color from a specific sky type and sun height
 	  getFogColor: function (skyType, sunHeight) {
 
+	    // Note: linear operations are performed on the sRGB fog color
+	    //       so tell Three that it's NoColorSpace and let it convert
+	    //       to the working color space after all computations are done
 	    var fogColor;
 	    if (skyType == 'color' || skyType == 'none'){
-	      fogColor = new THREE.Color(this.environmentData.skyColor);
+	      fogColor = new THREE.Color().setStyle(this.environmentData.skyColor, THREE.NoColorSpace);
 	    }
 	    else if (skyType == 'gradient'){
-	      fogColor = new THREE.Color(this.environmentData.horizonColor);
+	      fogColor = new THREE.Color().setStyle(this.environmentData.horizonColor, THREE.NoColorSpace);
 	    }
 	    else if (skyType == 'atmosphere')
 	    {
@@ -270,9 +276,9 @@
 	      sunHeight = Math.min(1, sunHeight);
 
 	      for (var i = 0; i < fogRatios.length; i++){
-	        if (sunHeight > fogRatios[i]){
-	          var c1 = new THREE.Color(fogColors[i - 1]);
-	          var c2 = new THREE.Color(fogColors[i]);
+	        if (sunHeight > fogRatios[i]) {
+	          var c1 = new THREE.Color().setStyle(fogColors[i - 1], THREE.NoColorSpace);
+	          var c2 = new THREE.Color().setStyle(fogColors[i], THREE.NoColorSpace);
 	          var a = (sunHeight - fogRatios[i]) / (fogRatios[i - 1] - fogRatios[i]);
 	          c2.lerp(c1, a);
 	          fogColor = c2;
@@ -283,7 +289,10 @@
 	    // dim down the color
 	    fogColor.multiplyScalar(0.9);
 	    // mix it a bit with ground color
-	    fogColor.lerp(new THREE.Color(this.data.groundColor), 0.3);
+	    fogColor.lerp(new THREE.Color().setStyle(this.data.groundColor, THREE.NoColorSpace), 0.3);
+
+	    // convert the resulting color to the working color space
+	    fogColor.setRGB(fogColor.r, fogColor.g, fogColor.b, THREE.SRGBColorSpace);
 
 	    return '#' + fogColor.getHexString();
 	  },
@@ -312,17 +321,25 @@
 	      this.sunlight.setAttribute('position', this.environmentData.lightPosition);
 	      if (skyType != 'atmosphere') {
 	        // dim down the sky color for the light
-	        var skycol = new THREE.Color(this.environmentData.skyColor);
-	        skycol.r = (skycol.r + 1.0) / 2.0;
-	        skycol.g = (skycol.g + 1.0) / 2.0;
-	        skycol.b = (skycol.b + 1.0) / 2.0;
-	        this.hemilight.setAttribute('light', {'color': '#' + skycol.getHexString()});
+	        var skycol = new THREE.Color().setStyle(this.environmentData.skyColor, THREE.NoColorSpace);
+	        skycol.setRGB(
+	          (skycol.r + 1.0) / 2.0,
+	          (skycol.g + 1.0) / 2.0,
+	          (skycol.b + 1.0) / 2.0,
+	          THREE.SRGBColorSpace
+	        );
+	        this.hemilight.setAttribute('light', {
+	          'color': '#' + skycol.getHexString(),
+	          'intensity': 0.6
+	        });
 	        this.sunlight.setAttribute('light', {'intensity': 0.6});
-	        this.hemilight.setAttribute('light', {'intensity': 0.6});
 	      }
 	      else {
+	        this.hemilight.setAttribute('light', {
+	          'color': '#CEE4F0',
+	          'intensity': 0.1 + sunPos.y * 0.5
+	        });
 	        this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
-	        this.hemilight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
 	      }
 
 	      this.sunlight.setAttribute('light', {
@@ -349,8 +366,9 @@
 	        mat.fog = false;
 	      }
 	      else if (skyType == 'gradient') {
-	        mat.topColor = this.environmentData.skyColor;
-	        mat.bottomColor = this.environmentData.horizonColor;
+	        // Gradient shader doesn't encode fragments, so pass in colors as NoColorSpace
+	        mat.topColor = new THREE.Color().setStyle(this.environmentData.skyColor, THREE.NoColorSpace);
+	        mat.bottomColor = new THREE.Color().setStyle(this.environmentData.horizonColor, THREE.NoColorSpace);
 	      }
 
 	      this.sky.setAttribute('material', mat);
@@ -599,6 +617,7 @@
 	      this.gridTexture.wrapS = THREE.RepeatWrapping;
 	      this.gridTexture.wrapT = THREE.RepeatWrapping;
 	      this.gridTexture.repeat.set(texRepeat, texRepeat);
+	      this.rendererSystem.applyColorCorrection(this.gridTexture);
 
 	      this.groundCanvas = document.createElement('canvas');
 	      this.groundCanvas.width = groundResolution;
@@ -607,6 +626,7 @@
 	      this.groundTexture.wrapS = THREE.RepeatWrapping;
 	      this.groundTexture.wrapT = THREE.RepeatWrapping;
 	      this.groundTexture.repeat.set(texRepeat, texRepeat);
+	      this.rendererSystem.applyColorCorrection(this.groundTexture);
 
 	      // ground material diffuse map is the regular ground texture and the grid texture
 	      // is used in the emissive map. This way, the grid is always equally visible, even at night.
@@ -738,26 +758,28 @@
 	      case 'squares': {
 	        var numSquares = 16;
 	        var squareSize = size / numSquares;
-	        col1 = new THREE.Color(this.environmentData.groundColor);
-	        col2 = new THREE.Color(this.environmentData.groundColor2);
+	        // Note: use THREE.NoColorSpace to perform operations on sRGB colors directly
+	        col1 = new THREE.Color().setStyle(this.environmentData.groundColor, THREE.NoColorSpace);
+	        col2 = new THREE.Color().setStyle(this.environmentData.groundColor2, THREE.NoColorSpace);
 	        for (i = 0; i < numSquares * numSquares; i++) {
 	          col = this.random(i + 3) > 0.5 ? col1.clone() : col2.clone();
 	          col.addScalar(this.random(i + 3) * 0.1 - 0.05);
-	          ctx.fillStyle = '#' + col.getHexString();
+	          ctx.fillStyle = '#' + col.getHexString(THREE.NoColorSpace);
+
 	          ctx.fillRect((i % numSquares) * squareSize, Math.floor(i / numSquares) * squareSize, squareSize, squareSize);
 	        }
 	        break;
 	      }
 	      case 'noise': {
-	      // TODO: fix
+	        // TODO: fix
 	        imdata = ctx.getImageData(0, 0, size, size);
 	        im = imdata.data;
-	        col1 = new THREE.Color(this.environmentData.groundColor);
-	        col2 = new THREE.Color(this.environmentData.groundColor2);
+	        // Note: use THREE.NoColorSpace to perform operations on sRGB colors directly
+	        col1 = new THREE.Color().setStyle(this.environmentData.groundColor, THREE.NoColorSpace);
+	        col2 = new THREE.Color().setStyle(this.environmentData.groundColor2, THREE.NoColorSpace);
 	        var diff = new THREE.Color(col2.r - col1.r, col2.g - col1.g, col2.b - col1.b);
 	        var perlin = new PerlinNoise();
 	        for (i = 0, j = 0, numpixels = im.length; i < numpixels; i += 4, j++){
-	          //console.log( (j % size) / size, j / size)
 	          var rnd = perlin.noise((j % size) / size * 3, j / size / size * 3, 0);
 	          im[i + 0] = Math.floor((col1.r + diff.r * rnd) * 255);
 	          im[i + 1] = Math.floor((col1.g + diff.g * rnd) * 255);
@@ -776,8 +798,9 @@
 	        texctx.fillRect(0, 0, s, s);
 	        imdata = texctx.getImageData(0, 0, s, s);
 	        im = imdata.data;
-	        col1 = new THREE.Color(this.environmentData.groundColor);
-	        col2 = new THREE.Color(this.environmentData.groundColor2);
+	        // Note: use THREE.NoColorSpace to perform operations on sRGB colors directly
+	        col1 = new THREE.Color().setStyle(this.environmentData.groundColor, THREE.NoColorSpace);
+	        col2 = new THREE.Color().setStyle(this.environmentData.groundColor2, THREE.NoColorSpace);
 	        var walkers = [];
 	        var numwalkers = 1000;
 	        for (i = 0; i < numwalkers; i++) {
@@ -877,7 +900,8 @@
 	        if (data[j]['mirror']) {
 	          var mirroredGeo = geo.clone();
 	          mirroredGeo.applyMatrix4(new THREE.Matrix4().makeRotationFromEuler(new THREE.Euler(0, Math.PI, 0)));
-	          geo = THREE.BufferGeometryUtils.mergeBufferGeometries([geo, mirroredGeo]);
+	          var mergeGeometries = THREE.BufferGeometryUtils.mergeGeometries || THREE.BufferGeometryUtils.mergeBufferGeometries;
+	          geo = mergeGeometries([geo, mirroredGeo]);
 	        }
 
 	        if (data[j]['noise']) applyNoise(geo, data[j].noise);
@@ -926,21 +950,8 @@
 
 	    for (var i = 0, r = 88343; i < this.environmentData.dressingAmount; i++, r++) {
 
-	      var clone = geoset[Math.floor(this.random(33 + i) * geoset.length)].clone;
 	      var geo = geoset[Math.floor(this.random(33 + i) * geoset.length)].clone();
-	/*
-	      // change vertex colors
-	      var color = new THREE.Color(0xFFFFFF).multiplyScalar(1 - this.random(66 + i) * 0.3);
 
-	      for (var f = 0, fl = geo.faces.length; f < fl; f++) {
-	        var face = geo.faces[f];
-	        for (var v = 0; v < 3; v++) {
-	          p = geo.vertices[face[faceindex[v]]]; // get vertex position
-	          var floorao =  p.y / 4 + 0.75;
-	          face.vertexColors[v] = new THREE.Color(color.r * floorao, color.g * floorao, color.b * floorao);
-	        }
-	      }
-	*/
 	      // set random position, rotation and scale
 	      var ds = this.environmentData.dressingScale;
 	      var dv = new THREE.Vector3(this.environmentData.dressingVariance.x, this.environmentData.dressingVariance.y, this.environmentData.dressingVariance.z);
@@ -982,13 +993,15 @@
 	    }
 
 	    // convert geometry to buffergeometry
-	    var bufgeo = THREE.BufferGeometryUtils.mergeBufferGeometries(geometries);
+	    var mergeGeometries = THREE.BufferGeometryUtils.mergeGeometries || THREE.BufferGeometryUtils.mergeBufferGeometries;
+	    var bufgeo = mergeGeometries(geometries);
 	    bufgeo.attributes.position.needsUpdate = true;
 
-	    // setup Materialial
+	    // setup Material
 	    var material = new THREE.MeshLambertMaterial({
 	      color: new THREE.Color(this.environmentData.dressingColor)
 	    });
+	    this.rendererSystem.applyColorCorrection(material.color);
 
 	    // create mesh
 	    var mesh = new THREE.Mesh(bufgeo, material);
@@ -1015,6 +1028,7 @@
 	    geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 	    geometry.setDrawRange(0, 0); // don't draw any yet
 	    var material = new THREE.PointsMaterial({size: 0.01, color: 0xCCCCCC, fog: false});
+	    this.rendererSystem.applyColorCorrection(material.color);
 	    this.stars.setObject3D('mesh', new THREE.Points(geometry, material));
 	  },
 
@@ -1034,7 +1048,7 @@
 	// atmosphere sky shader. From https://github.com/aframevr/aframe/blob/master/examples/test/shaders/shaders/sky.js
 	AFRAME.registerShader('skyshader', {
 	  schema: {
-	    luminance: { type: 'number', default: 1, min: 0, max: 2, is: 'uniform' },
+	    exposureBias: { type: 'number', default: 1.0, min: 0, max: 10, is: 'uniform' },
 	    turbidity: { type: 'number', default: 2, min: 0, max: 20, is: 'uniform' },
 	    reileigh: { type: 'number', default: 1, min: 0, max: 4, is: 'uniform' },
 	    mieCoefficient: { type: 'number', default: 0.005, min: 0, max: 0.1, is: 'uniform' },
@@ -1053,13 +1067,15 @@
 	  ].join('\n'),
 
 	  fragmentShader: [
+	    '#include <common>',
+	    '#include <dithering_pars_fragment>',
 	    'uniform sampler2D skySampler;',
 	    'uniform vec3 sunPosition;',
 	    'varying vec3 vWorldPosition;',
 
 	    'vec3 cameraPos = vec3(0., 0., 0.);',
 
-	    'uniform float luminance;',
+	    'uniform float exposureBias;',
 	    'uniform float turbidity;',
 	    'uniform float reileigh;',
 	    'uniform float mieCoefficient;',
@@ -1197,17 +1213,11 @@
 
 	    'vec3 whiteScale = 1.0/Uncharted2Tonemap(vec3(W));',
 
-	    'vec3 texColor = (Lin+L0);   ',
-	    'texColor *= 0.04 ;',
+	    'vec3 texColor = (Lin+L0);',
+	    'texColor *= 0.04;',
 	    'texColor += vec3(0.0,0.001,0.0025)*0.3;',
 
-	    'float g_fMaxLuminance = 1.0;',
-	    'float fLumScaled = 0.1 / luminance;     ',
-	    'float fLumCompressed = (fLumScaled * (1.0 + (fLumScaled / (g_fMaxLuminance * g_fMaxLuminance)))) / (1.0 + fLumScaled); ',
-
-	    'float ExposureBias = fLumCompressed;',
-
-	    'vec3 curr = Uncharted2Tonemap((log2(2.0/pow(luminance,4.0)))*texColor);',
+	    'vec3 curr = Uncharted2Tonemap(exposureBias*texColor);',
 	    'vec3 color = curr*whiteScale;',
 
 	    'vec3 retColor = pow(color,vec3(1.0/(1.2+(1.2*sunfade))));',
@@ -1215,6 +1225,7 @@
 	    'gl_FragColor.rgb = retColor;',
 
 	    'gl_FragColor.a = 1.0;',
+	    '#include <dithering_fragment>',
 	    '}'
 	  ].join('\n')
 	});
@@ -1238,6 +1249,8 @@
 	  ].join('\n'),
 
 	  fragmentShader: [
+	    '#include <common>',
+	    '#include <dithering_pars_fragment>',
 	    'uniform vec3 bottomColor;',
 	    'uniform vec3 topColor;',
 	    'uniform float offset;',
@@ -1245,6 +1258,7 @@
 	    'void main() {',
 	    ' float h = normalize( vWorldPosition ).y;',
 	    ' gl_FragColor = vec4( mix( bottomColor, topColor, max( pow( max(h, 0.0 ), 0.8 ), 0.0 ) ), 1.0 );',
+	    ' #include <dithering_fragment>',
 	    '}'
 	  ].join('\n')
 	});
