@@ -8,7 +8,7 @@ A simple way of setting up a whole basic environment for your
 Make sure you are using __A-Frame 1.3.0__ or later. Then just include `aframe-environment-component.js` in your HTML:
 
 ```html
-  <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.3/dist/aframe-environment-component.min.js"></script>
 ```
 
 and add the `environment` component to an entity:
