@@ -599,6 +599,7 @@ AFRAME.registerComponent('environment', {
       this.gridTexture.wrapS = THREE.RepeatWrapping;
       this.gridTexture.wrapT = THREE.RepeatWrapping;
       this.gridTexture.repeat.set(texRepeat, texRepeat);
+      this.gridTexture.anisotropy = 4;
       this.rendererSystem.applyColorCorrection(this.gridTexture);
 
       this.groundCanvas = document.createElement('canvas');
@@ -608,6 +609,7 @@ AFRAME.registerComponent('environment', {
       this.groundTexture.wrapS = THREE.RepeatWrapping;
       this.groundTexture.wrapT = THREE.RepeatWrapping;
       this.groundTexture.repeat.set(texRepeat, texRepeat);
+      this.groundTexture.anisotropy = 4;
       this.rendererSystem.applyColorCorrection(this.groundTexture);
 
       // ground material diffuse map is the regular ground texture and the grid texture
