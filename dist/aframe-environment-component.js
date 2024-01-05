@@ -214,7 +214,6 @@
 	    this.stars = null;
 
 	    // create ground
-	    this.groundMaterial = null;
 	    this.ground = document.createElement('a-entity');
 	    this.ground.setAttribute('rotation', '-90 0 0');
 	    this.ground.classList.add('environmentGround');
@@ -451,6 +450,35 @@
 	    this.dumpParametersDiff();
 	  },
 
+	  remove: function() {
+	    if (this.userFog) {
+	      this.el.sceneEl.setAttribute('fog', this.userFog);
+	    }
+	    else {
+	      this.el.sceneEl.removeAttribute('fog');
+	    }
+	    this.el.removeChild(this.hemilight);
+	    this.el.removeChild(this.sunlight);
+	    if (this.groundTexture) this.groundTexture.dispose();
+	    if (this.gridTexture) this.gridTexture.dispose();
+	    if (this.groundMaterial) this.groundMaterial.dispose();
+	    if (this.groundGeometry) this.groundGeometry.dispose();
+	    this.el.removeChild(this.ground);
+	    var dressingMesh = this.dressing.getObject3D('mesh');
+	    if (dressingMesh && dressingMesh.children.length > 0) {
+	      dressingMesh.children[0].material.dispose();
+	      dressingMesh.children[0].geometry.dispose();
+	    }
+	    this.el.removeChild(this.dressing);
+	    this.el.removeChild(this.sky);
+	    if (this.stars) {
+	      var mesh = this.stars.getObject3D('mesh');
+	      mesh.material.dispose();
+	      mesh.geometry.dispose();
+	      this.el.removeChild(this.stars);
+	    }
+	  },
+
 	  // logs current parameters to console, for saving to a preset
 	  logPreset: function () {
 	    var str = '{';
@@ -617,6 +645,7 @@
 	      this.gridTexture.wrapS = THREE.RepeatWrapping;
 	      this.gridTexture.wrapT = THREE.RepeatWrapping;
 	      this.gridTexture.repeat.set(texRepeat, texRepeat);
+	      this.gridTexture.anisotropy = 4;
 	      this.rendererSystem.applyColorCorrection(this.gridTexture);
 
 	      this.groundCanvas = document.createElement('canvas');
@@ -626,6 +655,7 @@
 	      this.groundTexture.wrapS = THREE.RepeatWrapping;
 	      this.groundTexture.wrapT = THREE.RepeatWrapping;
 	      this.groundTexture.repeat.set(texRepeat, texRepeat);
+	      this.groundTexture.anisotropy = 4;
 	      this.rendererSystem.applyColorCorrection(this.groundTexture);
 
 	      // ground material diffuse map is the regular ground texture and the grid texture
@@ -636,12 +666,7 @@
 	        emissiveMap: this.gridTexture
 	      };
 
-	      // use .shading for A-Frame < 0.7.0 and .flatShading for A-Frame >= 0.7.0
-	      if (new THREE.Material().hasOwnProperty('shading')) {
-	        this.groundMaterialProps.shading = this.environmentData.flatShading ? THREE.FlatShading : THREE.SmoothShading;
-	      } else {
-	        this.groundMaterialProps.flatShading = this.environmentData.flatShading;
-	      }
+	      this.groundMaterialProps.flatShading = this.environmentData.flatShading;
 
 	      this.groundMaterial = new THREE.MeshLambertMaterial(this.groundMaterialProps);
 	    }
