@@ -28,12 +28,15 @@ AFRAME.registerComponent('environment', {
 
     flatShading: {default: false},
     playArea: {type: 'float', default: 1, min: 0.5, max: 10},
+    stageSize: {type: 'float', default: 200, min: 1, max: 20000},
 
     ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']},
     groundYScale: {type: 'float', default: 3, min: 0, max: 50},
     groundTexture: {default: 'none', oneOf:['none', 'checkerboard', 'squares', 'walkernoise']},
     groundColor:  {type: 'color', default: '#553e35'},
     groundColor2: {type: 'color', default: '#694439'},
+    groundDensity: {type: 'number', default: 64, min: 8, max: 1024},
+    groundFrequency: {type: 'float', default: 10, min: 0.1, max: 1000},
 
     dressing: {default: 'none', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'hexagons', 'stones', 'trees', 'mushrooms', 'towers', 'apparatus', 'arches', 'torii']},
     dressingAmount: {type: 'int', default: 10, min: 0, max: 1000},
@@ -78,7 +81,7 @@ AFRAME.registerComponent('environment', {
     this.rendererSystem = this.el.sceneEl.systems.renderer;
 
     // stage ground diameter (and sky radius)
-    this.STAGE_SIZE = 200;
+    this.STAGE_SIZE = this.data.stageSize;
 
     // data for dressing meshes
     this.assets = {
@@ -304,6 +307,12 @@ AFRAME.registerComponent('environment', {
       });
     }
 
+    var updateStageSize = this.environmentData.stageSize !== oldData.stageSize;
+
+    if (updateStageSize) {
+      this.STAGE_SIZE = this.data.stageSize;
+      this.sky.setAttribute('radius', this.STAGE_SIZE);
+    }
     // update sky colors
     if (skyType !== oldData.skyType ||
       this.environmentData.skyColor != oldData.skyColor ||
@@ -355,7 +364,10 @@ AFRAME.registerComponent('environment', {
       this.environmentData.seed != oldData.seed ||
       this.environmentData.ground != oldData.ground ||
       this.environmentData.playArea != oldData.playArea ||
-      this.environmentData.flatShading != oldData.flatShading;
+      this.environmentData.flatShading != oldData.flatShading ||
+      this.environmentData.groundDensity != oldData.groundDensity ||
+      this.environmentData.groundFrequency != oldData.groundFrequency
+      updateStageSize;
 
     // check if any parameter of the ground was changed, and update it
     if (updateGroundGeometry ||
@@ -383,7 +395,8 @@ AFRAME.registerComponent('environment', {
         this.environmentData.dressingVariance.x != oldData.dressingVariance.x ||
         this.environmentData.dressingVariance.y != oldData.dressingVariance.y ||
         this.environmentData.dressingVariance.z != oldData.dressingVariance.z ||
-        this.environmentData.dressingUniformScale != oldData.dressingUniformScale
+        this.environmentData.dressingUniformScale != oldData.dressingUniformScale ||
+        updateStageSize
       ) {
       this.updateDressing();
     }
@@ -508,7 +521,7 @@ AFRAME.registerComponent('environment', {
   // updates ground attributes, and geometry if required
   updateGround: function (updateGeometry) {
 
-    var resolution = 64; // number of divisions of the ground mesh
+    var resolution = this.environmentData.groundDensity; // number of divisions of the ground mesh
 
     if (updateGeometry) {
       var visibleground = this.environmentData.ground != 'none';
@@ -523,7 +536,7 @@ AFRAME.registerComponent('environment', {
       var perlin = new PerlinNoise(this.environmentData.seed);
       var verts = this.groundGeometry.attributes.position.array;
       var numVerts = verts.length;
-      var frequency = 10;
+      var frequency = this.environmentData.groundFrequency;
       var inc = frequency / resolution;
       var x = 0;
       var y = 0;
@@ -571,7 +584,7 @@ AFRAME.registerComponent('environment', {
 
         // calculate next x,y ground coordinates
         x += inc;
-        if (x >= 10) {
+        if (x >= frequency ) {
           x = 0;
           y += inc;
         }
