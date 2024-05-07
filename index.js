@@ -28,7 +28,7 @@ AFRAME.registerComponent('environment', {
 
     flatShading: {default: false},
     playArea: {type: 'float', default: 1, min: 0.5, max: 10},
-    stageSize: {type: 'float', default: 200, min: 1, max: 20000},
+    stageSize: {type: 'number', default: 200, min: 1, max: 20000},
 
     ground: {default: 'hills', oneOf:['none', 'flat', 'hills', 'canyon', 'spikes', 'noise']},
     groundYScale: {type: 'float', default: 3, min: 0, max: 50},
@@ -36,7 +36,7 @@ AFRAME.registerComponent('environment', {
     groundColor:  {type: 'color', default: '#553e35'},
     groundColor2: {type: 'color', default: '#694439'},
     groundDensity: {type: 'number', default: 64, min: 8, max: 1024},
-    groundFrequency: {type: 'float', default: 10, min: 0.1, max: 1000},
+    groundFrequency: {type: 'number', default: 10, min: 0.1, max: 1000},
 
     dressing: {default: 'none', oneOf:['none', 'cubes', 'pyramids', 'cylinders', 'hexagons', 'stones', 'trees', 'mushrooms', 'towers', 'apparatus', 'arches', 'torii']},
     dressingAmount: {type: 'int', default: 10, min: 0, max: 1000},
@@ -584,7 +584,7 @@ AFRAME.registerComponent('environment', {
 
         // calculate next x,y ground coordinates
         x += inc;
-        if (x >= frequency ) {
+        if (x >= frequency) {
           x = 0;
           y += inc;
         }
