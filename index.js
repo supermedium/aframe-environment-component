@@ -438,12 +438,7 @@ AFRAME.registerComponent('environment', {
     }
     this.el.removeChild(this.dressing);
     this.el.removeChild(this.sky);
-    if (this.stars) {
-      var mesh = this.stars.getObject3D('mesh');
-      mesh.material.dispose();
-      mesh.geometry.dispose();
-      this.el.removeChild(this.stars);
-    }
+    this.removeStars();
   },
 
   // logs current parameters to console, for saving to a preset
@@ -1024,16 +1019,32 @@ AFRAME.registerComponent('environment', {
     this.stars.setObject3D('mesh', new THREE.Points(geometry, material));
   },
 
+  // removes and disposes the BufferGeometry of the stars
+  removeStars: function() {
+    if (!this.stars) return;
+
+    var mesh = this.stars.getObject3D('mesh');
+    mesh.material.dispose();
+    mesh.geometry.dispose();
+
+    this.el.removeChild(this.stars);
+    this.stars = null;
+  },
+
   // Sets the number of stars visible. Calls createStars() to initialize if needed.
   setStars: function (numStars) {
-    if (!this.stars){
-      this.stars = document.createElement('a-entity');
-      this.stars.id= 'stars';
-      this.createStars();
-      this.el.appendChild(this.stars);
-    }
     numStars = Math.floor(Math.min(2000, Math.max(0, numStars)));
-    this.stars.getObject3D('mesh').geometry.setDrawRange(0, numStars);
+    if (numStars === 0) {
+      this.removeStars();
+    } else {
+      if (!this.stars) {
+        this.stars = document.createElement('a-entity');
+        this.stars.id = 'stars';
+        this.createStars();
+        this.el.appendChild(this.stars);
+      }
+      this.stars.getObject3D('mesh').geometry.setDrawRange(0, numStars);
+    }
   }
 });
 
