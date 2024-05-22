@@ -4,13 +4,6 @@ if (typeof AFRAME === 'undefined') {
   throw new Error('Component attempted to register before AFRAME was available.');
 }
 
-/**
- * enviroGetSettings() - console function for printing out the current environment settings
- */
-function enviroGetSettings () {
-  document.querySelector('[environment]').components['environment'].logPreset();
-}
-
 AFRAME.registerComponent('environment', {
   schema: {
     active: {default: false},
@@ -366,7 +359,7 @@ AFRAME.registerComponent('environment', {
       this.environmentData.playArea != oldData.playArea ||
       this.environmentData.flatShading != oldData.flatShading ||
       this.environmentData.groundDensity != oldData.groundDensity ||
-      this.environmentData.groundFrequency != oldData.groundFrequency
+      this.environmentData.groundFrequency != oldData.groundFrequency ||
       updateStageSize;
 
     // check if any parameter of the ground was changed, and update it
@@ -829,7 +822,6 @@ AFRAME.registerComponent('environment', {
     var geoset = [];
     var self = this;
     function applyNoise(geo, noise) {
-      var n = new THREE.Vector3();
       var verts = geo.attributes.position.array;
       var numVerts = verts.length;
       for (var i = 0; i < numVerts; i+=3) {
