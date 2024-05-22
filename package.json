@@ -1,6 +1,6 @@
 {
   "name": "aframe-environment-component",
-  "version": "1.3.5",
+  "version": "1.3.7",
   "description": "Infinite environments for your A-Frame VR scene in just one file.",
   "main": "index.js",
   "cdn": "dist/aframe-environment-component.min.js",
