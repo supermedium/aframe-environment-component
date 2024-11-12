@@ -187,12 +187,12 @@ AFRAME.registerComponent('environment', {
     this.hemilight.setAttribute('light', {
       type: 'hemisphere',
       color: '#CEE4F0',
-      intensity: 0.4
+      intensity: 1.256
     });
     this.sunlight = document.createElement('a-entity');
     this.sunlight.classList.add('environment');
     this.sunlight.setAttribute('position', this.data.lightPosition);
-    this.sunlight.setAttribute('light', {intensity: 0.6});
+    this.sunlight.setAttribute('light', {intensity: 1.884});
 
     // add everything to the scene
     this.el.appendChild(this.hemilight);
@@ -279,16 +279,16 @@ AFRAME.registerComponent('environment', {
         );
         this.hemilight.setAttribute('light', {
           'color': '#' + skycol.getHexString(),
-          'intensity': 0.6
+          'intensity': 1.884
         });
-        this.sunlight.setAttribute('light', {'intensity': 0.6});
+        this.sunlight.setAttribute('light', {'intensity': 1.884});
       }
       else {
         this.hemilight.setAttribute('light', {
           'color': '#CEE4F0',
-          'intensity': 0.1 + sunPos.y * 0.5
+          'intensity': 0.314 + sunPos.y * 0.5
         });
-        this.sunlight.setAttribute('light', {'intensity': 0.1 + sunPos.y * 0.5});
+        this.sunlight.setAttribute('light', {'intensity': 0.314 + sunPos.y * 0.5});
       }
 
       this.sunlight.setAttribute('light', {
