@@ -286,9 +286,9 @@ AFRAME.registerComponent('environment', {
       else {
         this.hemilight.setAttribute('light', {
           'color': '#CEE4F0',
-          'intensity': 0.314 + sunPos.y * 0.5
+          'intensity': 0.314 + sunPos.y * 1.57
         });
-        this.sunlight.setAttribute('light', {'intensity': 0.314 + sunPos.y * 0.5});
+        this.sunlight.setAttribute('light', {'intensity': 0.314 + sunPos.y * 1.57});
       }
 
       this.sunlight.setAttribute('light', {
