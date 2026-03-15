@@ -15,6 +15,7 @@ AFRAME.registerComponent('environment', {
     horizonColor: {type: 'color'},
     lighting: {default: 'distant', oneOf: ['none', 'distant', 'point']},
     shadow: {default: false},
+    shadowBias: {type: 'float', default: 0},
     shadowSize: { default: 10},
     lightPosition: {type:'vec3', default: {x: 0, y: 1, z: -0.2}},
     fog: {type:'float', default: 0, min: 0, max: 1},
@@ -293,6 +294,7 @@ AFRAME.registerComponent('environment', {
 
       this.sunlight.setAttribute('light', {
         castShadow: this.environmentData.shadow,
+        shadowBias: this.environmentData.shadowBias,
         shadowCameraLeft: -this.environmentData.shadowSize,
         shadowCameraBottom: -this.environmentData.shadowSize,
         shadowCameraRight: this.environmentData.shadowSize,
