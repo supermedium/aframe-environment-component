@@ -258,7 +258,14 @@ AFRAME.registerComponent('environment', {
       this.environmentData = {};
       Object.assign(this.environmentData, this.data);
       Object.assign(this.environmentData, this.presets[this.data.preset]);
-      Object.assign(this.environmentData, this.el.components.environment.attrValue);
+      // Only assign defined values from attrValue, as removeAttribute sets
+      // properties to undefined rather than deleting them.
+      var attrValue = this.attrValue;
+      for (var key in attrValue) {
+        if (attrValue[key] !== undefined) {
+          this.environmentData[key] = attrValue[key];
+        }
+      }
       console.log(this.environmentData);
     }
 
