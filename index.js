@@ -1066,7 +1066,6 @@ AFRAME.registerShader('skyshader', {
   fragmentShader: [
     '#include <common>',
     '#include <dithering_pars_fragment>',
-    'uniform sampler2D skySampler;',
     'uniform vec3 sunPosition;',
     'varying vec3 vWorldPosition;',
 
@@ -1201,7 +1200,6 @@ AFRAME.registerShader('skyshader', {
     'float theta = acos(direction.y); // elevation --> y-axis, [-pi/2, pi/2]',
     'float phi = atan(direction.z, direction.x); // azimuth --> x-axis [-pi/2, pi/2]',
     'vec2 uv = vec2(phi, theta) / vec2(2.0*pi, pi) + vec2(0.5, 0.0);',
-    // vec3 L0 = texture2D(skySampler, uv).rgb+0.1 * Fex;
     'vec3 L0 = vec3(0.1) * Fex;',
 
     // composition + solar disc
