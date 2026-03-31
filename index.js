@@ -203,6 +203,17 @@ AFRAME.registerComponent('environment', {
     this.el.appendChild(this.sky);
   },
 
+  remove: function(){
+    this.el.removeChild(this.hemilight);
+    this.el.removeChild(this.sunlight);
+    this.el.removeChild(this.ground);
+    this.el.removeChild(this.dressing);
+    this.el.removeChild(this.sky);
+    if(this.stars){
+        this.el.removeChild(this.stars);
+    }
+  },
+
   // returns a fog color from a specific sky type and sun height
   getFogColor: function (skyType, sunHeight) {
 
